@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage availability{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Manage availability</h1>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Weekly schedule</h5>
+                </div>
+                <div class="card-body">
+                    {% if blocks %}
+                        <ul class="list-unstyled">
+                            {% for block in blocks %}
+                                <li class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                                    <div>
+                                        <strong>{{ block.get_day_of_week_display }}</strong>
+                                        <span class="text-muted">{{ block.start_time|time:"H:i" }} - {{ block.end_time|time:"H:i" }}</span>
+                                    </div>
+                                    <form method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="delete_block">
+                                        <input type="hidden" name="block_id" value="{{ block.pk }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                    </form>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No availability blocks set. Add your weekly schedule below.</p>
+                    {% endif %}
+                    
+                    <hr>
+                    <h6>Add availability block</h6>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="add_block">
+                        <div class="row g-2 mb-2">
+                            <div class="col-md-4">
+                                <select name="day_of_week" class="form-select form-select-sm">
+                                    {% for day_num, day_name in days %}
+                                        <option value="{{ day_num }}">{{ day_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="time" name="start_time" class="form-control form-control-sm" value="09:00">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="time" name="end_time" class="form-control form-control-sm" value="17:00">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-sm btn-primary w-100">Add</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Blocked dates</h5>
+                </div>
+                <div class="card-body">
+                    {% if blocked_dates %}
+                        <ul class="list-unstyled">
+                            {% for blocked in blocked_dates %}
+                                <li class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                                    <div>
+                                        <strong>{{ blocked.date|date:"l, j F Y" }}</strong>
+                                        {% if blocked.reason %}<span class="text-muted small">- {{ blocked.reason }}</span>{% endif %}
+                                    </div>
+                                    <form method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="unblock_date">
+                                        <input type="hidden" name="date_id" value="{{ blocked.pk }}">
+                                        <button type="submit" class="btn btn-sm btn-outline-success"><i class="bi bi-unlock"></i></button>
+                                    </form>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No dates blocked.</p>
+                    {% endif %}
+                    
+                    <hr>
+                    <h6>Block a date</h6>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="block_date">
+                        <div class="row g-2">
+                            <div class="col-md-5">
+                                <input type="date" name="date" class="form-control form-control-sm" required>
+                            </div>
+                            <div class="col-md-5">
+                                <input type="text" name="reason" class="form-control form-control-sm" placeholder="Reason (optional)">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-sm btn-warning w-100">Block</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

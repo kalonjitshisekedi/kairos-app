@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ expert.user.full_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4 expert-profile">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            {% if expert.avatar %}
+                                <img src="{{ expert.avatar.url }}" alt="{{ expert.user.full_name }}" class="avatar-large mb-3">
+                            {% else %}
+                                <div class="avatar-large bg-secondary d-inline-flex align-items-center justify-content-center text-white mb-3" style="width: 150px; height: 150px; border-radius: 50%;">
+                                    <span class="display-4">{{ expert.user.first_name.0 }}{{ expert.user.last_name.0 }}</span>
+                                </div>
+                            {% endif %}
+                            {% if expert.is_verified %}
+                                <div class="mb-2">
+                                    <span class="badge badge-verified" title="Credentials verified by Kairos">
+                                        <i class="bi bi-patch-check-fill me-1"></i> Verified expert
+                                    </span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <h1 class="mb-1">
+                                {{ expert.user.full_name }}
+                                {% if expert.pronouns %}<span class="text-muted small">({{ expert.pronouns }})</span>{% endif %}
+                            </h1>
+                            <p class="lead text-kairos mb-2">{{ expert.headline }}</p>
+                            {% if expert.affiliation %}
+                                <p class="text-muted mb-1"><i class="bi bi-building me-2"></i>{{ expert.affiliation }}</p>
+                            {% endif %}
+                            {% if expert.location %}
+                                <p class="text-muted mb-1"><i class="bi bi-geo-alt me-2"></i>{{ expert.location }} ({{ expert.timezone }})</p>
+                            {% endif %}
+                            {% if expert.languages %}
+                                <p class="text-muted mb-2"><i class="bi bi-translate me-2"></i>{{ expert.languages|join:", " }}</p>
+                            {% endif %}
+                            {% if expert.average_rating > 0 %}
+                                <div class="rating-stars mb-2">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= expert.average_rating %}
+                                            <i class="bi bi-star-fill"></i>
+                                        {% else %}
+                                            <i class="bi bi-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <span class="text-muted">({{ expert.total_reviews }} reviews)</span>
+                                </div>
+                            {% endif %}
+                            {% if avg_response_time %}
+                                <p class="text-muted small"><i class="bi bi-clock me-1"></i> Typical response time: {{ avg_response_time }} hours</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">About</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ expert.bio|linebreaks }}</p>
+                    
+                    <h6 class="mt-4">Areas of expertise</h6>
+                    <div class="mb-3">
+                        {% for tag in expert.expertise_tags.all %}
+                            <span class="badge bg-primary me-1">{{ tag.name }}</span>
+                        {% empty %}
+                            <span class="text-muted">No expertise tags listed</span>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if expert.orcid_id %}
+                        <p><a href="https://orcid.org/{{ expert.orcid_id }}" target="_blank" rel="noopener"><i class="bi bi-link-45deg me-1"></i>ORCID: {{ expert.orcid_id }}</a></p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if expert.publications.exists %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Selected publications</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        {% for pub in expert.publications.all %}
+                            <li class="mb-2">
+                                {% if pub.url %}
+                                    <a href="{{ pub.url }}" target="_blank" rel="noopener">{{ pub.title }}</a>
+                                {% else %}
+                                    {{ pub.title }}
+                                {% endif %}
+                                {% if pub.journal %}<span class="text-muted small">- {{ pub.journal }}</span>{% endif %}
+                                {% if pub.year %}<span class="text-muted small">({{ pub.year }})</span>{% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if expert.patents.exists %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Patents</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        {% for patent in expert.patents.all %}
+                            <li class="mb-2">
+                                {% if patent.url %}
+                                    <a href="{{ patent.url }}" target="_blank" rel="noopener">{{ patent.title }}</a>
+                                {% else %}
+                                    {{ patent.title }}
+                                {% endif %}
+                                {% if patent.patent_number %}<span class="text-muted small">- {{ patent.patent_number }}</span>{% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if reviews %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Reviews</h5>
+                </div>
+                <div class="card-body">
+                    {% for booking in reviews %}
+                        <div class="border-bottom pb-3 mb-3">
+                            <div class="rating-stars mb-1">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= booking.review.rating %}
+                                        <i class="bi bi-star-fill"></i>
+                                    {% else %}
+                                        <i class="bi bi-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <p class="mb-1">{{ booking.review.comment }}</p>
+                            <p class="text-muted small mb-0">{{ booking.client.first_name }} - {{ booking.review.created_at|date:"j M Y" }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card mb-4 sticky-top" style="top: 20px;">
+                <div class="card-header">
+                    <h5 class="mb-0">Rate card</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-3">
+                        {% if expert.rate_30_min > 0 %}
+                            <li class="d-flex justify-content-between mb-2">
+                                <span>30 minutes</span>
+                                <strong>&pound;{{ expert.rate_30_min }}</strong>
+                            </li>
+                        {% endif %}
+                        {% if expert.rate_60_min > 0 %}
+                            <li class="d-flex justify-content-between mb-2">
+                                <span>60 minutes</span>
+                                <strong>&pound;{{ expert.rate_60_min }}</strong>
+                            </li>
+                        {% endif %}
+                        {% if expert.rate_90_min > 0 %}
+                            <li class="d-flex justify-content-between mb-2">
+                                <span>90 minutes</span>
+                                <strong>&pound;{{ expert.rate_90_min }}</strong>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    {% if expert.project_work_available %}
+                        <p class="text-muted small"><i class="bi bi-briefcase me-1"></i> Project work available</p>
+                    {% endif %}
+                    
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'consultations:create_booking' expert_id=expert.pk %}" class="btn btn-primary">Request a consultation</a>
+                        <a href="{% url 'consultations:concierge_request' %}" class="btn btn-outline-secondary">Submit a concierge request</a>
+                    </div>
+                </div>
+            </div>
+
+            {% if next_slots %}
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Next available times</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0 small">
+                        {% for slot in next_slots %}
+                            <li class="mb-1">
+                                <i class="bi bi-calendar me-1"></i>
+                                {{ slot.start_datetime|date:"D j M" }} at {{ slot.start_datetime|time:"H:i" }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

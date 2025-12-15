@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Search results{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Search results {% if query %}for "{{ query }}"{% endif %}</h1>
+    
+    <form action="{% url 'core:search' %}" method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control form-control-lg" value="{{ query }}" placeholder="Search experts...">
+            <button type="submit" class="btn btn-primary btn-lg">Search</button>
+        </div>
+    </form>
+    
+    {% if experts %}
+        <div class="row g-4">
+            {% for expert in experts %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            {% if expert.avatar %}
+                                <img src="{{ expert.avatar.url }}" class="rounded-circle mb-3" style="width: 80px; height: 80px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center text-white mb-3" style="width: 80px; height: 80px;">
+                                    <span class="fs-4">{{ expert.user.first_name.0 }}{{ expert.user.last_name.0 }}</span>
+                                </div>
+                            {% endif %}
+                            <h5>{{ expert.user.full_name }}</h5>
+                            <p class="text-muted small">{{ expert.headline|truncatechars:80 }}</p>
+                            {% if expert.rate_60_min > 0 %}
+                                <p><strong>&pound;{{ expert.rate_60_min }}</strong> / 60 min</p>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer bg-white text-center">
+                            <a href="{% url 'experts:profile' pk=expert.pk %}" class="btn btn-outline-primary btn-sm">View profile</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-search display-1 text-muted"></i>
+            <h3 class="mt-3">No experts found</h3>
+            <p class="text-muted">Try a different search term or <a href="{% url 'experts:directory' %}">browse all experts</a>.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

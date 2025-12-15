@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}Expert dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Expert dashboard</h1>
+        <div>
+            <a href="{% url 'experts:edit_profile' %}" class="btn btn-outline-primary me-2">Edit profile</a>
+            <a href="{% url 'experts:profile' pk=profile.pk %}" class="btn btn-primary">View public profile</a>
+        </div>
+    </div>
+
+    {% if profile.verification_status == 'pending' %}
+        <div class="alert alert-warning">
+            <i class="bi bi-clock me-2"></i>
+            <strong>Verification pending:</strong> Your profile is being reviewed. You'll receive an email once it's verified.
+        </div>
+    {% elif profile.verification_status == 'needs_changes' %}
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <strong>Changes needed:</strong> {{ profile.verification_notes }}
+            <a href="{% url 'experts:edit_profile' %}" class="alert-link">Update your profile</a>
+        </div>
+    {% elif profile.verification_status == 'incomplete' %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Complete your profile:</strong> Finish setting up your profile to start receiving bookings.
+            <a href="{% url 'experts:profile_wizard' %}" class="alert-link">Continue setup</a>
+        </div>
+    {% endif %}
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="display-5">&pound;{{ total_earnings|default:"0" }}</h3>
+                    <p class="text-muted mb-0">Total earnings</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="display-5">{{ profile.total_consultations }}</h3>
+                    <p class="text-muted mb-0">Consultations</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="display-5">{{ profile.profile_completeness }}%</h3>
+                    <p class="text-muted mb-0">Profile completeness</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if profile.missing_sections %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Improve your profile</h5>
+            </div>
+            <div class="card-body">
+                <ul class="mb-0">
+                    {% for suggestion in profile.missing_sections %}
+                        <li>{{ suggestion }}</li>
+                    {% endfor %}
+                </ul>
+                <a href="{% url 'experts:edit_profile' %}" class="btn btn-sm btn-primary mt-3">Update profile</a>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row mt-4 g-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Pending requests</h5>
+                    <span class="badge bg-warning">{{ pending_requests|length }}</span>
+                </div>
+                <div class="card-body">
+                    {% if pending_requests %}
+                        <div class="list-group list-group-flush">
+                            {% for booking in pending_requests %}
+                                <a href="{% url 'consultations:booking_detail' pk=booking.pk %}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <strong>{{ booking.client.full_name }}</strong>
+                                            <p class="mb-0 small text-muted">{{ booking.problem_statement|truncatechars:60 }}</p>
+                                        </div>
+                                        <span class="badge bg-primary">{{ booking.duration }} min</span>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">No pending requests</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Upcoming sessions</h5>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_sessions %}
+                        <div class="list-group list-group-flush">
+                            {% for booking in upcoming_sessions %}
+                                <a href="{% url 'consultations:booking_detail' pk=booking.pk %}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <strong>{{ booking.client.full_name }}</strong>
+                                            <p class="mb-0 small text-muted">{{ booking.scheduled_start|date:"l, j F" }} at {{ booking.scheduled_start|time:"H:i" }}</p>
+                                        </div>
+                                        <span class="badge bg-success">{{ booking.duration }} min</span>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">No upcoming sessions</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4 g-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Quick actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <a href="{% url 'availability:manage' %}" class="btn btn-outline-primary w-100">Manage availability</a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{% url 'experts:manage_publications' %}" class="btn btn-outline-primary w-100">Manage publications</a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{% url 'messaging:my_messages' %}" class="btn btn-outline-primary w-100">Messages</a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{% url 'payments:my_invoices' %}" class="btn btn-outline-primary w-100">Invoices</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

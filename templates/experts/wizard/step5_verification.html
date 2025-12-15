@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Expert profile setup{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="mb-4">
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar progress-bar-custom" style="width: 83%;"></div>
+                </div>
+                <small class="text-muted">Step {{ step }} of {{ total_steps }}</small>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Verification documents</h4>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Upload evidence of your credentials. This helps us verify your expertise and build trust with clients.</p>
+                    
+                    {% if profile.verification_documents.exists %}
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle me-2"></i>
+                            You have uploaded {{ profile.verification_documents.count }} document(s).
+                        </div>
+                    {% endif %}
+                    
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Document type</label>
+                            {{ form.document_type }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Upload file</label>
+                            {{ form.file }}
+                            <small class="text-muted">Accepted formats: PDF, DOC, DOCX, PNG, JPG (max 10MB)</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description (optional)</label>
+                            {{ form.description }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload and continue</button>
+                        {% if profile.verification_documents.exists %}
+                            <a href="?step=6" class="btn btn-outline-primary">Continue without adding more</a>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

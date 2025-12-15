@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Expert profile setup{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="mb-4">
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar progress-bar-custom" style="width: 49.8%;"></div>
+                </div>
+                <small class="text-muted">Step {{ step }} of {{ total_steps }}</small>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Expertise and credentials</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Areas of expertise</label>
+                            <div class="row">
+                                {% for tag in form.expertise_tags.field.queryset %}
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="expertise_tags" value="{{ tag.pk }}" id="tag_{{ tag.pk }}" {% if tag in form.instance.expertise_tags.all %}checked{% endif %}>
+                                            <label class="form-check-label" for="tag_{{ tag.pk }}">{{ tag.name }}</label>
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <p class="text-muted">No expertise tags available yet.</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Languages</label>
+                            {{ form.languages }}
+                            <small class="text-muted">Comma-separated list (e.g., English, French, German)</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">ORCID ID (optional)</label>
+                            {{ form.orcid_id }}
+                            <small class="text-muted">Your ORCID identifier for academic verification</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Continue</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

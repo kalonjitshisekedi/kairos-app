@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage publications{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Manage publications</h1>
+    
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Your publications</h5>
+                </div>
+                <div class="card-body">
+                    {% if publications %}
+                        <ul class="list-unstyled">
+                            {% for pub in publications %}
+                                <li class="d-flex justify-content-between align-items-start mb-3 pb-3 border-bottom">
+                                    <div>
+                                        <strong>{{ pub.title }}</strong>
+                                        {% if pub.journal %}<div class="text-muted small">{{ pub.journal }}</div>{% endif %}
+                                        {% if pub.year %}<div class="text-muted small">{{ pub.year }}</div>{% endif %}
+                                    </div>
+                                    <a href="{% url 'experts:delete_publication' pk=pub.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No publications added yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Add publication</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            {{ form.title }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Journal/Conference</label>
+                            {{ form.journal }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Year</label>
+                            {{ form.year }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">URL</label>
+                            {{ form.url }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add publication</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

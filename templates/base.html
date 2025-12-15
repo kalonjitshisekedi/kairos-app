@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>{% block title %}Kairos{% endblock %} | Don't guess. Know.</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --kairos-primary: #1a365d;
+            --kairos-secondary: #2c5282;
+            --kairos-accent: #ed8936;
+            --kairos-light: #f7fafc;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--kairos-primary) !important;
+        }
+        .btn-primary {
+            background-color: var(--kairos-primary);
+            border-color: var(--kairos-primary);
+        }
+        .btn-primary:hover {
+            background-color: var(--kairos-secondary);
+            border-color: var(--kairos-secondary);
+        }
+        .btn-accent {
+            background-color: var(--kairos-accent);
+            border-color: var(--kairos-accent);
+            color: white;
+        }
+        .btn-accent:hover {
+            background-color: #dd6b20;
+            border-color: #dd6b20;
+            color: white;
+        }
+        .bg-kairos {
+            background-color: var(--kairos-primary);
+        }
+        .text-kairos {
+            color: var(--kairos-primary);
+        }
+        .badge-verified {
+            background-color: #38a169;
+            color: white;
+        }
+        .badge-pending {
+            background-color: #ed8936;
+            color: white;
+        }
+        .badge-incomplete {
+            background-color: #718096;
+            color: white;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: box-shadow 0.2s;
+        }
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .expert-card .avatar {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .expert-profile .avatar-large {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .rating-stars {
+            color: #f6ad55;
+        }
+        footer {
+            margin-top: auto;
+            background-color: var(--kairos-primary);
+            color: white;
+        }
+        footer a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+        }
+        footer a:hover {
+            color: white;
+        }
+        .hero {
+            background: linear-gradient(135deg, var(--kairos-primary) 0%, var(--kairos-secondary) 100%);
+            color: white;
+            padding: 4rem 0;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+        .hero .tagline {
+            font-size: 1.5rem;
+            opacity: 0.9;
+        }
+        .progress-bar-custom {
+            background-color: var(--kairos-accent);
+        }
+        main {
+            flex: 1;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'core:home' %}">Kairos</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'experts:directory' %}">Browse experts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:how_it_works' %}">How it works</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                {{ user.first_name }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'accounts:dashboard' %}">Dashboard</a></li>
+                                {% if user.is_expert %}
+                                    <li><a class="dropdown-item" href="{% url 'experts:dashboard' %}">Expert dashboard</a></li>
+                                {% endif %}
+                                {% if user.is_staff %}
+                                    <li><a class="dropdown-item" href="{% url 'core:admin_dashboard' %}">Operations</a></li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'accounts:profile_settings' %}">Settings</a></li>
+                                <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Log out</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:login' %}">Log in</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-primary ms-2" href="{% url 'accounts:signup' %}">Sign up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Kairos</h5>
+                    <p class="mb-0 opacity-75">Don't guess. Know.</p>
+                </div>
+                <div class="col-md-4">
+                    <h6>Legal</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'core:terms' %}">Terms of service</a></li>
+                        <li><a href="{% url 'core:privacy' %}">Privacy policy</a></li>
+                        <li><a href="{% url 'core:acceptable_use' %}">Acceptable use</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6>Platform</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'experts:directory' %}">Browse experts</a></li>
+                        <li><a href="{% url 'core:how_it_works' %}">How it works</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-3 opacity-25">
+            <p class="mb-0 text-center opacity-75">&copy; {% now "Y" %} Kairos. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

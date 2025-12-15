@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign up{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body p-4">
+                    <h2 class="text-center mb-4">Create your account</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_email" class="form-label">Email address</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                                <div class="text-danger small">{{ form.email.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="id_first_name" class="form-label">First name</label>
+                                {{ form.first_name }}
+                                {% if form.first_name.errors %}
+                                    <div class="text-danger small">{{ form.first_name.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col">
+                                <label for="id_last_name" class="form-label">Last name</label>
+                                {{ form.last_name }}
+                                {% if form.last_name.errors %}
+                                    <div class="text-danger small">{{ form.last_name.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">I am</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="role" id="role_client" value="client" checked>
+                                <label class="form-check-label" for="role_client">Looking for expert consultation</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="role" id="role_expert" value="expert">
+                                <label class="form-check-label" for="role_expert">An expert offering consultations</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_password1" class="form-label">Password</label>
+                            {{ form.password1 }}
+                            {% if form.password1.errors %}
+                                <div class="text-danger small">{{ form.password1.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_password2" class="form-label">Confirm password</label>
+                            {{ form.password2 }}
+                            {% if form.password2.errors %}
+                                <div class="text-danger small">{{ form.password2.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.privacy_consent }}
+                                <label class="form-check-label" for="id_privacy_consent">
+                                    I agree to the <a href="{% url 'core:privacy' %}" target="_blank">privacy policy</a> and consent to the processing of my personal data
+                                </label>
+                            </div>
+                            {% if form.privacy_consent.errors %}
+                                <div class="text-danger small">{{ form.privacy_consent.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-4">
+                            <div class="form-check">
+                                {{ form.terms_accepted }}
+                                <label class="form-check-label" for="id_terms_accepted">
+                                    I accept the <a href="{% url 'core:terms' %}" target="_blank">terms of service</a> and <a href="{% url 'core:acceptable_use' %}" target="_blank">acceptable use policy</a>
+                                </label>
+                            </div>
+                            {% if form.terms_accepted.errors %}
+                                <div class="text-danger small">{{ form.terms_accepted.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Create account</button>
+                    </form>
+                    <p class="text-center mt-3 mb-0">
+                        Already have an account? <a href="{% url 'accounts:login' %}">Log in</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

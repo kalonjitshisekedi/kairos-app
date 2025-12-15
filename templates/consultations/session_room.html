@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}Session with {{ booking.expert.user.full_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .session-room {
+        min-height: 80vh;
+    }
+    .jitsi-container {
+        height: 500px;
+        background: #1a1a2e;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-3 session-room">
+    <div class="row g-3">
+        <div class="col-lg-9">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-camera-video-fill text-danger me-2"></i>
+                        Session with {% if user == booking.client %}{{ booking.expert.user.full_name }}{% else %}{{ booking.client.full_name }}{% endif %}
+                    </h5>
+                    <div>
+                        <span class="badge bg-success me-2">{{ booking.duration }} min</span>
+                        <form method="post" action="{% url 'consultations:mark_complete' pk=booking.pk %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-primary">Mark complete</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div id="jitsi-container" class="jitsi-container d-flex align-items-center justify-content-center">
+                        <div class="text-center text-white">
+                            <i class="bi bi-camera-video display-1 mb-3"></i>
+                            <h4>Video conference</h4>
+                            <p class="mb-3">Click below to join the Jitsi meeting room</p>
+                            <a href="{{ booking.meeting_url }}" target="_blank" class="btn btn-accent btn-lg">
+                                <i class="bi bi-box-arrow-up-right me-2"></i>Open Jitsi room
+                            </a>
+                            <p class="small mt-3 opacity-75">Room ID: {{ booking.jitsi_room_id }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0">Agenda</h6>
+                </div>
+                <div class="card-body small">
+                    {{ booking.problem_statement|linebreaks }}
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0">Attachments</h6>
+                </div>
+                <div class="card-body">
+                    {% for attachment in attachments %}
+                        <div class="mb-1">
+                            <a href="{{ attachment.file.url }}" target="_blank" class="small">
+                                <i class="bi bi-file-earmark me-1"></i>{{ attachment.filename|truncatechars:25 }}
+                            </a>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted small mb-0">No files attached</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0">Shared notes</h6>
+                </div>
+                <div class="card-body">
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        {% for note in shared_notes %}
+                            <div class="border-bottom pb-1 mb-1 small">
+                                {{ note.content|truncatechars:100 }}
+                            </div>
+                        {% empty %}
+                            <p class="text-muted small mb-0">No notes yet</p>
+                        {% endfor %}
+                    </div>
+                    <form method="post" action="{% url 'consultations:add_note' pk=booking.pk %}" class="mt-2">
+                        {% csrf_token %}
+                        <input type="hidden" name="note_type" value="shared">
+                        <textarea name="content" class="form-control form-control-sm" rows="2" placeholder="Add note..."></textarea>
+                        <button type="submit" class="btn btn-sm btn-primary mt-1 w-100">Add</button>
+                    </form>
+                </div>
+            </div>
+
+            {% if user == booking.expert.user %}
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Private notes</h6>
+                </div>
+                <div class="card-body">
+                    <div style="max-height: 150px; overflow-y: auto;">
+                        {% for note in expert_notes %}
+                            <div class="border-bottom pb-1 mb-1 small">{{ note.content|truncatechars:80 }}</div>
+                        {% empty %}
+                            <p class="text-muted small mb-0">Your private notes</p>
+                        {% endfor %}
+                    </div>
+                    <form method="post" action="{% url 'consultations:add_note' pk=booking.pk %}" class="mt-2">
+                        {% csrf_token %}
+                        <input type="hidden" name="note_type" value="expert_private">
+                        <textarea name="content" class="form-control form-control-sm" rows="2" placeholder="Private note..."></textarea>
+                        <button type="submit" class="btn btn-sm btn-outline-primary mt-1 w-100">Add</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

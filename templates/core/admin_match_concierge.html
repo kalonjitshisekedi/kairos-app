@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Match concierge request{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'core:admin_dashboard' %}">Operations</a></li>
+            <li class="breadcrumb-item active">Match request</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Concierge request</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Client:</strong> {{ concierge.client.full_name }} ({{ concierge.client.email }})
+                    </div>
+                    <div class="mb-3">
+                        <strong>Description:</strong>
+                        <p>{{ concierge.description }}</p>
+                    </div>
+                    {% if concierge.budget_min or concierge.budget_max %}
+                    <div class="mb-3">
+                        <strong>Budget:</strong> 
+                        {% if concierge.budget_min %}&pound;{{ concierge.budget_min }}{% endif %}
+                        {% if concierge.budget_min and concierge.budget_max %} - {% endif %}
+                        {% if concierge.budget_max %}&pound;{{ concierge.budget_max }}{% endif %}
+                    </div>
+                    {% endif %}
+                    {% if concierge.timeline %}
+                    <div class="mb-3">
+                        <strong>Timeline:</strong> {{ concierge.timeline }}
+                    </div>
+                    {% endif %}
+                    <div>
+                        <strong>Submitted:</strong> {{ concierge.created_at|date:"j F Y H:i" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Match with expert</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Select expert</label>
+                            <select name="expert_id" class="form-select" required>
+                                <option value="">Choose an expert...</option>
+                                {% for expert in experts %}
+                                    <option value="{{ expert.pk }}">{{ expert.user.full_name }} - {{ expert.headline|truncatechars:40 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Admin notes</label>
+                            <textarea name="admin_notes" class="form-control" rows="3" placeholder="Internal notes about this match..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Match with expert</button>
+                        <a href="{% url 'core:admin_dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

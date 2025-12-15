@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}Operations dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Operations dashboard</h1>
+    
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="display-6">{{ total_users }}</h3>
+                    <p class="text-muted mb-0">Total users</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="display-6">{{ total_experts }}</h3>
+                    <p class="text-muted mb-0">Verified experts</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="display-6">{{ recent_bookings }}</h3>
+                    <p class="text-muted mb-0">Bookings (30 days)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="display-6">&pound;{{ total_revenue|floatformat:0 }}</h3>
+                    <p class="text-muted mb-0">Revenue (30 days)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Pending verifications</h5>
+                    <span class="badge bg-warning">{{ pending_verifications|length }}</span>
+                </div>
+                <div class="card-body">
+                    {% if pending_verifications %}
+                        <div class="list-group list-group-flush">
+                            {% for expert in pending_verifications %}
+                                <a href="{% url 'core:admin_verify_expert' pk=expert.pk %}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <strong>{{ expert.user.full_name }}</strong>
+                                            <p class="mb-0 small text-muted">{{ expert.user.email }}</p>
+                                        </div>
+                                        <small class="text-muted">{{ expert.verification_submitted_at|date:"j M" }}</small>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">No pending verifications</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Concierge requests</h5>
+                    <span class="badge bg-info">{{ pending_concierge|length }}</span>
+                </div>
+                <div class="card-body">
+                    {% if pending_concierge %}
+                        <div class="list-group list-group-flush">
+                            {% for request in pending_concierge %}
+                                <a href="{% url 'core:admin_match_concierge' pk=request.pk %}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <strong>{{ request.client.full_name }}</strong>
+                                            <p class="mb-0 small text-muted">{{ request.description|truncatechars:50 }}</p>
+                                        </div>
+                                        <small class="text-muted">{{ request.created_at|date:"j M" }}</small>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">No pending requests</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-2">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Upcoming sessions</h5>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_sessions %}
+                        <div class="list-group list-group-flush">
+                            {% for booking in upcoming_sessions %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <strong>{{ booking.client.full_name }}</strong> with <strong>{{ booking.expert.user.full_name }}</strong>
+                                            <p class="mb-0 small text-muted">{{ booking.scheduled_start|date:"l, j F" }} at {{ booking.scheduled_start|time:"H:i" }}</p>
+                                        </div>
+                                        <span class="badge bg-primary">{{ booking.duration }} min</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">No upcoming sessions</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick links</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'admin:index' %}" class="btn btn-outline-primary">Django admin</a>
+                        <a href="{% url 'core:admin_audit_log' %}" class="btn btn-outline-secondary">Audit log</a>
+                    </div>
+                </div>
+            </div>
+
+            {% if disputed_bookings %}
+            <div class="card mt-3">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Disputes</h5>
+                </div>
+                <div class="card-body">
+                    {% for booking in disputed_bookings %}
+                        <div class="mb-2">
+                            <strong>{{ booking.client.full_name }}</strong> vs <strong>{{ booking.expert.user.full_name }}</strong>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Book {{ expert.user.full_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Request a consultation</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Select duration</label>
+                            <div class="row g-3">
+                                {% if expert.rate_30_min > 0 %}
+                                <div class="col-md-4">
+                                    <div class="form-check card p-3">
+                                        <input class="form-check-input" type="radio" name="duration" id="duration30" value="30">
+                                        <label class="form-check-label w-100" for="duration30">
+                                            <strong>30 minutes</strong>
+                                            <div class="text-muted">&pound;{{ expert.rate_30_min }}</div>
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if expert.rate_60_min > 0 %}
+                                <div class="col-md-4">
+                                    <div class="form-check card p-3">
+                                        <input class="form-check-input" type="radio" name="duration" id="duration60" value="60" checked>
+                                        <label class="form-check-label w-100" for="duration60">
+                                            <strong>60 minutes</strong>
+                                            <div class="text-muted">&pound;{{ expert.rate_60_min }}</div>
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if expert.rate_90_min > 0 %}
+                                <div class="col-md-4">
+                                    <div class="form-check card p-3">
+                                        <input class="form-check-input" type="radio" name="duration" id="duration90" value="90">
+                                        <label class="form-check-label w-100" for="duration90">
+                                            <strong>90 minutes</strong>
+                                            <div class="text-muted">&pound;{{ expert.rate_90_min }}</div>
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Select a time slot</label>
+                            {% if available_slots %}
+                                <div class="row g-2">
+                                    {% for slot in available_slots %}
+                                        <div class="col-6 col-md-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="slot_id" id="slot_{{ slot.pk }}" value="{{ slot.pk }}" {% if forloop.first %}checked{% endif %}>
+                                                <label class="form-check-label small" for="slot_{{ slot.pk }}">
+                                                    {{ slot.start_datetime|date:"D j M" }}<br>
+                                                    {{ slot.start_datetime|time:"H:i" }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="alert alert-warning">
+                                    No available time slots at the moment. Please check back later or <a href="{% url 'consultations:concierge_request' %}">submit a concierge request</a>.
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="problem_statement" class="form-label">What would you like to discuss?</label>
+                            <textarea name="problem_statement" id="problem_statement" class="form-control" rows="4" required placeholder="Briefly describe your problem or question. This helps the expert prepare for your session."></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="terms_accepted" id="terms_accepted" required>
+                                <label class="form-check-label" for="terms_accepted">
+                                    I agree to the <a href="{% url 'core:terms' %}" target="_blank">terms of service</a> and understand the <a href="{% url 'core:acceptable_use' %}" target="_blank">acceptable use policy</a>
+                                </label>
+                            </div>
+                        </div>
+
+                        {% if available_slots %}
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                {% if PAYMENTS_ENABLED %}Proceed to payment{% else %}Confirm booking{% endif %}
+                            </button>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    {% if expert.avatar %}
+                        <img src="{{ expert.avatar.url }}" alt="{{ expert.user.full_name }}" class="rounded-circle mb-3" style="width: 80px; height: 80px; object-fit: cover;">
+                    {% endif %}
+                    <h5>{{ expert.user.full_name }}</h5>
+                    <p class="text-muted small">{{ expert.headline }}</p>
+                    {% if expert.is_verified %}
+                        <span class="badge badge-verified"><i class="bi bi-patch-check-fill me-1"></i>Verified</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

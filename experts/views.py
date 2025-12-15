@@ -1,0 +1,315 @@
+"""
+Views for expert profile management and directory.
+"""
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db.models import Q, Avg
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
+
+from accounts.models import AuditLog
+from consultations.models import Booking
+from .models import ExpertProfile, ExpertiseTag, Publication, Patent, NotableProject, VerificationDocument
+from .forms import (
+    ExpertProfileBasicForm, ExpertProfileAvatarForm, ExpertProfileExpertiseForm,
+    ExpertProfileRatesForm, PublicationForm, PatentForm, NotableProjectForm, VerificationDocumentForm
+)
+
+
+def expert_directory(request):
+    experts = ExpertProfile.objects.filter(
+        verification_status='verified',
+        is_publicly_listed=True
+    ).select_related('user')
+    
+    search = request.GET.get('search', '')
+    if search:
+        experts = experts.filter(
+            Q(user__first_name__icontains=search) |
+            Q(user__last_name__icontains=search) |
+            Q(headline__icontains=search) |
+            Q(bio__icontains=search)
+        )
+    
+    expertise = request.GET.getlist('expertise')
+    if expertise:
+        experts = experts.filter(expertise_tags__slug__in=expertise).distinct()
+    
+    industry = request.GET.getlist('industry')
+    if industry:
+        experts = experts.filter(expertise_tags__slug__in=industry, expertise_tags__tag_type='industry').distinct()
+    
+    language = request.GET.get('language')
+    if language:
+        experts = experts.filter(languages__contains=[language])
+    
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    if min_price:
+        experts = experts.filter(rate_60_min__gte=min_price)
+    if max_price:
+        experts = experts.filter(rate_60_min__lte=max_price)
+    
+    sort = request.GET.get('sort', 'rating')
+    if sort == 'price_low':
+        experts = experts.order_by('rate_60_min')
+    elif sort == 'price_high':
+        experts = experts.order_by('-rate_60_min')
+    elif sort == 'rating':
+        experts = experts.order_by('-average_rating', '-total_reviews')
+    elif sort == 'availability':
+        experts = experts.order_by('created_at')
+    else:
+        experts = experts.order_by('-average_rating')
+    
+    paginator = Paginator(experts, 12)
+    page = request.GET.get('page')
+    experts = paginator.get_page(page)
+    
+    discipline_tags = ExpertiseTag.objects.filter(tag_type='discipline')
+    industry_tags = ExpertiseTag.objects.filter(tag_type='industry')
+    
+    context = {
+        'experts': experts,
+        'discipline_tags': discipline_tags,
+        'industry_tags': industry_tags,
+        'search': search,
+        'selected_expertise': expertise,
+        'selected_industry': industry,
+        'selected_language': language,
+        'min_price': min_price,
+        'max_price': max_price,
+        'sort': sort,
+    }
+    return render(request, 'experts/directory.html', context)
+
+
+def expert_profile(request, pk):
+    expert = get_object_or_404(
+        ExpertProfile.objects.select_related('user').prefetch_related(
+            'expertise_tags', 'publications', 'patents', 'notable_projects'
+        ),
+        pk=pk
+    )
+    
+    if not expert.is_publicly_listed and not (request.user.is_authenticated and (request.user == expert.user or request.user.is_admin)):
+        messages.error(request, 'This expert profile is not available.')
+        return redirect('experts:directory')
+    
+    reviews = Booking.objects.filter(
+        expert=expert,
+        status='completed',
+        review__isnull=False,
+        review__is_public=True
+    ).select_related('review', 'client')[:10]
+    
+    from availability.models import TimeSlot
+    next_slots = TimeSlot.objects.filter(
+        expert=expert,
+        status='available',
+        start_datetime__gte=timezone.now()
+    ).order_by('start_datetime')[:5]
+    
+    avg_response_time = expert.calculate_average_response_time()
+    
+    context = {
+        'expert': expert,
+        'reviews': reviews,
+        'next_slots': next_slots,
+        'avg_response_time': avg_response_time,
+    }
+    return render(request, 'experts/profile.html', context)
+
+
+@login_required
+def dashboard(request):
+    if not request.user.is_expert:
+        return redirect('accounts:dashboard')
+    
+    try:
+        profile = request.user.expert_profile
+    except ExpertProfile.DoesNotExist:
+        profile = ExpertProfile.objects.create(user=request.user)
+    
+    pending_requests = Booking.objects.filter(
+        expert=profile,
+        status='requested'
+    ).order_by('-created_at')[:5]
+    
+    upcoming_sessions = Booking.objects.filter(
+        expert=profile,
+        status__in=['accepted', 'scheduled'],
+        scheduled_start__gte=timezone.now()
+    ).order_by('scheduled_start')[:5]
+    
+    recent_bookings = Booking.objects.filter(expert=profile).order_by('-created_at')[:10]
+    
+    from payments.models import Payment
+    total_earnings = Payment.objects.filter(
+        booking__expert=profile,
+        status='completed'
+    ).aggregate(total=Avg('amount'))['total'] or 0
+    
+    context = {
+        'profile': profile,
+        'pending_requests': pending_requests,
+        'upcoming_sessions': upcoming_sessions,
+        'recent_bookings': recent_bookings,
+        'total_earnings': profile.total_earnings,
+    }
+    return render(request, 'experts/dashboard.html', context)
+
+
+@login_required
+def profile_wizard(request):
+    if not request.user.is_expert:
+        return redirect('accounts:dashboard')
+    
+    try:
+        profile = request.user.expert_profile
+    except ExpertProfile.DoesNotExist:
+        profile = ExpertProfile.objects.create(user=request.user)
+    
+    step = request.GET.get('step', '1')
+    
+    if step == '1':
+        form = ExpertProfileBasicForm(request.POST or None, instance=profile)
+        if request.method == 'POST' and form.is_valid():
+            form.save()
+            return redirect('experts:profile_wizard') + '?step=2'
+        template = 'experts/wizard/step1_basic.html'
+    elif step == '2':
+        form = ExpertProfileAvatarForm(request.POST or None, request.FILES or None, instance=profile)
+        if request.method == 'POST' and form.is_valid():
+            form.save()
+            return redirect('experts:profile_wizard') + '?step=3'
+        template = 'experts/wizard/step2_avatar.html'
+    elif step == '3':
+        form = ExpertProfileExpertiseForm(request.POST or None, instance=profile)
+        if request.method == 'POST' and form.is_valid():
+            form.save()
+            return redirect('experts:profile_wizard') + '?step=4'
+        template = 'experts/wizard/step3_expertise.html'
+    elif step == '4':
+        form = ExpertProfileRatesForm(request.POST or None, instance=profile)
+        if request.method == 'POST' and form.is_valid():
+            form.save()
+            return redirect('experts:profile_wizard') + '?step=5'
+        template = 'experts/wizard/step4_rates.html'
+    elif step == '5':
+        form = VerificationDocumentForm(request.POST or None, request.FILES or None)
+        if request.method == 'POST' and form.is_valid():
+            doc = form.save(commit=False)
+            doc.expert = profile
+            doc.save()
+            AuditLog.objects.create(
+                user=request.user,
+                event_type=AuditLog.EventType.FILE_UPLOADED,
+                description=f'Verification document uploaded: {doc.get_document_type_display()}',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            return redirect('experts:profile_wizard') + '?step=6'
+        template = 'experts/wizard/step5_verification.html'
+    else:
+        if profile.verification_status == 'incomplete':
+            profile.verification_status = 'pending'
+            profile.verification_submitted_at = timezone.now()
+            profile.save()
+            AuditLog.objects.create(
+                user=request.user,
+                event_type=AuditLog.EventType.VERIFICATION_STATUS_CHANGED,
+                description='Profile submitted for verification',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            messages.success(request, 'Your profile has been submitted for verification. We will review it shortly.')
+        return redirect('experts:dashboard')
+    
+    context = {
+        'form': form,
+        'profile': profile,
+        'step': step,
+        'total_steps': 6,
+    }
+    return render(request, template, context)
+
+
+@login_required
+def edit_profile(request):
+    if not request.user.is_expert:
+        return redirect('accounts:dashboard')
+    
+    profile = get_object_or_404(ExpertProfile, user=request.user)
+    
+    if request.method == 'POST':
+        basic_form = ExpertProfileBasicForm(request.POST, instance=profile)
+        avatar_form = ExpertProfileAvatarForm(request.POST, request.FILES, instance=profile)
+        expertise_form = ExpertProfileExpertiseForm(request.POST, instance=profile)
+        rates_form = ExpertProfileRatesForm(request.POST, instance=profile)
+        
+        if all([basic_form.is_valid(), avatar_form.is_valid(), expertise_form.is_valid(), rates_form.is_valid()]):
+            basic_form.save()
+            if request.FILES.get('avatar'):
+                avatar_form.save()
+            expertise_form.save()
+            rates_form.save()
+            AuditLog.objects.create(
+                user=request.user,
+                event_type=AuditLog.EventType.PROFILE_UPDATED,
+                description='Expert profile updated',
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            messages.success(request, 'Your profile has been updated.')
+            return redirect('experts:dashboard')
+    else:
+        basic_form = ExpertProfileBasicForm(instance=profile)
+        avatar_form = ExpertProfileAvatarForm(instance=profile)
+        expertise_form = ExpertProfileExpertiseForm(instance=profile)
+        rates_form = ExpertProfileRatesForm(instance=profile)
+    
+    context = {
+        'profile': profile,
+        'basic_form': basic_form,
+        'avatar_form': avatar_form,
+        'expertise_form': expertise_form,
+        'rates_form': rates_form,
+    }
+    return render(request, 'experts/edit_profile.html', context)
+
+
+@login_required
+def manage_publications(request):
+    if not request.user.is_expert:
+        return redirect('accounts:dashboard')
+    
+    profile = get_object_or_404(ExpertProfile, user=request.user)
+    publications = profile.publications.all()
+    
+    if request.method == 'POST':
+        form = PublicationForm(request.POST)
+        if form.is_valid():
+            pub = form.save(commit=False)
+            pub.expert = profile
+            pub.save()
+            messages.success(request, 'Publication added.')
+            return redirect('experts:manage_publications')
+    else:
+        form = PublicationForm()
+    
+    context = {
+        'profile': profile,
+        'publications': publications,
+        'form': form,
+    }
+    return render(request, 'experts/manage_publications.html', context)
+
+
+@login_required
+def delete_publication(request, pk):
+    if not request.user.is_expert:
+        return redirect('accounts:dashboard')
+    
+    pub = get_object_or_404(Publication, pk=pk, expert__user=request.user)
+    pub.delete()
+    messages.success(request, 'Publication removed.')
+    return redirect('experts:manage_publications')

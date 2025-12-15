@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit profile{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Edit profile</h1>
+    
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <strong>Profile completeness:</strong>
+                    <div class="progress mt-2">
+                        <div class="progress-bar progress-bar-custom" style="width: {{ profile.profile_completeness }}%;"></div>
+                    </div>
+                    <small class="text-muted">{{ profile.profile_completeness }}% complete</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Basic information</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Headline</label>
+                    {{ basic_form.headline }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Biography</label>
+                    {{ basic_form.bio }}
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Pronouns</label>
+                        {{ basic_form.pronouns }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Time zone</label>
+                        {{ basic_form.timezone }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">Affiliation</label>
+                        {{ basic_form.affiliation }}
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Location</label>
+                        {{ basic_form.location }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Profile photo</h5>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-3 text-center">
+                        {% if profile.avatar %}
+                            <img src="{{ profile.avatar.url }}" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center text-white" style="width: 100px; height: 100px;">
+                                <span class="display-6">{{ user.first_name.0 }}{{ user.last_name.0 }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-9">
+                        {{ avatar_form.avatar }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Rates</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">30 minutes (GBP)</label>
+                        <div class="input-group">
+                            <span class="input-group-text">&pound;</span>
+                            {{ rates_form.rate_30_min }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">60 minutes (GBP)</label>
+                        <div class="input-group">
+                            <span class="input-group-text">&pound;</span>
+                            {{ rates_form.rate_60_min }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">90 minutes (GBP)</label>
+                        <div class="input-group">
+                            <span class="input-group-text">&pound;</span>
+                            {{ rates_form.rate_90_min }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-check">
+                    {{ rates_form.project_work_available }}
+                    <label class="form-check-label">Available for project work</label>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg">Save changes</button>
+        <a href="{% url 'experts:dashboard' %}" class="btn btn-outline-secondary btn-lg">Cancel</a>
+    </form>
+</div>
+{% endblock %}

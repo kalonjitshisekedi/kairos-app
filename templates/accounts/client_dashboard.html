@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Welcome back, {{ user.first_name }}</h1>
+        <a href="{% url 'experts:directory' %}" class="btn btn-primary">Find an expert</a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Upcoming sessions</h5>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_sessions %}
+                        <div class="list-group list-group-flush">
+                            {% for booking in upcoming_sessions %}
+                                <a href="{% url 'consultations:booking_detail' pk=booking.pk %}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>{{ booking.expert.user.full_name }}</strong>
+                                            <p class="mb-0 text-muted small">{{ booking.scheduled_start|date:"l, j F Y" }} at {{ booking.scheduled_start|time:"H:i" }}</p>
+                                        </div>
+                                        <span class="badge bg-primary">{{ booking.duration }} min</span>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">No upcoming sessions. <a href="{% url 'experts:directory' %}">Book a consultation</a></p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent bookings</h5>
+                    <a href="{% url 'consultations:my_bookings' %}" class="btn btn-sm btn-outline-primary">View all</a>
+                </div>
+                <div class="card-body">
+                    {% if bookings %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Expert</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for booking in bookings %}
+                                        <tr>
+                                            <td>{{ booking.expert.user.full_name }}</td>
+                                            <td>{{ booking.created_at|date:"j M Y" }}</td>
+                                            <td>
+                                                <span class="badge bg-{% if booking.status == 'completed' %}success{% elif booking.status == 'scheduled' %}primary{% elif booking.status == 'cancelled' %}danger{% else %}secondary{% endif %}">
+                                                    {{ booking.get_status_display }}
+                                                </span>
+                                            </td>
+                                            <td><a href="{% url 'consultations:booking_detail' pk=booking.pk %}" class="btn btn-sm btn-outline-secondary">View</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">No bookings yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'experts:directory' %}" class="btn btn-outline-primary">Browse experts</a>
+                        <a href="{% url 'consultations:concierge_request' %}" class="btn btn-outline-secondary">Submit concierge request</a>
+                        <a href="{% url 'messaging:my_messages' %}" class="btn btn-outline-secondary">Messages</a>
+                        <a href="{% url 'payments:my_payments' %}" class="btn btn-outline-secondary">Payment history</a>
+                    </div>
+                </div>
+            </div>
+
+            {% if concierge_requests %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Concierge requests</h5>
+                </div>
+                <div class="card-body">
+                    {% for request in concierge_requests %}
+                        <div class="mb-2 pb-2 border-bottom">
+                            <p class="mb-1 small">{{ request.description|truncatechars:100 }}</p>
+                            <span class="badge bg-{% if request.status == 'matched' %}success{% elif request.status == 'pending' %}warning{% else %}secondary{% endif %}">
+                                {{ request.get_status_display }}
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

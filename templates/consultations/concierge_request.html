@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Concierge request{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Submit a concierge request</h4>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-4">Not sure which expert to book? Tell us what you need and our team will match you with the right expert.</p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label for="description" class="form-label">What do you need help with?</label>
+                            <textarea name="description" id="description" class="form-control" rows="5" required placeholder="Describe your problem, project, or question in detail. The more information you provide, the better we can match you."></textarea>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="budget_min" class="form-label">Budget range (optional)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">&pound;</span>
+                                    <input type="number" name="budget_min" id="budget_min" class="form-control" placeholder="Min">
+                                    <span class="input-group-text">to</span>
+                                    <input type="number" name="budget_max" class="form-control" placeholder="Max">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="timeline" class="form-label">Timeline (optional)</label>
+                                <input type="text" name="timeline" id="timeline" class="form-control" placeholder="e.g. Within 2 weeks">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg">Submit request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify {{ expert.user.full_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'core:admin_dashboard' %}">Operations</a></li>
+            <li class="breadcrumb-item active">Verify expert</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">{{ expert.user.full_name }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>Email</strong></div>
+                        <div class="col-sm-9">{{ expert.user.email }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>Headline</strong></div>
+                        <div class="col-sm-9">{{ expert.headline|default:"-" }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>Affiliation</strong></div>
+                        <div class="col-sm-9">{{ expert.affiliation|default:"-" }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>Bio</strong></div>
+                        <div class="col-sm-9">{{ expert.bio|linebreaks|default:"-" }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>ORCID</strong></div>
+                        <div class="col-sm-9">
+                            {% if expert.orcid_id %}
+                                <a href="https://orcid.org/{{ expert.orcid_id }}" target="_blank">{{ expert.orcid_id }}</a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>Submitted</strong></div>
+                        <div class="col-sm-9">{{ expert.verification_submitted_at|date:"j F Y H:i" }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Verification documents</h5>
+                </div>
+                <div class="card-body">
+                    {% if documents %}
+                        <ul class="list-unstyled">
+                            {% for doc in documents %}
+                                <li class="mb-2">
+                                    <i class="bi bi-file-earmark me-2"></i>
+                                    <a href="{{ doc.file.url }}" target="_blank">{{ doc.get_document_type_display }}</a>
+                                    {% if doc.description %}<span class="text-muted">- {{ doc.description }}</span>{% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted mb-0">No documents uploaded</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Decision</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Internal notes</label>
+                            <textarea name="notes" id="notes" class="form-control" rows="4" placeholder="Notes about this verification..."></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" name="action" value="approve" class="btn btn-success">
+                                <i class="bi bi-check-circle me-1"></i> Approve
+                            </button>
+                            <button type="submit" name="action" value="needs_changes" class="btn btn-warning">
+                                <i class="bi bi-pencil me-1"></i> Request changes
+                            </button>
+                            <button type="submit" name="action" value="reject" class="btn btn-danger">
+                                <i class="bi bi-x-circle me-1"></i> Reject
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

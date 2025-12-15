@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}How it works{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1>How Kairos works</h1>
+        <p class="lead text-muted">Connect with verified experts in three simple steps</p>
+    </div>
+
+    <div class="row g-5 mb-5">
+        <div class="col-md-4">
+            <div class="text-center">
+                <div class="bg-kairos text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                    <span class="display-6">1</span>
+                </div>
+                <h3>Find your expert</h3>
+                <p class="text-muted">Browse our directory of verified PhD and postdoc experts. Search by discipline, industry, or specific expertise. Review profiles, credentials, ratings, and availability.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="text-center">
+                <div class="bg-kairos text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                    <span class="display-6">2</span>
+                </div>
+                <h3>Book a session</h3>
+                <p class="text-muted">Choose a convenient time slot from the expert's availability. Describe your question or project, upload any relevant documents, and complete your booking securely.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="text-center">
+                <div class="bg-kairos text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                    <span class="display-6">3</span>
+                </div>
+                <h3>Get answers</h3>
+                <p class="text-muted">Meet your expert in a private video session. Discuss your questions, share your screen, take notes, and receive expert insights. Download any deliverables from your dashboard.</p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6">
+            <h2>For clients</h2>
+            <ul class="list-unstyled">
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Verified expertise:</strong> Every expert's credentials are checked before they can list on our platform</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Secure payments:</strong> Pay safely through our platform with our money-back guarantee</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Private sessions:</strong> All consultations are confidential and secure</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Concierge matching:</strong> Not sure who to book? Submit a request and we'll match you</li>
+            </ul>
+            <a href="{% url 'experts:directory' %}" class="btn btn-primary">Browse experts</a>
+        </div>
+        <div class="col-md-6 text-center">
+            <div class="bg-light p-5 rounded">
+                <i class="bi bi-person-check display-1 text-kairos"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6 order-md-2">
+            <h2>For experts</h2>
+            <ul class="list-unstyled">
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Set your rates:</strong> You decide what to charge for 30, 60, or 90 minute sessions</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Control your time:</strong> Set your availability and only accept bookings that suit you</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Build your reputation:</strong> Grow your profile with verified reviews and credentials</li>
+                <li class="mb-3"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Secure payouts:</strong> Get paid reliably for every completed session</li>
+            </ul>
+            <a href="{% url 'accounts:signup' %}" class="btn btn-primary">Apply as an expert</a>
+        </div>
+        <div class="col-md-6 order-md-1 text-center">
+            <div class="bg-light p-5 rounded">
+                <i class="bi bi-mortarboard display-1 text-kairos"></i>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <div class="text-center">
+        <h2>Ready to get started?</h2>
+        <p class="lead text-muted mb-4">Join thousands of clients and experts on Kairos</p>
+        <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg me-2">Sign up now</a>
+        <a href="{% url 'experts:directory' %}" class="btn btn-outline-primary btn-lg">Browse experts</a>
+    </div>
+</div>
+{% endblock %}

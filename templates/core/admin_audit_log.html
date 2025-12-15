@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Audit log{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Audit log</h1>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <select name="event_type" class="form-select">
+                        <option value="">All event types</option>
+                        {% for value, label in event_types %}
+                            <option value="{{ value }}" {% if selected_type == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>User</th>
+                    <th>Event</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                    <tr>
+                        <td class="small">{{ log.created_at|date:"j M Y H:i" }}</td>
+                        <td>{{ log.user.email|default:"-" }}</td>
+                        <td><span class="badge bg-secondary">{{ log.get_event_type_display }}</span></td>
+                        <td class="small">{{ log.description|truncatechars:100 }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">No audit logs found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if logs.has_other_pages %}
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if logs.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ logs.previous_page_number }}">&laquo;</a></li>
+                {% endif %}
+                <li class="page-item active"><span class="page-link">{{ logs.number }} of {{ logs.paginator.num_pages }}</span></li>
+                {% if logs.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ logs.next_page_number }}">&raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+{% endblock %}
