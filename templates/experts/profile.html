@@ -13,7 +13,7 @@
                             {% if expert.avatar %}
                                 <img src="{{ expert.avatar.url }}" alt="{{ expert.user.full_name }}" class="avatar-large mb-3">
                             {% else %}
-                                <div class="avatar-large bg-secondary d-inline-flex align-items-center justify-content-center text-white mb-3" style="width: 150px; height: 150px; border-radius: 50%;">
+                                <div class="avatar-large bg-dark d-inline-flex align-items-center justify-content-center text-white mb-3" style="width: 150px; height: 150px; border-radius: 50%;">
                                     <span class="display-4">{{ expert.user.first_name.0 }}{{ expert.user.last_name.0 }}</span>
                                 </div>
                             {% endif %}
@@ -30,7 +30,7 @@
                                 {{ expert.user.full_name }}
                                 {% if expert.pronouns %}<span class="text-muted small">({{ expert.pronouns }})</span>{% endif %}
                             </h1>
-                            <p class="lead text-kairos mb-2">{{ expert.headline }}</p>
+                            <p class="lead text-accent mb-2">{{ expert.headline }}</p>
                             {% if expert.affiliation %}
                                 <p class="text-muted mb-1"><i class="bi bi-building me-2"></i>{{ expert.affiliation }}</p>
                             {% endif %}
@@ -61,7 +61,7 @@
             </div>
 
             <div class="card mb-4">
-                <div class="card-header">
+                <div class="card-header bg-white">
                     <h5 class="mb-0">About</h5>
                 </div>
                 <div class="card-body">
@@ -70,7 +70,7 @@
                     <h6 class="mt-4">Areas of expertise</h6>
                     <div class="mb-3">
                         {% for tag in expert.expertise_tags.all %}
-                            <span class="badge bg-primary me-1">{{ tag.name }}</span>
+                            <span class="badge bg-dark me-1 mb-1">{{ tag.name }}</span>
                         {% empty %}
                             <span class="text-muted">No expertise tags listed</span>
                         {% endfor %}
@@ -84,7 +84,7 @@
 
             {% if expert.publications.exists %}
             <div class="card mb-4">
-                <div class="card-header">
+                <div class="card-header bg-white">
                     <h5 class="mb-0">Selected publications</h5>
                 </div>
                 <div class="card-body">
@@ -107,7 +107,7 @@
 
             {% if expert.patents.exists %}
             <div class="card mb-4">
-                <div class="card-header">
+                <div class="card-header bg-white">
                     <h5 class="mb-0">Patents</h5>
                 </div>
                 <div class="card-body">
@@ -129,7 +129,7 @@
 
             {% if reviews %}
             <div class="card mb-4">
-                <div class="card-header">
+                <div class="card-header bg-white">
                     <h5 class="mb-0">Reviews</h5>
                 </div>
                 <div class="card-body">
@@ -155,44 +155,26 @@
 
         <div class="col-lg-4">
             <div class="card mb-4 sticky-top" style="top: 20px;">
-                <div class="card-header">
-                    <h5 class="mb-0">Rate card</h5>
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Book a consultation</h5>
                 </div>
                 <div class="card-body">
-                    <ul class="list-unstyled mb-3">
-                        {% if expert.rate_30_min > 0 %}
-                            <li class="d-flex justify-content-between mb-2">
-                                <span>30 minutes</span>
-                                <strong>&pound;{{ expert.rate_30_min }}</strong>
-                            </li>
-                        {% endif %}
-                        {% if expert.rate_60_min > 0 %}
-                            <li class="d-flex justify-content-between mb-2">
-                                <span>60 minutes</span>
-                                <strong>&pound;{{ expert.rate_60_min }}</strong>
-                            </li>
-                        {% endif %}
-                        {% if expert.rate_90_min > 0 %}
-                            <li class="d-flex justify-content-between mb-2">
-                                <span>90 minutes</span>
-                                <strong>&pound;{{ expert.rate_90_min }}</strong>
-                            </li>
-                        {% endif %}
-                    </ul>
+                    <p class="text-muted small mb-3">Request a consultation with this expert. Session details and rates will be shared after your request is reviewed.</p>
+                    
                     {% if expert.project_work_available %}
-                        <p class="text-muted small"><i class="bi bi-briefcase me-1"></i> Project work available</p>
+                        <p class="small mb-3"><i class="bi bi-briefcase me-1 text-accent"></i> Project work available</p>
                     {% endif %}
                     
                     <div class="d-grid gap-2">
-                        <a href="{% url 'consultations:create_booking' expert_id=expert.pk %}" class="btn btn-primary">Request a consultation</a>
-                        <a href="{% url 'consultations:concierge_request' %}" class="btn btn-outline-secondary">Submit a concierge request</a>
+                        <a href="{% url 'consultations:create_booking' expert_id=expert.pk %}" class="btn btn-accent">Request a consultation</a>
+                        <a href="{% url 'consultations:concierge_request' %}" class="btn btn-outline-primary">Submit a concierge request</a>
                     </div>
                 </div>
             </div>
 
             {% if next_slots %}
             <div class="card">
-                <div class="card-header">
+                <div class="card-header bg-white">
                     <h6 class="mb-0">Next available times</h6>
                 </div>
                 <div class="card-body">

@@ -1,0 +1,21 @@
+**Goal**
+Transform a SaaS website to have an elegant black and white design with a subtle non-blue accent color, refine messaging to emphasize brilliant minds and expertise, restructure navigation and search functionality, improve capitalization throughout, and create comprehensive AWS deployment documentation.
+
+**Return Format**
+Provide the complete updated codebase with:
+- Redesigned UI implementing the elegant black/white color scheme with one subtle accent color (not blue)
+- Updated landing page copy emphasizing expert brilliance and global service capability
+- Removed rate/pricing visibility from public pages
+- New "Career" page with domain/expertise/skill-based search (not name-based search)
+- Corrected capitalization for all sentences throughout the site
+- Detailed README.md covering AWS deployment, testing procedures, account creation workflows, and admin account setup instructions
+
+**Warnings**
+- Do not emphasize African geography in the messaging despite the expert base being from the African continent
+- Ensure pricing/rates are completely hidden from initial view and only shown after consultation
+- The search functionality must prioritize domain/expertise/skill filters over expert name searches
+- Maintain all existing functionality while implementing design changes
+- Ensure the README is actionable for technical users unfamiliar with the codebase
+
+**Context**
+This is a SaaS platform connecting clients with highly qualified experts (including PhDs and professors) who provide specialized services. The current website has an overly simplistic design and needs refinement to convey professionalism and expertise. The platform's value proposition centers on accessing brilliant minds with deep domain knowledge who can serve global clients, though the expert pool is based on the African continent. The business model requires consultation before revealing pricing. Users need to discover experts through their skills and domains of expertise rather than by searching individual names. The deployment target is AWS, and the documentation must enable both standard users and administrators to properly set up and manage accounts on the platform.

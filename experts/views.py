@@ -18,71 +18,63 @@ from .forms import (
 
 
 def expert_directory(request):
+    """Legacy directory view - redirects to careers page."""
+    from django.shortcuts import redirect
+    return redirect('experts:careers')
+
+
+def careers(request):
+    """New careers page with skill/expertise-based search."""
     experts = ExpertProfile.objects.filter(
         verification_status='verified',
         is_publicly_listed=True
     ).select_related('user')
     
-    search = request.GET.get('search', '')
-    if search:
+    skills = request.GET.get('skills', '')
+    if skills:
         experts = experts.filter(
-            Q(user__first_name__icontains=search) |
-            Q(user__last_name__icontains=search) |
-            Q(headline__icontains=search) |
-            Q(bio__icontains=search)
+            Q(headline__icontains=skills) |
+            Q(bio__icontains=skills)
         )
     
     expertise = request.GET.getlist('expertise')
     if expertise:
         experts = experts.filter(expertise_tags__slug__in=expertise).distinct()
     
-    industry = request.GET.getlist('industry')
-    if industry:
-        experts = experts.filter(expertise_tags__slug__in=industry, expertise_tags__tag_type='industry').distinct()
-    
-    language = request.GET.get('language')
-    if language:
-        experts = experts.filter(languages__contains=[language])
-    
-    min_price = request.GET.get('min_price')
-    max_price = request.GET.get('max_price')
-    if min_price:
-        experts = experts.filter(rate_60_min__gte=min_price)
-    if max_price:
-        experts = experts.filter(rate_60_min__lte=max_price)
+    availability = request.GET.get('availability', '')
+    if availability == 'project_work':
+        experts = experts.filter(project_work_available=True)
+    elif availability == 'available_now':
+        from availability.models import TimeSlot
+        available_expert_ids = TimeSlot.objects.filter(
+            status='available',
+            start_datetime__gte=timezone.now()
+        ).values_list('expert_id', flat=True).distinct()
+        experts = experts.filter(pk__in=available_expert_ids)
     
     sort = request.GET.get('sort', 'rating')
-    if sort == 'price_low':
-        experts = experts.order_by('rate_60_min')
-    elif sort == 'price_high':
-        experts = experts.order_by('-rate_60_min')
-    elif sort == 'rating':
-        experts = experts.order_by('-average_rating', '-total_reviews')
-    elif sort == 'availability':
-        experts = experts.order_by('created_at')
+    if sort == 'reviews':
+        experts = experts.order_by('-total_reviews', '-average_rating')
+    elif sort == 'recent':
+        experts = experts.order_by('-created_at')
     else:
-        experts = experts.order_by('-average_rating')
+        experts = experts.order_by('-average_rating', '-total_reviews')
     
     paginator = Paginator(experts, 12)
     page = request.GET.get('page')
     experts = paginator.get_page(page)
     
     discipline_tags = ExpertiseTag.objects.filter(tag_type='discipline')
-    industry_tags = ExpertiseTag.objects.filter(tag_type='industry')
     
     context = {
         'experts': experts,
         'discipline_tags': discipline_tags,
-        'industry_tags': industry_tags,
-        'search': search,
+        'skills': skills,
         'selected_expertise': expertise,
-        'selected_industry': industry,
-        'selected_language': language,
-        'min_price': min_price,
-        'max_price': max_price,
+        'availability': availability,
         'sort': sort,
     }
-    return render(request, 'experts/directory.html', context)
+    return render(request, 'experts/careers.html', context)
 
 
 def expert_profile(request, pk):

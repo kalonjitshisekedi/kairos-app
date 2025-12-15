@@ -8,6 +8,7 @@ app_name = 'experts'
 
 urlpatterns = [
     path('', views.expert_directory, name='directory'),
+    path('careers/', views.careers, name='careers'),
     path('profile/<uuid:pk>/', views.expert_profile, name='profile'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('wizard/', views.profile_wizard, name='profile_wizard'),
