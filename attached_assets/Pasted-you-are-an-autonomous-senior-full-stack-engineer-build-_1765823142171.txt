@@ -1,0 +1,242 @@
+you are an autonomous senior full‑stack engineer. build a complete, working mvp web app for a premium expert consultation platform (clients book and pay to speak with verified phd/postdoc experts).
+
+product branding (must be used everywhere)
+- product name: kairos
+- slogan/tagline: "don't guess. know"
+- use british english everywhere in the ui copy and documentation.
+- use sentence case (not title case) for headings, buttons, labels, page titles, emails, and system messages.
+
+critical rule: do not stop early. do not leave TODOs. do not output partial code. if anything is missing, you must iterate and fix it until the application runs end‑to‑end locally and is ready to deploy on aws. keep going until the repo includes working code + migrations + seed data + clear docs + basic tests.
+
+goal
+deliver a cost‑effective mvp with a simple but premium-feeling ui, and an admin workflow that supports a concierge operating model (admin helps match client requests to the right expert). prioritise a high-quality expert profile experience.
+
+stack and constraints
+- python-first. use django 5.x + django rest framework.
+- use server-rendered templates (django templates) for the web ui to keep costs and complexity low.
+- use bootstrap 5 via cdn (no node build pipeline for the mvp).
+- use sqlite for local development by default.
+- support postgres for production (aws), with an optional docker-compose setup for running postgres locally.
+- static files via whitenoise for simplicity.
+- user-uploaded media stored locally in dev; s3 in production (optional toggle via env vars).
+- payments: integrate stripe checkout (preferred) in test mode for mvp. make payments easy to disable via env var PAYMENTS_ENABLED=true/false.
+- video calls: create a “session room” page that embeds a jitsi meeting with a unique room id per booking by default (cost effective). also allow an optional external meeting link field as a fallback.
+- notifications: send email via console backend in dev. document aws ses option for production. send email on: request created, booking confirmed, reminder, completion.
+- security: implement popia-aligned practices (data minimisation, explicit consent, secure storage, access controls, deletion request). include privacy policy + terms + acceptable use policy (explicitly disallow academic cheating and ghostwriting).
+
+roles and permissions
+- admin (staff): manages verification, approves experts, matches requests, manages disputes and refunds, views platform metrics.
+- expert: creates profile, sets availability, receives requests, accepts/declines, conducts sessions, uploads deliverables, invoices/history, sees earnings dashboard.
+- client: browses experts, submits concierge request, books sessions, pays, shares documents, rates sessions, sees dashboard and history.
+
+mvp user journeys (must be implemented)
+1) expert onboarding
+- expert signs up (email + password) and chooses “i am an expert”.
+- expert completes a profile wizard with a progress indicator and a “profile completeness” percentage.
+- expert uploads verification evidence (degree certificate or letter) + optional orcid link + publication links.
+- expert is set to “pending verification” and is not publicly listed until approved.
+- admin reviews and sets status to “verified” or “needs changes”. expert receives email and sees a status banner in dashboard.
+- once verified, expert profile becomes publicly visible and bookable.
+
+2) client flow
+- client signs up and can browse the expert directory without paying.
+- client can either:
+  a) book an expert directly: pick a duration (30/60/90 mins), choose an available slot, attach a brief problem statement and optional files, accept terms, pay (if enabled), then booking is confirmed; or
+  b) concierge request: client submits a request describing what they need, budget range (optional), and timeline. admin uses an internal dashboard to match to an expert and propose a booking. client then confirms and pays.
+
+3) consultation lifecycle
+- statuses: draft → requested → accepted → scheduled → in session → completed → archived (with cancellation and dispute branches).
+- create a unique session room page per booking with:
+  - embedded jitsi room
+  - agenda/problem statement
+  - file attachments
+  - a private notes area for expert (not visible to client)
+  - a shared notes area (visible to both)
+  - “mark as completed” action (expert triggers; client can confirm)
+- deliverables:
+  - expert can upload a pdf/docx deliverable to the booking record
+  - client can download deliverables from their dashboard
+- feedback:
+  - client rates expert (1–5) + written feedback after completion
+  - expert can rate client privately (for internal trust scoring)
+
+4) premium expert profile quality (high priority)
+public expert profile page must feel premium and trust-building. include:
+- professional headshot/avatar
+- full name, pronouns (optional), current affiliation (optional), location/time zone
+- “areas of expertise” as tags (disciplines + applied industries)
+- short headline (one sentence)
+- longer bio
+- selected publications (title + link), patents (optional), notable projects (optional)
+- languages
+- typical response time (calculated from last 10 accept/decline actions)
+- rate card (per 30/60/90 mins) and “project work available” toggle
+- verification badge with tooltip (“credentials verified”)
+- availability widget (next available times)
+- clear call-to-action buttons: “request a consultation” and “submit a concierge request”
+- include profile completeness score (only visible to expert/admin) with prompts to improve missing sections.
+
+core features list (must be built)
+- authentication: email/password, password reset, email verification (optional but preferred).
+- dashboards:
+  - client dashboard: upcoming sessions, requests, payments, invoices, files, reviews
+  - expert dashboard: verification status, upcoming sessions, pending requests, earnings summary, profile completeness, availability manager
+  - admin operations dashboard (custom, not only django admin): queues for expert verification, new concierge requests, upcoming sessions, disputes, basic metrics
+- expert search and discovery:
+  - directory filters: expertise tags, industry tags, price range, availability in next 7 days, language
+  - sorting: relevance, price low-high, rating, soonest availability
+  - only show verified experts publicly
+- messaging:
+  - per-request/booking message thread (simple, stored in db)
+  - email notifications on new messages (optional)
+- payments (stripe):
+  - pay before booking is final (if PAYMENTS_ENABLED)
+  - store payment status, stripe ids, receipts
+  - simple refund workflow for admin (may be manual via stripe dashboard for mvp, but document it; optional: implement refund endpoint)
+- documents:
+  - secure upload/download with access controls
+  - file size limits and allowed types
+- admin verification:
+  - admin can approve, reject, or request changes
+  - admin can add internal notes and attach verification decisions
+- legal pages:
+  - terms of service
+  - privacy policy (popia)
+  - acceptable use policy
+- audit logs:
+  - log key events (status changes, admin approvals, payment events, file uploads)
+
+django apps (implement these)
+- accounts (custom user model with roles)
+- experts (expert profile, verification records, tags)
+- availability (availability blocks, time slots)
+- consultations (requests, bookings, statuses, notes, deliverables, reviews)
+- messaging (threads, messages)
+- payments (stripe integration, receipts)
+- core (static pages, home, search, utilities)
+
+branding and copy requirements (must be enforced)
+- homepage hero must display:
+  - “kairos”
+  - tagline: “don't guess. know”
+  - a search bar and “browse experts” button
+- footer must include the tagline and links to terms/privacy/acceptable use.
+- no american spellings (use “organisation”, “favour”, “optimise”, etc. where applicable).
+- sentence case across the entire ui and docs.
+
+database and migrations
+- include full migrations.
+- include management command to seed:
+  - an admin user
+  - 3 sample experts (at least 1 verified, 1 pending verification)
+  - 2 sample clients
+  - sample tags and a sample booking
+- include management command to invite experts (optional but valuable):
+  - python manage.py invite_expert email@example.com
+  - system generates a one-time token link for expert signup
+
+api (minimal)
+- keep most logic server-rendered, but expose minimal json endpoints if needed for:
+  - availability slots fetch
+  - optional: expert search results
+- keep it simple and documented.
+
+ui requirements
+- bootstrap 5 (cdn) with a clean, modern layout.
+- use british english, sentence case, consistent microcopy.
+- accessibility: labels, proper form help text, aria where relevant.
+- clear status chips (pending verification, verified, scheduled, completed, cancelled).
+- build a “how it works” section (3 steps) written in simple, premium language.
+
+local development and testing documentation (must be in README.md)
+include step-by-step instructions for:
+1) linux (ubuntu/debian)
+2) macos
+3) windows 10/11 (powershell)
+
+must cover:
+- install python 3.12+
+- create and activate venv
+- install dependencies (pip)
+- set env vars using a .env file (provide .env.example)
+- run migrations
+- create admin user (command)
+- run the server
+- run tests (pytest)
+- optional: run with docker
+  - include Dockerfile
+  - include docker-compose.yml with web + postgres
+  - include instructions: docker compose up --build
+
+also include a “quick smoke test checklist”:
+- sign up as client
+- browse experts
+- sign up as expert
+- complete profile
+- admin approves expert
+- client books expert
+- payment test (stripe test card)
+- open session room and mark complete
+- client leaves review
+- confirm dashboards show correct data
+
+aws deployment documentation
+write docs/aws-deployment.md and summarise in README. choose one approach and fully document it:
+option a (preferred): aws lightsail container service
+option b: aws elastic beanstalk (single instance)
+
+you must pick one and include:
+- required aws services
+- low-cost mvp sizing (single instance, small db)
+- environment variables to set (DJANGO_SECRET_KEY, DEBUG=false, ALLOWED_HOSTS, DATABASE_URL, STRIPE keys, PAYMENTS_ENABLED, etc.)
+- how to provision postgres (lightsail managed database or rds) and point the app to it
+- static and media handling:
+  - static via whitenoise
+  - media via s3 (recommended) with django-storages, or document a minimal alternative
+- how to run migrations in production
+- how to create the first admin user in production (management command)
+- how expert accounts are created in production:
+  - self-signup + admin approval workflow
+  - optional: invite flow via invite_expert command
+- how to set up https and a domain
+- operational notes:
+  - where logs are
+  - how to restart the service
+  - how to back up the database
+  - how to rotate secrets
+
+quality and completeness requirements
+- include basic pytest tests for critical flows:
+  - signup/login
+  - expert profile creation
+  - admin verification status change
+  - booking creation
+  - payment status set (mocked if payments disabled)
+- add ruff config (preferred) or ensure consistent formatting.
+- secure defaults: DEBUG false in production, csrf enabled, secure cookies in production.
+- include a popia-minded “delete my account” request mechanism (simple form that emails admin is fine for mvp; document how to action it).
+
+deliverables in the repository
+- full django project code (name the repo and django project “kairos”)
+- requirements.txt
+- .env.example
+- README.md with all local instructions
+- docs/aws-deployment.md
+- docs/app-overview.md explaining:
+  - roles and flows
+  - data model overview (include a simple diagram in markdown)
+  - admin concierge matching workflow
+  - how to extend to project-based engagements later
+- Dockerfile and docker-compose.yml
+- pytest configuration and tests
+- migrations and seed command(s)
+
+final acceptance criteria
+- i can run the app locally (sqlite) and complete the full journey (expert signup → admin approve → client booking → session room → review).
+- tests run locally and pass.
+- documentation is complete and clear for linux, macos, and windows.
+- aws deployment guide is step-by-step and results in a working deployment.
+- ui uses british english and sentence case consistently.
+- expert profile pages look premium and trust-building.
+
+now implement the full project, including all documentation files, and ensure the repository is complete.
