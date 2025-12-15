@@ -1,0 +1,31 @@
+
+Enhance a web application  by improving visual design, user experience, and adding new pages and features for a Johannesburg-based business consulting service.
+
+# Return Format
+Provide specific, actionable code implementations and design recommendations for each requested feature, organized by component. Include:
+- HTML/CSS code snippets for UI improvements
+- Suggestions for stock image sources and placement
+- Design mockups or detailed descriptions for the expert selection interface
+- Complete page structure for the business benefits section
+- Logo design specifications or SVG code for a holding logo
+- Contact button implementation with consultation form
+- Step-by-step AWS domain linking instructions
+
+# Warnings
+- Ensure all stock images used are properly licensed (recommend free sources like Unsplash, Pexels, or Pixabay)
+- The expert/skills selection interface must be mobile-responsive given South Africa's high mobile usage
+- Domain linking instructions should account for common AWS services (Route 53, CloudFront, S3) - clarify which deployment method is being used
+- Contact form should include GDPR/POPIA compliance considerations for South African data protection laws
+- Avoid overly complex navigation that could confuse users unfamiliar with consulting services
+- Ensure the "Why businesses benefit" page addresses specific South African business pain points and market context
+
+# Context
+The web application is being developed on Replit for a Johannesburg, South Africa-based business that appears to offer expert consulting services. The current application has:
+- An expert selection page that needs UX/UI improvements
+- A skills selection feature that requires better design and easier option selection
+- Missing key pages (business benefits page)
+- No branding elements (needs a holding logo)
+- No clear call-to-action for consultation requests
+- Incomplete deployment documentation for AWS domain configuration
+
+The target audience is South African businesses seeking consulting expertise, so the design should reflect local business culture while maintaining professional standards. The application needs to balance functionality with ease of use, particularly for the expert and skills selection processes.
