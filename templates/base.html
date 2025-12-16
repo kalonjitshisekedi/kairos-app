@@ -424,9 +424,6 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'consultations:submit_request' %}">Submit request</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'core:how_it_works' %}">How it works</a>
                     </li>
                     <li class="nav-item">
@@ -438,7 +435,10 @@
                 </ul>
                 <ul class="navbar-nav align-items-lg-center">
                     <li class="nav-item me-2">
-                        <a class="btn btn-outline-gold btn-sm" href="{% url 'core:contact' %}">
+                        <a class="btn btn-primary btn-sm" href="{% url 'consultations:submit_request' %}">Submit a request</a>
+                    </li>
+                    <li class="nav-item me-2">
+                        <a class="btn btn-outline-light btn-sm" href="{% url 'core:contact' %}">
                             <i class="bi bi-chat-dots me-1"></i>Get in touch
                         </a>
                     </li>
@@ -465,7 +465,7 @@
                             <a class="nav-link" href="{% url 'accounts:login' %}">Log in</a>
                         </li>
                         <li class="nav-item ms-lg-2">
-                            <a class="btn btn-primary btn-sm" href="{% url 'accounts:signup' %}">Get started</a>
+                            <a class="btn btn-outline-light btn-sm" href="{% url 'accounts:signup' %}">Create an account</a>
                         </li>
                     {% endif %}
                 </ul>
