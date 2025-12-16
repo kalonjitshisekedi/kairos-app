@@ -443,10 +443,10 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav align-items-lg-center">
-                    <li class="nav-item me-2">
-                        <a class="btn btn-primary btn-sm" href="{% url 'consultations:submit_request' %}">Submit a request</a>
-                    </li>
                     {% if user.is_authenticated %}
+                        <li class="nav-item me-2">
+                            <a class="btn btn-primary btn-sm" href="{% url 'consultations:submit_request' %}">Submit a request</a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 {{ user.first_name|default:"Account" }}
@@ -470,6 +470,9 @@
                         </li>
                         <li class="nav-item ms-lg-2">
                             <a class="btn btn-outline-light btn-sm" href="{% url 'accounts:signup' %}">Create an account</a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-primary btn-sm" href="{% url 'consultations:submit_request' %}">Submit a request</a>
                         </li>
                     {% endif %}
                 </ul>

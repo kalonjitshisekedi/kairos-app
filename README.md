@@ -420,6 +420,7 @@ kairos/
 To create demo users and sample content for testing, run:
 
 ```bash
+python manage.py migrate
 python manage.py seed_demo
 ```
 
@@ -429,16 +430,33 @@ This command is idempotent and safe to run multiple times.
 
 | Role | Email | Password |
 |------|-------|----------|
-| Admin | admin@kairos.africa | KairosAdmin123! |
+| Super admin | admin@kairos.africa | KairosAdmin123! |
+| Operations (staff) | ops@kairos.africa | KairosOps123! |
 | Client | client@kairos.africa | KairosClient123! |
 | Expert | expert@kairos.africa | KairosExpert123! |
 
-### What to test
+### What gets created
+
+**Users:**
+- Super admin with full access
+- Operations user (staff only, no superuser)
+- Client user (Morgan Naidoo from Umkhonto Capital)
+- Expert user (Naledi Mbeki with 18 years fintech/risk experience)
+
+**Content:**
+- 3 published blog posts
+- 1 pending client request
+- 1 matched/scheduled engagement
+- 1 ongoing engagement (in progress)
+- 1 completed engagement with review
+
+### Quick click-through test checklist
 
 **Public pages:**
-1. Home → Why Kairos → Blog → Contact us
-2. Verify all navbar links work
-3. Check blog posts render correctly
+1. Home → Blog (should show 3 posts)
+2. Home → Why Kairos
+3. Home → Contact us (should show contact@kairos.africa)
+4. Verify navbar shows: Log in → Create an account → Submit a request
 
 **Admin workflow:**
 1. Log in as admin@kairos.africa
@@ -449,11 +467,11 @@ This command is idempotent and safe to run multiple times.
 **Client workflow:**
 1. Log in as client@kairos.africa
 2. Submit a request via "Submit a request" button
-3. View dashboard and existing requests
+3. View dashboard and existing requests/engagements
 
 **Expert workflow:**
 1. Log in as expert@kairos.africa
-2. Access expert dashboard (if enabled)
+2. Access expert dashboard (shows assigned engagements)
 3. View profile and availability settings
 
 ## Support

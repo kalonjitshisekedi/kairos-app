@@ -3,11 +3,11 @@ Management command to seed demo data for testing.
 """
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from django.utils.text import slugify
+from datetime import timedelta
 
 from accounts.models import User
 from experts.models import ExpertProfile, ExpertiseTag
-from consultations.models import ClientRequest
+from consultations.models import ClientRequest, Booking, Review
 from blog.models import BlogPost
 
 
@@ -19,14 +19,16 @@ class Command(BaseCommand):
         
         self.create_expertise_tags()
         self.create_admin_user()
+        self.create_ops_user()
         self.create_client_user()
         self.create_expert_user()
         self.create_blog_posts()
-        self.create_sample_request()
+        self.create_demo_requests_and_bookings()
         
         self.stdout.write(self.style.SUCCESS('\nDemo data seeded successfully!\n'))
         self.stdout.write('\n=== Demo Account Credentials ===\n')
         self.stdout.write('Admin:  admin@kairos.africa / KairosAdmin123!\n')
+        self.stdout.write('Ops:    ops@kairos.africa / KairosOps123!\n')
         self.stdout.write('Client: client@kairos.africa / KairosClient123!\n')
         self.stdout.write('Expert: expert@kairos.africa / KairosExpert123!\n')
 
@@ -72,6 +74,29 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS('  Created admin user'))
         else:
             self.stdout.write('  Admin user already exists')
+
+    def create_ops_user(self):
+        ops, created = User.objects.get_or_create(
+            email='ops@kairos.africa',
+            defaults={
+                'first_name': 'Operations',
+                'last_name': 'Manager',
+                'is_staff': True,
+                'is_superuser': False,
+                'is_active': True,
+                'role': User.Role.ADMIN,
+                'email_verified': True,
+                'privacy_consent': True,
+                'terms_accepted': True,
+            }
+        )
+        
+        if created:
+            ops.set_password('KairosOps123!')
+            ops.save()
+            self.stdout.write(self.style.SUCCESS('  Created operations user'))
+        else:
+            self.stdout.write('  Operations user already exists')
 
     def create_client_user(self):
         client, created = User.objects.get_or_create(
@@ -262,34 +287,187 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(f'  Blog post already exists: {post.title}')
 
-    def create_sample_request(self):
+    def create_demo_requests_and_bookings(self):
         client = User.objects.filter(email='client@kairos.africa').first()
+        expert_profile = ExpertProfile.objects.filter(user__email='expert@kairos.africa').first()
+        admin = User.objects.filter(email='admin@kairos.africa').first()
         
-        if not client:
-            self.stdout.write(self.style.WARNING('  Skipping sample request: client user not found'))
+        if not client or not expert_profile:
+            self.stdout.write(self.style.WARNING('  Skipping demo bookings: client or expert not found'))
             return
-        
-        request, created = ClientRequest.objects.get_or_create(
+
+        fintech_tag = ExpertiseTag.objects.filter(slug='fintech').first()
+        regulatory_tag = ExpertiseTag.objects.filter(slug='regulatory').first()
+
+        request_1, created = ClientRequest.objects.get_or_create(
             email='client@kairos.africa',
             company='Umkhonto Capital',
+            status=ClientRequest.Status.PENDING,
             defaults={
                 'name': 'Morgan Naidoo',
                 'client': client,
-                'problem_description': 'We are evaluating a potential investment in a South African fintech company focused on cross-border payments. We need expert input on regulatory requirements across SADC markets, particularly regarding mobile money licensing and foreign exchange compliance. Looking for someone with direct experience navigating these frameworks.',
+                'problem_description': 'We are evaluating a potential investment in a South African fintech company focused on cross-border payments. We need expert input on regulatory requirements across SADC markets, particularly regarding mobile money licensing and foreign exchange compliance.',
                 'engagement_type': ClientRequest.EngagementType.CONSULTATION,
                 'timeline_urgency': ClientRequest.UrgencyLevel.MEDIUM,
                 'confidentiality_level': ClientRequest.ConfidentialityLevel.ELEVATED,
-                'status': ClientRequest.Status.PENDING,
             }
         )
-        
         if created:
-            fintech_tag = ExpertiseTag.objects.filter(slug='fintech').first()
-            regulatory_tag = ExpertiseTag.objects.filter(slug='regulatory').first()
             if fintech_tag:
-                request.preferred_expertise.add(fintech_tag)
+                request_1.preferred_expertise.add(fintech_tag)
             if regulatory_tag:
-                request.preferred_expertise.add(regulatory_tag)
-            self.stdout.write(self.style.SUCCESS('  Created sample client request'))
+                request_1.preferred_expertise.add(regulatory_tag)
+            self.stdout.write(self.style.SUCCESS('  Created pending client request'))
         else:
-            self.stdout.write('  Sample client request already exists')
+            self.stdout.write('  Pending client request already exists')
+
+        request_2, created = ClientRequest.objects.get_or_create(
+            email='client@kairos.africa',
+            company='Umkhonto Capital',
+            status=ClientRequest.Status.MATCHED,
+            defaults={
+                'name': 'Morgan Naidoo',
+                'client': client,
+                'problem_description': 'Need guidance on establishing a digital banking framework in Kenya. Looking for expertise on Central Bank of Kenya regulations and licensing requirements.',
+                'engagement_type': ClientRequest.EngagementType.ADVISORY,
+                'timeline_urgency': ClientRequest.UrgencyLevel.HIGH,
+                'confidentiality_level': ClientRequest.ConfidentialityLevel.STANDARD,
+                'matched_expert': expert_profile,
+                'matched_by': admin,
+                'matched_at': timezone.now() - timedelta(days=3),
+            }
+        )
+        if created:
+            if regulatory_tag:
+                request_2.preferred_expertise.add(regulatory_tag)
+            self.stdout.write(self.style.SUCCESS('  Created matched client request'))
+        else:
+            self.stdout.write('  Matched client request already exists')
+
+        booking_scheduled, created = Booking.objects.get_or_create(
+            client=client,
+            expert=expert_profile,
+            status=Booking.Status.SCHEDULED,
+            defaults={
+                'client_request': request_2,
+                'service_type': Booking.ServiceType.ADVISORY,
+                'scope': 'Advisory session on digital banking licensing in Kenya',
+                'duration_description': '1 hour consultation',
+                'scheduled_start': timezone.now() + timedelta(days=2),
+                'scheduled_end': timezone.now() + timedelta(days=2, hours=1),
+                'problem_statement': 'Need guidance on establishing a digital banking framework in Kenya.',
+                'amount': 500.00,
+                'expert_payout': 400.00,
+                'currency': 'GBP',
+                'terms_accepted': True,
+                'terms_accepted_at': timezone.now() - timedelta(days=2),
+            }
+        )
+        if created:
+            self.stdout.write(self.style.SUCCESS('  Created scheduled booking'))
+        else:
+            self.stdout.write('  Scheduled booking already exists')
+
+        request_3, created = ClientRequest.objects.get_or_create(
+            email='client@kairos.africa',
+            company='Umkhonto Capital',
+            status=ClientRequest.Status.IN_PROGRESS,
+            defaults={
+                'name': 'Morgan Naidoo',
+                'client': client,
+                'problem_description': 'Ongoing advisory on risk management frameworks for African fintech expansion.',
+                'engagement_type': ClientRequest.EngagementType.ADVISORY,
+                'timeline_urgency': ClientRequest.UrgencyLevel.LOW,
+                'confidentiality_level': ClientRequest.ConfidentialityLevel.STRICT,
+                'matched_expert': expert_profile,
+                'matched_by': admin,
+                'matched_at': timezone.now() - timedelta(days=14),
+            }
+        )
+        if created:
+            self.stdout.write(self.style.SUCCESS('  Created in-progress client request'))
+
+        booking_ongoing, created = Booking.objects.get_or_create(
+            client=client,
+            expert=expert_profile,
+            status=Booking.Status.IN_SESSION,
+            defaults={
+                'client_request': request_3,
+                'service_type': Booking.ServiceType.ADVISORY,
+                'scope': 'Multi-week advisory engagement on risk frameworks',
+                'duration_description': '4 weeks ongoing advisory',
+                'scheduled_start': timezone.now() - timedelta(days=7),
+                'problem_statement': 'Ongoing advisory on risk management frameworks for African fintech expansion.',
+                'amount': 2500.00,
+                'expert_payout': 2000.00,
+                'currency': 'GBP',
+                'terms_accepted': True,
+                'terms_accepted_at': timezone.now() - timedelta(days=14),
+            }
+        )
+        if created:
+            self.stdout.write(self.style.SUCCESS('  Created ongoing booking'))
+        else:
+            self.stdout.write('  Ongoing booking already exists')
+
+        request_4, created = ClientRequest.objects.get_or_create(
+            email='client@kairos.africa',
+            company='Umkhonto Capital',
+            status=ClientRequest.Status.COMPLETED,
+            defaults={
+                'name': 'Morgan Naidoo',
+                'client': client,
+                'problem_description': 'Due diligence support for a proposed acquisition of a Nigerian payments company.',
+                'engagement_type': ClientRequest.EngagementType.RESEARCH,
+                'timeline_urgency': ClientRequest.UrgencyLevel.HIGH,
+                'confidentiality_level': ClientRequest.ConfidentialityLevel.STRICT,
+                'matched_expert': expert_profile,
+                'matched_by': admin,
+                'matched_at': timezone.now() - timedelta(days=45),
+            }
+        )
+        if created:
+            self.stdout.write(self.style.SUCCESS('  Created completed client request'))
+
+        booking_completed, created = Booking.objects.get_or_create(
+            client=client,
+            expert=expert_profile,
+            status=Booking.Status.COMPLETED,
+            defaults={
+                'client_request': request_4,
+                'service_type': Booking.ServiceType.RESEARCH,
+                'scope': 'Full due diligence on Nigerian payments company acquisition',
+                'duration_description': '3 weeks research engagement',
+                'scheduled_start': timezone.now() - timedelta(days=40),
+                'scheduled_end': timezone.now() - timedelta(days=25),
+                'problem_statement': 'Due diligence support for a proposed acquisition of a Nigerian payments company.',
+                'amount': 5000.00,
+                'expert_payout': 4000.00,
+                'currency': 'GBP',
+                'terms_accepted': True,
+                'terms_accepted_at': timezone.now() - timedelta(days=42),
+                'completed_at': timezone.now() - timedelta(days=25),
+                'completed_by_expert': True,
+                'completed_by_client': True,
+            }
+        )
+        if created:
+            self.stdout.write(self.style.SUCCESS('  Created completed booking'))
+        else:
+            self.stdout.write('  Completed booking already exists')
+
+        if booking_completed:
+            review, created = Review.objects.get_or_create(
+                booking=booking_completed,
+                defaults={
+                    'reviewer': client,
+                    'reviewee': expert_profile.user,
+                    'rating': 5,
+                    'comment': 'Exceptional expertise and professionalism. Naledi provided invaluable insights into the Nigerian payments landscape that directly informed our investment decision. Highly recommended.',
+                    'is_public': True,
+                }
+            )
+            if created:
+                self.stdout.write(self.style.SUCCESS('  Created review on completed booking'))
+            else:
+                self.stdout.write('  Review already exists')
