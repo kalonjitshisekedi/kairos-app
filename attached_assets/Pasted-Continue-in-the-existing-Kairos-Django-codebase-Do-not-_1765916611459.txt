@@ -1,0 +1,50 @@
+Continue in the existing Kairos Django codebase. Do not rebuild.
+
+Make the following focused content and routing fixes (keep British English and sentence case). Do not stop early.
+
+1) Rename “For enterprise” page and nav label
+- The page currently at /for-businesses/ (or the “For enterprise” link) must be renamed in UI to:
+  “For organisations”
+- Keep the URL the same for now (to avoid breaking links), but update:
+  - navbar label
+  - page title (H1 and <title>)
+  - any internal headings using “For enterprise”
+
+2) Improve “Industries we serve” section on that page
+- Expand and refine the industries list to feel enterprise-grade and Africa-relevant.
+Include categories like:
+  - financial services and fintech
+  - healthcare and life sciences
+  - energy, mining, and industrials
+  - telecommunications and infrastructure
+  - public sector and development
+  - agriculture and food systems
+  - technology and data
+  - legal, compliance, and regulation
+- Keep the copy concise and premium (no marketing fluff).
+
+3) Remove “Fortune 500” mentions everywhere
+- Search the entire repo for:
+  “Fortune 500”, “Fortune”, “Private equity” trust bar wording, or any “trusted by Fortune 500” badges.
+- Remove those lines or replace with neutral phrasing:
+  “Trusted by teams working on high-stakes decisions”
+- Ensure the homepage trust line remains clean and credible without specific claims.
+
+4) Remove “Budget range (optional)” from all forms
+- Remove that field from the request form UI completely (do not ask for money anywhere).
+- If it exists in the model, you may keep it internally but it must not appear on the website.
+
+5) Ensure “Join the expert network” always links to the expert application form
+- “Join the expert network” must route to the expert application form page (experts:careers).
+- Fix this everywhere:
+  - homepage CTA
+  - contact page CTA
+  - footer links
+  - any other references
+
+After implementing, verify:
+- /for-businesses/ shows “For organisations”
+- industries section updated
+- no Fortune 500 mentions remain
+- no budget field appears anywhere
+- “Join the expert network” goes to the expert application form

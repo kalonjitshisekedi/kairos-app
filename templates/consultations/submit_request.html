@@ -83,21 +83,14 @@
                                 <textarea name="problem_description" id="problem_description" class="form-control" rows="6" required placeholder="Describe the problem you need help with, the context, and what outcomes you're looking for. The more detail you provide, the better we can match you with the right expert."></textarea>
                             </div>
 
-                            <div class="row g-3 mb-4">
-                                <div class="col-md-6">
-                                    <label for="budget_range" class="form-label">Budget range (optional)</label>
-                                    <input type="text" name="budget_range" id="budget_range" class="form-control" placeholder="e.g. R50,000 - R100,000">
-                                    <small class="text-muted">Leave blank if unsure</small>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="confidentiality_level" class="form-label">Confidentiality</label>
-                                    <select name="confidentiality_level" id="confidentiality_level" class="form-select">
-                                        {% for value, label in confidentiality_levels %}
-                                            <option value="{{ value }}">{{ label }}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <small class="text-muted">Level of confidentiality required</small>
-                                </div>
+                            <div class="mb-4">
+                                <label for="confidentiality_level" class="form-label">Confidentiality</label>
+                                <select name="confidentiality_level" id="confidentiality_level" class="form-select">
+                                    {% for value, label in confidentiality_levels %}
+                                        <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                                <small class="text-muted">Level of confidentiality required</small>
                             </div>
 
                             <div class="mb-4">
