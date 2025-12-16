@@ -436,6 +436,9 @@
                         <a class="nav-link" href="{% url 'experts:join' %}">Expert network</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'experts:careers' %}">Expert careers</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'blog:index' %}">Blog</a>
                     </li>
                     <li class="nav-item">
@@ -450,7 +453,7 @@
                             </li>
                         {% else %}
                             <li class="nav-item me-2">
-                                <a class="btn btn-primary btn-sm" href="{% url 'consultations:submit_request' %}">Submit a request</a>
+                                <a class="btn btn-primary btn-sm" href="{% url 'consultations:submit_request' %}">Request expert matching</a>
                             </li>
                         {% endif %}
                         <li class="nav-item dropdown">
@@ -483,7 +486,7 @@
                             <a class="btn btn-outline-light btn-sm" href="{% url 'accounts:signup' %}">Create an account</a>
                         </li>
                         <li class="nav-item ms-lg-2">
-                            <a class="btn btn-primary btn-sm" href="{% url 'consultations:submit_request' %}">Submit a request</a>
+                            <a class="btn btn-primary btn-sm" href="{% url 'consultations:submit_request' %}">Request expert matching</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -526,7 +529,7 @@
                 <div class="col-6 col-lg-2">
                     <h6 class="mb-3 text-uppercase letter-spacing-wide" style="font-size: 0.75rem;">Platform</h6>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="{% url 'consultations:submit_request' %}">Submit a request</a></li>
+                        <li class="mb-2"><a href="{% url 'consultations:submit_request' %}">Request expert matching</a></li>
                         <li class="mb-2"><a href="{% url 'core:why_kairos' %}">Why Kairos</a></li>
                         <li class="mb-2"><a href="{% url 'core:how_it_works' %}">How it works</a></li>
                         <li class="mb-2"><a href="{% url 'core:why_businesses' %}">For enterprise</a></li>

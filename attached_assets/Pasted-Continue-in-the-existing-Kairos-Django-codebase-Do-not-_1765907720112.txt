@@ -1,0 +1,62 @@
+Continue in the existing Kairos Django codebase. Do not rebuild. Keep the premium, enterprise-grade style. British English and sentence case everywhere.
+
+Do not stop early. Do not leave TODOs. If something breaks, fix it and continue until everything works end-to-end.
+
+────────────────────────────────────────
+Task 1) Landing page: add three CTA buttons
+────────────────────────────────────────
+On the homepage (templates/core/home.html), update the hero CTA area to include THREE buttons:
+
+A) Primary CTA (btn-primary): replace “Submit a request” with a better label that feels premium and enterprise.
+Use this label:
+- “Request expert matching”
+
+B) Secondary CTA (btn-outline-light): “How it works”
+
+C) Secondary CTA (btn-outline-light): replace “Apply to join” / “Apply to become an expert” with a better label that feels premium and respectful.
+Use this label:
+- “Join the expert network”
+
+These CTAs should be arranged:
+- Desktop: inline row, primary first, then the two secondary buttons
+- Mobile: stacked or wrapped cleanly (no overflow)
+
+Links:
+- “Request expert matching” → consultations:submit_request
+- “How it works” → core:how_it_works
+- “Join the expert network” → experts:careers (NOT experts:join)
+
+Ensure button text is sentence case and matches the new wording consistently across site copy.
+
+────────────────────────────────────────
+Task 2) Add /experts/careers/ to navbar
+────────────────────────────────────────
+In templates/base.html navbar links:
+- Add a nav link labelled “Expert careers” that routes to /experts/careers/
+- Keep it in the main nav area near “Expert network” or under it.
+
+If you currently have:
+- “Expert network” linking to experts:join
+Keep that, but also include:
+- “Expert careers” linking to experts:careers
+
+If the navbar becomes too crowded on smaller screens:
+- Keep the link but ensure it collapses nicely (Bootstrap collapse).
+- Do not convert it into a CTA button. It should be a normal nav link.
+
+────────────────────────────────────────
+Task 3) Consistency pass (copy and buttons)
+────────────────────────────────────────
+- Replace any remaining homepage hero CTA text that still says “Submit a request” or “Apply to join” so it matches:
+  - “Request expert matching”
+  - “Join the expert network”
+- Ensure you do NOT introduce marketplace wording (no “hire”, “book now”, “browse experts” in the hero).
+
+────────────────────────────────────────
+Final verification
+────────────────────────────────────────
+- Confirm homepage renders with 3 CTAs.
+- Confirm /experts/careers/ is reachable from navbar.
+- Confirm mobile layout is clean and premium.
+
+Implement all changes now and finish.
