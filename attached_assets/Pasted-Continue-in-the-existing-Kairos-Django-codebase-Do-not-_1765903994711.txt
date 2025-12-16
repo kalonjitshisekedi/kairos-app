@@ -1,0 +1,111 @@
+Continue in the existing Kairos Django codebase. Do not rebuild anything.
+
+Do not stop early. Do not leave TODOs. If something breaks, fix it and continue until everything works end-to-end. Keep British English and sentence case across the UI.
+
+────────────────────────────────────────
+Task 1) Fix navbar layout (unauthenticated)
+────────────────────────────────────────
+Problem: The navbar currently shows “Submit a request” then “Log in” then “Create an account”, which looks wrong.
+
+Goal: Group auth actions together and keep CTAs ordered cleanly.
+
+For unauthenticated users, the right side of the navbar must be ordered as:
+1) Log in (nav link)
+2) Create an account (btn-outline-light)
+3) Submit a request (btn-primary)
+
+Important:
+- “Log in” must NOT sit between two buttons.
+- There must be ONLY ONE “Submit a request” CTA in the navbar.
+  If it exists as a left-side button/link, remove it so it only appears on the right-side CTA group.
+
+After changes:
+- Desktop navbar looks balanced and premium.
+- Mobile navbar remains readable and not overcrowded.
+
+────────────────────────────────────────
+Task 2) Seed richer demo data (users + projects)
+────────────────────────────────────────
+Extend or create a management command:
+python manage.py seed_demo
+
+It must be safe to run multiple times (idempotent).
+
+Create these demo accounts:
+
+A) Super admin
+- Email: admin@kairos.africa
+- Password: KairosAdmin123!
+- Staff + superuser
+
+B) Operations user (staff only)
+- Email: ops@kairos.africa
+- Password: KairosOps123!
+- Staff = true, superuser = false
+
+C) Client user
+- Email: client@kairos.africa
+- Password: KairosClient123!
+- First name: Morgan
+- Last name: Naidoo
+- Organisation (if supported): Umkhonto Capital
+
+D) Expert user
+- Email: expert@kairos.africa
+- Password: KairosExpert123!
+- First name: Naledi
+- Last name: Mbeki
+- Expert profile:
+  - Headline: “Former fintech risk lead and emerging markets advisor”
+  - Years of experience: 18
+  - Sectors/tags: fintech, banking, regulatory, risk
+  - Visibility: semi-private (or closest supported value)
+  - Verification status: vetted/verified (or closest supported)
+
+Seed demo content:
+
+1) Blog
+- Create 3 published blog posts (is_published=True, published_at set) so /blog/ is NOT empty.
+
+2) Demo workflow objects
+Create realistic objects so dashboards are not empty:
+
+- 1 submitted client request linked to the client user
+- 1 matched/scheduled engagement linked to the client + expert
+- 1 ongoing engagement linked to the client + expert (status “ongoing” / “in progress”)
+- 1 completed engagement linked to the client + expert (status “completed”)
+- (optional) 1 review on the completed engagement, if reviews exist
+
+Important:
+- Use the existing models in the codebase (consultations/requests/bookings/engagements).
+- If exact status enums differ, map to the nearest equivalent values.
+- Ensure these records show up in the correct dashboards.
+
+────────────────────────────────────────
+Task 3) Update README documentation
+────────────────────────────────────────
+Add a section titled: “Demo accounts and test data”
+
+Include:
+- Commands:
+  - python manage.py migrate
+  - python manage.py seed_demo
+- The demo emails + passwords
+- What data gets created (blog posts + requests + engagements)
+- A quick click-through test checklist:
+  - Home → Blog (should show posts)
+  - Home → Why Kairos
+  - Home → Contact us (should show contact@kairos.africa)
+  - Admin login → /admin/ (manage blog posts)
+  - Client login → submit a request (verify flow works)
+  - Expert login → expert dashboard (verify it shows assigned engagements)
+
+────────────────────────────────────────
+Task 4) Verify and finish
+────────────────────────────────────────
+- Run migrations if needed.
+- Ensure seed_demo runs with no errors.
+- Ensure /blog/ shows seeded posts.
+- Ensure navbar looks correct and “Log in” is not between two buttons.
+
+Complete all tasks and ensure the app runs without errors.
