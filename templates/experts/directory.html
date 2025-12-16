@@ -71,10 +71,10 @@
                             <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.05em;">Price range (ZAR/hr)</label>
                             <div class="row g-2">
                                 <div class="col">
-                                    <input type="number" name="min_price" class="form-control form-control-sm" placeholder="Min" value="{{ min_price }}">
+                                    <input type="number" name="min_price" class="form-control form-control-sm" placeholder="Min" value="{{ min_price|default_if_none:'' }}">
                                 </div>
                                 <div class="col">
-                                    <input type="number" name="max_price" class="form-control form-control-sm" placeholder="Max" value="{{ max_price }}">
+                                    <input type="number" name="max_price" class="form-control form-control-sm" placeholder="Max" value="{{ max_price|default_if_none:'' }}">
                                 </div>
                             </div>
                         </div>
