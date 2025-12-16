@@ -424,6 +424,9 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:why_kairos' %}">Why Kairos</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'core:how_it_works' %}">How it works</a>
                     </li>
                     <li class="nav-item">
@@ -432,15 +435,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'experts:join' %}">Expert network</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'blog:index' %}">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:contact' %}">Contact us</a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav align-items-lg-center">
                     <li class="nav-item me-2">
                         <a class="btn btn-primary btn-sm" href="{% url 'consultations:submit_request' %}">Submit a request</a>
-                    </li>
-                    <li class="nav-item me-2">
-                        <a class="btn btn-outline-light btn-sm" href="{% url 'core:contact' %}">
-                            <i class="bi bi-chat-dots me-1"></i>Get in touch
-                        </a>
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
@@ -501,15 +505,19 @@
                         <span class="text-white fs-5 fw-semibold" style="font-family: var(--font-serif);">Kairos</span>
                     </div>
                     <p class="text-gold mb-2" style="font-family: var(--font-serif); font-size: 1.125rem;">Don't guess. Know.</p>
-                    <p class="small opacity-60">Confidential expert network for enterprise research and advisory. Connecting decision-makers with vetted expertise.</p>
+                    <p class="small opacity-60 mb-3">Confidential expert network for enterprise research and advisory. Connecting decision-makers with vetted expertise.</p>
+                    <p class="small opacity-50 mb-2">Based in South Africa. Serving organisations globally.</p>
+                    <p class="small"><a href="mailto:contact@kairos.africa" class="text-gold">contact@kairos.africa</a></p>
                 </div>
                 <div class="col-6 col-lg-2">
                     <h6 class="mb-3 text-uppercase letter-spacing-wide" style="font-size: 0.75rem;">Platform</h6>
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="{% url 'consultations:submit_request' %}">Submit a request</a></li>
+                        <li class="mb-2"><a href="{% url 'core:why_kairos' %}">Why Kairos</a></li>
                         <li class="mb-2"><a href="{% url 'core:how_it_works' %}">How it works</a></li>
                         <li class="mb-2"><a href="{% url 'core:why_businesses' %}">For enterprise</a></li>
-                        <li class="mb-2"><a href="{% url 'core:contact' %}">Get in touch</a></li>
+                        <li class="mb-2"><a href="{% url 'blog:index' %}">Blog</a></li>
+                        <li class="mb-2"><a href="{% url 'core:contact' %}">Contact us</a></li>
                     </ul>
                 </div>
                 <div class="col-6 col-lg-2">

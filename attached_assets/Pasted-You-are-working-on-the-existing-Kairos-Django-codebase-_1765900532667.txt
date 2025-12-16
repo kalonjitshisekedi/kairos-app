@@ -1,0 +1,177 @@
+You are working on the existing Kairos Django codebase (do not rebuild). Continue implementing new pages and content. Keep British English and sentence case everywhere. Maintain the premium, discreet, enterprise-grade style and the existing colour palette and typography.
+
+Do not stop early. Do not leave TODOs. If anything breaks, fix it and continue until everything works end-to-end.
+
+────────────────────────────────────────
+1) Navigation cleanup (reduce CTAs)
+────────────────────────────────────────
+Goal: reduce navbar clutter and remove “Get in touch”.
+
+In templates/base.html:
+- Remove the “Get in touch” navbar button entirely.
+- Keep ONE primary CTA: “Submit a request” (btn-primary).
+- Keep “Contact us” as a standard nav link (not a button) that goes to the new contact page.
+- Keep existing nav links:
+  - How it works
+  - For enterprise
+  - Expert network
+Add:
+  - Why Kairos (new page)
+  - Blog (new page)
+  - Contact us (new page)
+
+Ensure the navbar remains premium and not overcrowded on mobile.
+
+────────────────────────────────────────
+2) New page: “Why Kairos” (philosophy)
+────────────────────────────────────────
+Create a new page routed at /why-kairos/ and linked in the navbar as “Why Kairos”.
+
+Requirements:
+- Content must explain:
+  - The Kairos philosophy (timing, clarity, decisive moments)
+  - Why Kairos exists (confidential access to expertise for high-stakes decisions)
+  - How Kairos differs from marketplaces (no public pricing, curated matching, discretion)
+- Include a “South Africa-based” trust line:
+  - Soft positioning: “Based in South Africa, built to surface brilliant minds across the continent.”
+  - Do not sound nationalistic; keep it elegant and globally credible.
+- Include a section titled (sentence case): “Why this matters in Africa”
+  - Soft-launch the concept: “Brilliant minds on the continent are underutilised.”
+  - Emphasise global reach: “Built in South Africa, serving organisations globally.”
+- End with a single CTA button: “Submit a request”.
+
+Implementation:
+- Add Django view + URL route in core app.
+- Add template: templates/core/why_kairos.html
+- Ensure styling matches the current design system (hero section, dividers, cards, minimal icon use).
+
+────────────────────────────────────────
+3) Blog page (simple MVP)
+────────────────────────────────────────
+Create a blog section with:
+- Blog index page: /blog/
+- Blog post detail page: /blog/<slug>/
+
+Keep it simple and professional (no comments, no social share buttons in MVP).
+
+Data model:
+- Create a new Django app OR add to core: blog
+- Model: BlogPost
+  - title
+  - slug (unique)
+  - excerpt
+  - content (use TextField; allow basic HTML via safe rendering OR use Markdown and render safely)
+  - published_at (datetime, nullable)
+  - is_published (boolean)
+  - reading_time_minutes (optional auto-calc or manual int)
+- Admin should be able to create/edit posts in Django admin.
+- Blog index shows only is_published posts ordered by published_at desc.
+- Blog detail only accessible if is_published (otherwise 404).
+
+UI requirements:
+- Blog index shows 6–12 posts per page with pagination.
+- Each card shows: title, excerpt, published date, reading time.
+- Blog detail shows: title, metadata line, and content with clean typography.
+- Use a calm “insight desk” feel.
+
+Seed data:
+- Create 3 sample blog posts about:
+  - “Why confidential expertise matters”
+  - “The Kairos philosophy”
+  - “Building a trusted expert network in Africa”
+Write them in British English.
+
+────────────────────────────────────────
+4) Contact us page (replace old “Get in touch”)
+────────────────────────────────────────
+Create a new contact page: /contact/
+- Replace any existing contact page if needed, but keep compatibility with current URL names if referenced.
+
+The contact page must include:
+- A simple form:
+  - full name
+  - organisation
+  - email
+  - message
+- Clear privacy note (POPIA-aligned) in sentence case.
+- After submission:
+  - store inquiry in database (ContactInquiry model if it already exists; reuse it)
+  - display a success message (bootstrap alert-success)
+  - send an email using Django email backend (console in dev)
+
+Add a visible contact email on the page:
+- contact@kairos.africa  (use this as a display email; also include in footer if suitable)
+
+Ensure navbar includes “Contact us” as a nav link (not a CTA button).
+
+────────────────────────────────────────
+5) South Africa-based positioning (soft)
+────────────────────────────────────────
+Update site-wide copy in footer (and optionally homepage) to include one discreet line:
+- “Based in South Africa. Serving organisations globally.”
+
+Do not make this dominant. It should read as a credibility signal, not a limitation.
+
+────────────────────────────────────────
+6) Dummy users and test data (management command)
+────────────────────────────────────────
+Create a management command to seed realistic test data so I can log in and click through flows.
+
+Command name:
+- python manage.py seed_demo
+
+It must create:
+A) Admin user (staff + superuser)
+- email: admin@kairos.africa
+- password: KairosAdmin123!  (document this clearly)
+- first_name: Admin
+
+B) Dummy client user
+- email: client@kairos.africa
+- password: KairosClient123!
+- first_name: Morgan
+- last_name: Naidoo
+- organisation (if you store it): Umkhonto Capital (or similar professional name)
+
+C) Dummy expert user
+- email: expert@kairos.africa
+- password: KairosExpert123!
+- first_name: Naledi
+- last_name: Mbeki
+- expert profile with:
+  - headline: “Former fintech risk lead and emerging markets advisor”
+  - years of experience: 18+
+  - sectors: fintech, banking, regulatory, risk
+  - visibility: semi-private (or whatever your model supports)
+  - verification status: vetted/verified
+
+Also seed:
+- 3 blog posts (published)
+- 1 sample client request (submitted) linked to dummy client
+- (optional) 1 matched engagement object if your models support it, otherwise skip
+
+Ensure the command is idempotent (safe to run multiple times without duplicating).
+
+────────────────────────────────────────
+7) Documentation updates (README)
+────────────────────────────────────────
+Update README.md with a new section: “Demo accounts and test data”
+Include:
+- seed command instructions
+- demo emails + passwords
+- what to click to test:
+  - home → why kairos → blog → contact us
+  - login as admin → django admin → blog posts
+  - login as client → submit a request
+  - login as expert → expert dashboard (if enabled)
+
+────────────────────────────────────────
+Final checks
+────────────────────────────────────────
+- Run migrations for any new models.
+- Ensure navbar links work.
+- Ensure blog index and detail pages render.
+- Ensure contact form saves and shows success.
+- Ensure seed_demo creates all demo data.
+
+Deliver the finished changes in the repo with no broken routes and no unfinished tasks.

@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<section class="hero py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'blog:index' %}" class="text-gold">Blog</a></li>
+                        <li class="breadcrumb-item active text-white opacity-75" aria-current="page">{{ post.title|truncatechars:40 }}</li>
+                    </ol>
+                </nav>
+                <h1 class="mb-4">{{ post.title }}</h1>
+                <div class="d-flex align-items-center">
+                    <span class="opacity-75">{{ post.author_name }}</span>
+                    <span class="mx-3 opacity-50">&middot;</span>
+                    <span class="opacity-75">{{ post.published_at|date:"j F Y" }}</span>
+                    <span class="mx-3 opacity-50">&middot;</span>
+                    <span class="opacity-75">{{ post.reading_time_minutes }} min read</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <article class="blog-content" style="font-size: 1.0625rem; line-height: 1.85;">
+                    {{ post.content|safe }}
+                </article>
+                
+                <hr class="my-5">
+                
+                <div class="d-flex align-items-center justify-content-between">
+                    <a href="{% url 'blog:index' %}" class="text-gold">
+                        <i class="bi bi-arrow-left me-2"></i>Back to blog
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if related_posts %}
+<section class="py-5 bg-ivory">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h4 class="fw-semibold mb-4">Related posts</h4>
+                <div class="row g-4">
+                    {% for related in related_posts %}
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-body p-4">
+                                    <span class="small text-muted">{{ related.published_at|date:"j F Y" }}</span>
+                                    <h6 class="fw-semibold mt-2 mb-0">
+                                        <a href="{% url 'blog:detail' related.slug %}" class="text-decoration-none text-kairos">{{ related.title }}</a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="py-5 bg-kairos-slate">
+    <div class="container text-center">
+        <h2 class="text-white section-title mb-4">Ready to access vetted expertise?</h2>
+        <p class="text-white opacity-75 mb-4">Tell us what you need. Our team will match you with the right expert.</p>
+        <a href="{% url 'consultations:submit_request' %}" class="btn btn-primary btn-lg">Submit a request</a>
+    </div>
+</section>
+
+<style>
+    .blog-content h2 {
+        font-family: var(--font-serif);
+        font-size: 1.75rem;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    .blog-content h3 {
+        font-family: var(--font-serif);
+        font-size: 1.375rem;
+        margin-top: 2rem;
+        margin-bottom: 0.75rem;
+    }
+    .blog-content p {
+        margin-bottom: 1.5rem;
+    }
+    .blog-content ul, .blog-content ol {
+        margin-bottom: 1.5rem;
+        padding-left: 1.5rem;
+    }
+    .blog-content li {
+        margin-bottom: 0.5rem;
+    }
+    .blog-content blockquote {
+        border-left: 3px solid var(--kairos-gold);
+        padding-left: 1.5rem;
+        margin: 2rem 0;
+        font-style: italic;
+        color: var(--kairos-text-secondary);
+    }
+</style>
+{% endblock %}

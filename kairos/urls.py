@@ -16,6 +16,7 @@ urlpatterns = [
     path('messaging/', include('messaging.urls')),
     path('payments/', include('payments.urls')),
     path('api/', include('availability.api_urls')),
+    path('blog/', include('blog.urls')),
 ]
 
 if settings.DEBUG:

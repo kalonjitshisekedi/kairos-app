@@ -14,6 +14,7 @@ urlpatterns = [
     path('acceptable-use/', views.acceptable_use, name='acceptable_use'),
     path('how-it-works/', views.how_it_works, name='how_it_works'),
     path('for-businesses/', views.why_businesses, name='why_businesses'),
+    path('why-kairos/', views.why_kairos, name='why_kairos'),
     path('contact/', views.contact, name='contact'),
     path('operations/', views.admin_dashboard, name='admin_dashboard'),
     path('operations/verify/<uuid:pk>/', views.admin_verify_expert, name='admin_verify_expert'),

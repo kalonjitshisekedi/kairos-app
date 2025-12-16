@@ -75,6 +75,10 @@ def why_businesses(request):
     return render(request, 'core/why_businesses.html')
 
 
+def why_kairos(request):
+    return render(request, 'core/why_kairos.html')
+
+
 def contact(request):
     from .forms import ContactInquiryForm
     
