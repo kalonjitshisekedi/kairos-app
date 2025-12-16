@@ -68,20 +68,22 @@ class ExpertProfileExpertiseForm(forms.ModelForm):
         return instance
 
 
-class ExpertProfileRatesForm(forms.ModelForm):
+class ExpertProfileExperienceForm(forms.ModelForm):
     class Meta:
         model = ExpertProfile
-        fields = ['rate_30_min', 'rate_60_min', 'rate_90_min', 'project_work_available']
+        fields = ['years_experience', 'senior_roles', 'sector_expertise', 'privacy_level', 'project_work_available']
         widgets = {
-            'rate_30_min': forms.NumberInput(attrs={'class': 'form-control', 'min': '0', 'step': '0.01'}),
-            'rate_60_min': forms.NumberInput(attrs={'class': 'form-control', 'min': '0', 'step': '0.01'}),
-            'rate_90_min': forms.NumberInput(attrs={'class': 'form-control', 'min': '0', 'step': '0.01'}),
+            'years_experience': forms.NumberInput(attrs={'class': 'form-control', 'min': '0'}),
+            'senior_roles': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'List senior positions you have held'}),
+            'sector_expertise': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Describe your industry sectors of expertise'}),
+            'privacy_level': forms.Select(attrs={'class': 'form-select'}),
             'project_work_available': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
         labels = {
-            'rate_30_min': 'Rate for 30 minutes (GBP)',
-            'rate_60_min': 'Rate for 60 minutes (GBP)',
-            'rate_90_min': 'Rate for 90 minutes (GBP)',
+            'years_experience': 'Years of professional experience',
+            'senior_roles': 'Senior roles held',
+            'sector_expertise': 'Sector expertise',
+            'privacy_level': 'Profile visibility',
             'project_work_available': 'Available for project work',
         }
 

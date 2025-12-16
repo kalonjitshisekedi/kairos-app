@@ -7,6 +7,7 @@ from . import views
 app_name = 'consultations'
 
 urlpatterns = [
+    path('submit-request/', views.submit_client_request, name='submit_request'),
     path('book/<uuid:expert_id>/', views.create_booking, name='create_booking'),
     path('booking/<uuid:pk>/', views.booking_detail, name='booking_detail'),
     path('booking/<uuid:pk>/session/', views.session_room, name='session_room'),

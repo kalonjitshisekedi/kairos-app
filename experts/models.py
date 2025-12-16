@@ -27,11 +27,16 @@ class ExpertiseTag(models.Model):
 
 class ExpertProfile(models.Model):
     class VerificationStatus(models.TextChoices):
-        INCOMPLETE = 'incomplete', 'Incomplete'
-        PENDING = 'pending', 'Pending verification'
-        VERIFIED = 'verified', 'Verified'
+        APPLIED = 'applied', 'Applied'
+        VETTED = 'vetted', 'Vetted'
+        ACTIVE = 'active', 'Active'
         NEEDS_CHANGES = 'needs_changes', 'Needs changes'
         REJECTED = 'rejected', 'Rejected'
+
+    class PrivacyLevel(models.TextChoices):
+        PUBLIC = 'public', 'Public'
+        SEMI_PRIVATE = 'semi_private', 'Semi-private'
+        PRIVATE = 'private', 'Private'
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='expert_profile')
@@ -45,14 +50,23 @@ class ExpertProfile(models.Model):
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
     expertise_tags = models.ManyToManyField(ExpertiseTag, blank=True, related_name='experts')
     orcid_id = models.CharField(max_length=50, blank=True, help_text='ORCID identifier')
-    rate_30_min = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    rate_60_min = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    rate_90_min = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    years_experience = models.IntegerField(default=0, help_text='Years of professional experience')
+    senior_roles = models.TextField(blank=True, help_text='Senior positions held')
+    sector_expertise = models.TextField(blank=True, help_text='Industry sectors of expertise')
+    privacy_level = models.CharField(
+        max_length=20,
+        choices=PrivacyLevel.choices,
+        default=PrivacyLevel.SEMI_PRIVATE,
+        help_text='Controls profile visibility'
+    )
+    is_featured = models.BooleanField(default=False, help_text='Featured on homepage')
+    internal_rate = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Internal pricing - admin only')
+    expert_payout_rate = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Expert payout rate - expert only')
     project_work_available = models.BooleanField(default=False)
     verification_status = models.CharField(
         max_length=20,
         choices=VerificationStatus.choices,
-        default=VerificationStatus.INCOMPLETE
+        default=VerificationStatus.APPLIED
     )
     verification_submitted_at = models.DateTimeField(blank=True, null=True)
     verification_reviewed_at = models.DateTimeField(blank=True, null=True)
@@ -81,7 +95,11 @@ class ExpertProfile(models.Model):
 
     @property
     def is_verified(self):
-        return self.verification_status == self.VerificationStatus.VERIFIED
+        return self.verification_status in [self.VerificationStatus.VETTED, self.VerificationStatus.ACTIVE]
+
+    @property
+    def is_active(self):
+        return self.verification_status == self.VerificationStatus.ACTIVE
 
     @property
     def profile_completeness(self):
@@ -92,7 +110,7 @@ class ExpertProfile(models.Model):
             bool(self.affiliation),
             bool(self.location),
             self.expertise_tags.exists(),
-            self.rate_30_min > 0 or self.rate_60_min > 0 or self.rate_90_min > 0,
+            self.years_experience > 0,
             self.publications.exists(),
             self.verification_documents.exists(),
             bool(self.languages),
@@ -114,10 +132,10 @@ class ExpertProfile(models.Model):
             missing.append('Specify your location')
         if not self.expertise_tags.exists():
             missing.append('Select your areas of expertise')
-        if not (self.rate_30_min > 0 or self.rate_60_min > 0 or self.rate_90_min > 0):
-            missing.append('Set your consultation rates')
+        if self.years_experience == 0:
+            missing.append('Specify your years of experience')
         if not self.publications.exists():
-            missing.append('Add at least one publication')
+            missing.append('Add at least one publication or project')
         if not self.verification_documents.exists():
             missing.append('Upload verification documents')
         if not self.languages:

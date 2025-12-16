@@ -1,0 +1,140 @@
+You are a senior Django engineer and product architect.
+
+You are working on an EXISTING Django SaaS codebase called “kairos”.
+Your task is to REFRACTOR the product from a public expert marketplace
+into a premium, confidential, enterprise-focused expert network.
+
+IMPORTANT RULES
+- Do NOT turn this into a Fiverr-style marketplace.
+- Do NOT show hourly rates anywhere.
+- Do NOT allow instant self-service booking.
+- Do NOT stop early.
+- Do NOT leave TODOs.
+- If something breaks, fix it and continue until the app works end-to-end.
+- Maintain British English and sentence case everywhere.
+
+PRODUCT IDENTITY
+- Product name: Kairos
+- Tagline: “Don’t guess. Know.”
+- Positioning: confidential expert network for enterprise research and advisory
+
+CORE MODEL CHANGE
+Kairos is now concierge-led.
+Clients submit briefs.
+Admins match experts.
+Pricing is private and negotiated.
+
+REQUIRED PRODUCT CHANGES
+
+1) PLATFORM POSITIONING
+- Replace all “marketplace” language with:
+  “expert network”, “concierge matching”, “confidential engagements”
+- Homepage hero:
+  “Confidential access to vetted expertise.
+   Insight when it matters most.”
+- Remove any references to:
+  hourly rates, instant booking, gig language
+
+2) CLIENT FLOW (PRIMARY)
+- Replace direct booking with a “submit a request” flow:
+  Fields:
+  - name
+  - company
+  - email
+  - problem description
+  - preferred engagement type:
+    (consultation / research / advisory)
+  - timeline urgency
+  - confidentiality level
+- Request is created as ClientRequest model
+- Admin reviews and matches experts manually
+- Client never sees pricing until proposal stage
+
+3) EXPERT DIRECTORY & VISIBILITY
+- Expert directory visible ONLY to verified clients
+- Add expert privacy levels:
+  public / semi-private / private
+- Expert cards show:
+  - headline
+  - expertise areas
+  - industries
+  - years of experience
+  - anonymised project examples
+- NO pricing fields rendered in templates or serializers
+
+4) EXPERT ONBOARDING
+- Rename “Join as expert” messaging to:
+  “Join the Kairos expert network”
+- Remove academic-first language
+- Capture:
+  - years of experience
+  - senior roles held
+  - sector expertise
+  - privacy preference
+- Expert status:
+  applied → vetted → active
+- Experts cannot self-publish profiles publicly without approval
+
+5) SERVICE TYPES
+Add service_type field to engagements:
+- consultation
+- research
+- advisory
+
+Each has:
+- scope
+- duration
+- internal price (admin only)
+- expert payout (expert only)
+
+6) PAYMENTS
+- Payments handled at engagement level
+- No per-hour pricing
+- Stripe remains integrated
+- Admin sets price and triggers payment request
+- Client pays Kairos
+- Kairos pays expert
+
+7) ADMIN / OPERATIONS DASHBOARD
+Create or extend internal dashboard:
+- queue of client requests
+- expert matching tool
+- engagement lifecycle management
+- expert visibility controls
+- featured experts flag
+- dispute and notes system
+
+8) POACHING PREVENTION (SOFT)
+- Mask emails and phone numbers
+- Messaging only inside Kairos
+- Session rooms hosted inside Kairos
+- Watermark shared files
+- Terms reminder banner:
+  “Engagements are managed through Kairos for confidentiality and protection”
+
+9) REMOVE / DEPRECATE
+- Hourly rate fields
+- Public booking calendar
+- “Book now” CTAs
+Replace with:
+- “Request consultation”
+- “Submit brief”
+
+10) DOCUMENTATION
+Update README.md to reflect:
+- concierge-first model
+- enterprise positioning
+- expert privacy tiers
+- engagement types
+- how admins operate the platform
+
+FINAL ACCEPTANCE CRITERIA
+- Platform feels premium, discreet, enterprise-grade
+- No public pricing anywhere
+- Experts are not commoditised
+- Clients cannot bypass Kairos easily
+- Existing Kairos codebase is refactored, not replaced
+- App runs locally and passes migrations
+
+Proceed step by step.
+Do not stop until the refactor is complete.
