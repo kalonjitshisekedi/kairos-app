@@ -21,27 +21,35 @@ class Command(BaseCommand):
         self.create_admin_user()
         self.create_ops_user()
         self.create_client_user()
-        self.create_expert_user()
+        self.create_diverse_experts()
         self.create_blog_posts()
         self.create_demo_requests_and_bookings()
         
         self.stdout.write(self.style.SUCCESS('\nDemo data seeded successfully!\n'))
-        self.stdout.write('\n=== Demo Account Credentials ===\n')
-        self.stdout.write('Admin:  admin@kairos.africa / KairosAdmin123!\n')
-        self.stdout.write('Ops:    ops@kairos.africa / KairosOps123!\n')
-        self.stdout.write('Client: client@kairos.africa / KairosClient123!\n')
-        self.stdout.write('Expert: expert@kairos.africa / KairosExpert123!\n')
+        self.stdout.write('\n=== Demo account credentials ===\n')
+        self.stdout.write('Admin:  admin@kairos.co.za / KairosAdmin123!\n')
+        self.stdout.write('Ops:    ops@kairos.co.za / KairosOps123!\n')
+        self.stdout.write('Client: client@kairos.co.za / KairosClient123!\n')
+        self.stdout.write('Expert: dr.molefe@kairos.co.za / KairosExpert123!\n')
 
     def create_expertise_tags(self):
         tags = [
-            ('Fintech', 'fintech', 'discipline'),
+            ('Computational biology', 'computational-biology', 'discipline'),
+            ('Machine learning', 'machine-learning', 'discipline'),
+            ('Materials science', 'materials-science', 'discipline'),
+            ('Quantitative finance', 'quantitative-finance', 'discipline'),
+            ('Clinical research', 'clinical-research', 'discipline'),
+            ('Regulatory affairs', 'regulatory-affairs', 'discipline'),
+            ('Risk modelling', 'risk-modelling', 'discipline'),
+            ('Policy analysis', 'policy-analysis', 'discipline'),
+            ('Technical due diligence', 'technical-due-diligence', 'discipline'),
+            ('Fintech', 'fintech', 'industry'),
+            ('Healthcare', 'healthcare', 'industry'),
+            ('Energy', 'energy', 'industry'),
+            ('Mining', 'mining', 'industry'),
             ('Banking', 'banking', 'industry'),
-            ('Regulatory', 'regulatory', 'discipline'),
-            ('Risk Management', 'risk-management', 'discipline'),
-            ('Emerging Markets', 'emerging-markets', 'industry'),
-            ('Private Equity', 'private-equity', 'industry'),
-            ('Strategy', 'strategy', 'discipline'),
-            ('Due Diligence', 'due-diligence', 'discipline'),
+            ('Private equity', 'private-equity', 'industry'),
+            ('STEM', 'stem', 'discipline'),
         ]
         
         for name, slug, tag_type in tags:
@@ -54,7 +62,7 @@ class Command(BaseCommand):
 
     def create_admin_user(self):
         admin, created = User.objects.get_or_create(
-            email='admin@kairos.africa',
+            email='admin@kairos.co.za',
             defaults={
                 'first_name': 'Admin',
                 'last_name': 'Kairos',
@@ -77,7 +85,7 @@ class Command(BaseCommand):
 
     def create_ops_user(self):
         ops, created = User.objects.get_or_create(
-            email='ops@kairos.africa',
+            email='ops@kairos.co.za',
             defaults={
                 'first_name': 'Operations',
                 'last_name': 'Manager',
@@ -100,7 +108,7 @@ class Command(BaseCommand):
 
     def create_client_user(self):
         client, created = User.objects.get_or_create(
-            email='client@kairos.africa',
+            email='client@kairos.co.za',
             defaults={
                 'first_name': 'Morgan',
                 'last_name': 'Naidoo',
@@ -121,54 +129,103 @@ class Command(BaseCommand):
         else:
             self.stdout.write('  Client user already exists')
 
-    def create_expert_user(self):
-        expert_user, created = User.objects.get_or_create(
-            email='expert@kairos.africa',
-            defaults={
-                'first_name': 'Naledi',
-                'last_name': 'Mbeki',
-                'is_staff': False,
-                'is_superuser': False,
-                'is_active': True,
-                'role': User.Role.EXPERT,
-                'email_verified': True,
-                'privacy_consent': True,
-                'terms_accepted': True,
-            }
-        )
-        
-        if created:
-            expert_user.set_password('KairosExpert123!')
-            expert_user.save()
-            self.stdout.write(self.style.SUCCESS('  Created expert user'))
-        else:
-            self.stdout.write('  Expert user already exists')
-        
-        profile, profile_created = ExpertProfile.objects.get_or_create(
-            user=expert_user,
-            defaults={
-                'headline': 'Former fintech risk lead and emerging markets advisor',
-                'bio': 'Over 18 years of experience in financial services across Africa. Former Chief Risk Officer at a leading pan-African bank, with deep expertise in regulatory compliance, fintech partnerships, and emerging market risk frameworks. Advised multiple private equity firms on due diligence for African financial services investments.',
-                'affiliation': 'Independent Advisor',
-                'location': 'Johannesburg, South Africa',
-                'timezone': 'Africa/Johannesburg',
-                'languages': ['English', 'Zulu', 'Afrikaans'],
-                'years_experience': 18,
-                'sector_expertise': 'Fintech, Banking, Regulatory, Risk Management',
+    def create_diverse_experts(self):
+        experts_data = [
+            {
+                'email': 'dr.molefe@kairos.co.za',
+                'first_name': 'Thabo',
+                'last_name': 'Molefe',
+                'headline': 'Computational biology specialist | Machine learning for drug discovery',
+                'bio': 'PhD in Computational Biology from the University of Cape Town. Research focus on applying machine learning methods to genomic data analysis and drug target identification. Published in Nature Communications and PLOS Computational Biology. Advisory experience includes technical due diligence for biotech investments and clinical study design consultation.',
+                'affiliation': 'University of Cape Town (affiliated)',
+                'location': 'Cape Town, South Africa',
+                'sector_expertise': 'Computational biology, Machine learning, Drug discovery, Genomics',
+                'tags': ['computational-biology', 'machine-learning', 'clinical-research', 'technical-due-diligence'],
                 'privacy_level': ExpertProfile.PrivacyLevel.SEMI_PRIVATE,
-                'verification_status': ExpertProfile.VerificationStatus.VETTED,
-                'is_publicly_listed': True,
-                'verification_submitted_at': timezone.now(),
-                'verification_reviewed_at': timezone.now(),
-            }
-        )
+            },
+            {
+                'email': 'prof.dlamini@kairos.co.za',
+                'first_name': 'Nomvula',
+                'last_name': 'Dlamini',
+                'headline': 'Professor emeritus | Regulatory policy and financial systems',
+                'bio': 'Former Professor of Economics at the University of the Witwatersrand. Served as an advisor to the South African Reserve Bank and National Treasury. Specialises in financial regulation, monetary policy, and emerging market dynamics. Extensive board experience with major financial institutions. Currently provides strategic advisory to private equity firms on regulatory risk assessment.',
+                'affiliation': 'Independent advisor (formerly Wits University)',
+                'location': 'Johannesburg, South Africa',
+                'sector_expertise': 'Financial regulation, Monetary policy, Central banking, Risk assessment',
+                'tags': ['regulatory-affairs', 'policy-analysis', 'banking', 'private-equity'],
+                'privacy_level': ExpertProfile.PrivacyLevel.PRIVATE,
+            },
+            {
+                'email': 'dr.okonkwo@kairos.co.za',
+                'first_name': 'Adaeze',
+                'last_name': 'Okonkwo',
+                'headline': 'Early-career PhD | Materials science and renewable energy systems',
+                'bio': 'Recently completed PhD in Materials Science from Stellenbosch University with distinction. Research focus on advanced battery materials and solar cell efficiency. Published in Advanced Energy Materials and Journal of Materials Chemistry. Niche expertise in perovskite solar cells and solid-state battery technology. Available for technical review and R&D consultation.',
+                'affiliation': 'Stellenbosch University (postdoctoral)',
+                'location': 'Stellenbosch, South Africa',
+                'sector_expertise': 'Materials science, Battery technology, Solar energy, R&D',
+                'tags': ['materials-science', 'stem', 'energy', 'technical-due-diligence'],
+                'privacy_level': ExpertProfile.PrivacyLevel.SEMI_PRIVATE,
+            },
+            {
+                'email': 'dr.vanwyk@kairos.co.za',
+                'first_name': 'Johan',
+                'last_name': 'van Wyk',
+                'headline': 'Quantitative finance specialist | Risk model development',
+                'bio': 'PhD in Applied Mathematics from the University of Pretoria. Former Head of Quantitative Research at a leading South African asset manager. Expertise in derivatives pricing, risk model validation, and algorithmic trading systems. Advisory experience includes model validation for regulatory submissions and technical due diligence on fintech acquisitions.',
+                'affiliation': 'Independent consultant',
+                'location': 'Pretoria, South Africa',
+                'sector_expertise': 'Quantitative finance, Risk modelling, Derivatives, Fintech',
+                'tags': ['quantitative-finance', 'risk-modelling', 'fintech', 'technical-due-diligence'],
+                'privacy_level': ExpertProfile.PrivacyLevel.SEMI_PRIVATE,
+            },
+        ]
         
-        if profile_created:
-            tags = ExpertiseTag.objects.filter(slug__in=['fintech', 'banking', 'regulatory', 'risk-management'])
-            profile.expertise_tags.set(tags)
-            self.stdout.write(self.style.SUCCESS('  Created expert profile'))
-        else:
-            self.stdout.write('  Expert profile already exists')
+        for expert_data in experts_data:
+            expert_user, created = User.objects.get_or_create(
+                email=expert_data['email'],
+                defaults={
+                    'first_name': expert_data['first_name'],
+                    'last_name': expert_data['last_name'],
+                    'is_staff': False,
+                    'is_superuser': False,
+                    'is_active': True,
+                    'role': User.Role.EXPERT,
+                    'email_verified': True,
+                    'privacy_consent': True,
+                    'terms_accepted': True,
+                }
+            )
+            
+            if created:
+                expert_user.set_password('KairosExpert123!')
+                expert_user.save()
+                self.stdout.write(self.style.SUCCESS(f'  Created expert user: {expert_data["first_name"]} {expert_data["last_name"]}'))
+            else:
+                self.stdout.write(f'  Expert user already exists: {expert_data["email"]}')
+            
+            profile, profile_created = ExpertProfile.objects.get_or_create(
+                user=expert_user,
+                defaults={
+                    'headline': expert_data['headline'],
+                    'bio': expert_data['bio'],
+                    'affiliation': expert_data['affiliation'],
+                    'location': expert_data['location'],
+                    'timezone': 'Africa/Johannesburg',
+                    'languages': ['English'],
+                    'sector_expertise': expert_data['sector_expertise'],
+                    'privacy_level': expert_data['privacy_level'],
+                    'verification_status': ExpertProfile.VerificationStatus.VETTED,
+                    'is_publicly_listed': True,
+                    'verification_submitted_at': timezone.now(),
+                    'verification_reviewed_at': timezone.now(),
+                }
+            )
+            
+            if profile_created:
+                tags = ExpertiseTag.objects.filter(slug__in=expert_data['tags'])
+                profile.expertise_tags.set(tags)
+                self.stdout.write(self.style.SUCCESS(f'  Created expert profile: {expert_data["first_name"]}'))
 
     def create_blog_posts(self):
         posts_data = [
@@ -237,7 +294,7 @@ class Command(BaseCommand):
                 'title': 'Building a trusted expert network in Africa',
                 'slug': 'building-trusted-expert-network-africa',
                 'excerpt': 'The African continent holds remarkable expertise that remains underutilised. Here is how Kairos is working to change that.',
-                'content': '''<p>Africa is home to some of the world's most innovative financial services markets, rapidly evolving regulatory frameworks, and business environments that demand exceptional adaptability. Yet when global organisations need African expertise, finding the right people remains surprisingly difficult.</p>
+                'content': '''<p>Africa produces exceptional technical and scientific talent. The continent's universities and research institutions develop world-class specialists in fields from computational biology to advanced materials science, regulatory frameworks to quantitative finance.</p>
 
 <h2>The expertise gap</h2>
 
@@ -245,14 +302,14 @@ class Command(BaseCommand):
 
 <p>Traditional consulting firms can provide generic market reports. Local advisors may have relationships but limited sector depth. Former executives from relevant companies are difficult to identify and even harder to approach professionally.</p>
 
-<p>This gap represents a significant inefficiency. Brilliant minds across the continent—former central bankers, industry pioneers, regulatory experts—possess invaluable knowledge. Yet connecting with them remains an exercise in networking luck rather than systematic access.</p>
+<p>This gap represents a significant inefficiency. PhD researchers, distinguished academics, and domain specialists possess invaluable knowledge. Yet connecting with them remains an exercise in networking luck rather than systematic access.</p>
 
 <h2>Our approach</h2>
 
 <p>Kairos was built in South Africa specifically to address this challenge. We are creating infrastructure that:</p>
 
 <ul>
-<li><strong>Surfaces hidden expertise:</strong> Identifying and vetting experts across African markets who have deep, relevant experience</li>
+<li><strong>Surfaces hidden expertise:</strong> Identifying and vetting specialists across African markets who have deep, relevant experience</li>
 <li><strong>Enables professional engagement:</strong> Providing a platform where organisations can access this expertise through structured, confidential consultations</li>
 <li><strong>Maintains quality standards:</strong> Applying rigorous verification to ensure every expert can deliver genuine value</li>
 </ul>
@@ -288,58 +345,65 @@ class Command(BaseCommand):
                 self.stdout.write(f'  Blog post already exists: {post.title}')
 
     def create_demo_requests_and_bookings(self):
-        client = User.objects.filter(email='client@kairos.africa').first()
-        expert_profile = ExpertProfile.objects.filter(user__email='expert@kairos.africa').first()
-        admin = User.objects.filter(email='admin@kairos.africa').first()
+        client = User.objects.filter(email='client@kairos.co.za').first()
+        expert_profile = ExpertProfile.objects.filter(user__email='dr.molefe@kairos.co.za').first()
+        admin = User.objects.filter(email='admin@kairos.co.za').first()
         
         if not client or not expert_profile:
             self.stdout.write(self.style.WARNING('  Skipping demo bookings: client or expert not found'))
             return
 
-        fintech_tag = ExpertiseTag.objects.filter(slug='fintech').first()
-        regulatory_tag = ExpertiseTag.objects.filter(slug='regulatory').first()
+        comp_bio_tag = ExpertiseTag.objects.filter(slug='computational-biology').first()
+        tech_dd_tag = ExpertiseTag.objects.filter(slug='technical-due-diligence').first()
 
         request_1, created = ClientRequest.objects.get_or_create(
-            email='client@kairos.africa',
+            email='client@kairos.co.za',
             company='Umkhonto Capital',
             status=ClientRequest.Status.PENDING,
             defaults={
                 'name': 'Morgan Naidoo',
                 'client': client,
-                'problem_description': 'We are evaluating a potential investment in a South African fintech company focused on cross-border payments. We need expert input on regulatory requirements across SADC markets, particularly regarding mobile money licensing and foreign exchange compliance.',
+                'problem_description': 'We are evaluating a potential investment in a South African biotech company developing novel drug discovery platforms. We need expert input on the technical validity of their machine learning approach and assessment of their computational biology capabilities.',
                 'engagement_type': ClientRequest.EngagementType.CONSULTATION,
                 'timeline_urgency': ClientRequest.UrgencyLevel.MEDIUM,
                 'confidentiality_level': ClientRequest.ConfidentialityLevel.ELEVATED,
+                'billing_email': 'accounts@umkhontocapital.co.za',
+                'organisation_name': 'Umkhonto Capital (Pty) Ltd',
+                'invoice_status': 'draft',
             }
         )
         if created:
-            if fintech_tag:
-                request_1.preferred_expertise.add(fintech_tag)
-            if regulatory_tag:
-                request_1.preferred_expertise.add(regulatory_tag)
+            if comp_bio_tag:
+                request_1.preferred_expertise.add(comp_bio_tag)
+            if tech_dd_tag:
+                request_1.preferred_expertise.add(tech_dd_tag)
             self.stdout.write(self.style.SUCCESS('  Created pending client request'))
         else:
             self.stdout.write('  Pending client request already exists')
 
         request_2, created = ClientRequest.objects.get_or_create(
-            email='client@kairos.africa',
+            email='client@kairos.co.za',
             company='Umkhonto Capital',
             status=ClientRequest.Status.MATCHED,
             defaults={
                 'name': 'Morgan Naidoo',
                 'client': client,
-                'problem_description': 'Need guidance on establishing a digital banking framework in Kenya. Looking for expertise on Central Bank of Kenya regulations and licensing requirements.',
+                'problem_description': 'Technical due diligence on genomic data analysis methodology for a clinical research company acquisition.',
                 'engagement_type': ClientRequest.EngagementType.ADVISORY,
                 'timeline_urgency': ClientRequest.UrgencyLevel.HIGH,
-                'confidentiality_level': ClientRequest.ConfidentialityLevel.STANDARD,
+                'confidentiality_level': ClientRequest.ConfidentialityLevel.STRICT,
                 'matched_expert': expert_profile,
                 'matched_by': admin,
                 'matched_at': timezone.now() - timedelta(days=3),
+                'billing_email': 'accounts@umkhontocapital.co.za',
+                'organisation_name': 'Umkhonto Capital (Pty) Ltd',
+                'po_number': 'PO-2024-0892',
+                'invoice_status': 'sent',
             }
         )
         if created:
-            if regulatory_tag:
-                request_2.preferred_expertise.add(regulatory_tag)
+            if comp_bio_tag:
+                request_2.preferred_expertise.add(comp_bio_tag)
             self.stdout.write(self.style.SUCCESS('  Created matched client request'))
         else:
             self.stdout.write('  Matched client request already exists')
@@ -351,14 +415,14 @@ class Command(BaseCommand):
             defaults={
                 'client_request': request_2,
                 'service_type': Booking.ServiceType.ADVISORY,
-                'scope': 'Advisory session on digital banking licensing in Kenya',
-                'duration_description': '1 hour consultation',
+                'scope': 'Technical review of genomic analysis methodology',
+                'duration_description': '2 hour consultation',
                 'scheduled_start': timezone.now() + timedelta(days=2),
-                'scheduled_end': timezone.now() + timedelta(days=2, hours=1),
-                'problem_statement': 'Need guidance on establishing a digital banking framework in Kenya.',
-                'amount': 500.00,
-                'expert_payout': 400.00,
-                'currency': 'GBP',
+                'scheduled_end': timezone.now() + timedelta(days=2, hours=2),
+                'problem_statement': 'Technical due diligence on genomic data analysis methodology.',
+                'amount': 8500.00,
+                'expert_payout': 6800.00,
+                'currency': 'ZAR',
                 'terms_accepted': True,
                 'terms_accepted_at': timezone.now() - timedelta(days=2),
             }
@@ -369,61 +433,23 @@ class Command(BaseCommand):
             self.stdout.write('  Scheduled booking already exists')
 
         request_3, created = ClientRequest.objects.get_or_create(
-            email='client@kairos.africa',
-            company='Umkhonto Capital',
-            status=ClientRequest.Status.IN_PROGRESS,
-            defaults={
-                'name': 'Morgan Naidoo',
-                'client': client,
-                'problem_description': 'Ongoing advisory on risk management frameworks for African fintech expansion.',
-                'engagement_type': ClientRequest.EngagementType.ADVISORY,
-                'timeline_urgency': ClientRequest.UrgencyLevel.LOW,
-                'confidentiality_level': ClientRequest.ConfidentialityLevel.STRICT,
-                'matched_expert': expert_profile,
-                'matched_by': admin,
-                'matched_at': timezone.now() - timedelta(days=14),
-            }
-        )
-        if created:
-            self.stdout.write(self.style.SUCCESS('  Created in-progress client request'))
-
-        booking_ongoing, created = Booking.objects.get_or_create(
-            client=client,
-            expert=expert_profile,
-            status=Booking.Status.IN_SESSION,
-            defaults={
-                'client_request': request_3,
-                'service_type': Booking.ServiceType.ADVISORY,
-                'scope': 'Multi-week advisory engagement on risk frameworks',
-                'duration_description': '4 weeks ongoing advisory',
-                'scheduled_start': timezone.now() - timedelta(days=7),
-                'problem_statement': 'Ongoing advisory on risk management frameworks for African fintech expansion.',
-                'amount': 2500.00,
-                'expert_payout': 2000.00,
-                'currency': 'GBP',
-                'terms_accepted': True,
-                'terms_accepted_at': timezone.now() - timedelta(days=14),
-            }
-        )
-        if created:
-            self.stdout.write(self.style.SUCCESS('  Created ongoing booking'))
-        else:
-            self.stdout.write('  Ongoing booking already exists')
-
-        request_4, created = ClientRequest.objects.get_or_create(
-            email='client@kairos.africa',
+            email='client@kairos.co.za',
             company='Umkhonto Capital',
             status=ClientRequest.Status.COMPLETED,
             defaults={
                 'name': 'Morgan Naidoo',
                 'client': client,
-                'problem_description': 'Due diligence support for a proposed acquisition of a Nigerian payments company.',
+                'problem_description': 'Clinical study design review for a pharmaceutical R&D investment opportunity.',
                 'engagement_type': ClientRequest.EngagementType.RESEARCH,
                 'timeline_urgency': ClientRequest.UrgencyLevel.HIGH,
                 'confidentiality_level': ClientRequest.ConfidentialityLevel.STRICT,
                 'matched_expert': expert_profile,
                 'matched_by': admin,
                 'matched_at': timezone.now() - timedelta(days=45),
+                'billing_email': 'accounts@umkhontocapital.co.za',
+                'organisation_name': 'Umkhonto Capital (Pty) Ltd',
+                'po_number': 'PO-2024-0756',
+                'invoice_status': 'paid',
             }
         )
         if created:
@@ -434,16 +460,16 @@ class Command(BaseCommand):
             expert=expert_profile,
             status=Booking.Status.COMPLETED,
             defaults={
-                'client_request': request_4,
+                'client_request': request_3,
                 'service_type': Booking.ServiceType.RESEARCH,
-                'scope': 'Full due diligence on Nigerian payments company acquisition',
+                'scope': 'Clinical study design review and technical assessment',
                 'duration_description': '3 weeks research engagement',
                 'scheduled_start': timezone.now() - timedelta(days=40),
                 'scheduled_end': timezone.now() - timedelta(days=25),
-                'problem_statement': 'Due diligence support for a proposed acquisition of a Nigerian payments company.',
-                'amount': 5000.00,
-                'expert_payout': 4000.00,
-                'currency': 'GBP',
+                'problem_statement': 'Clinical study design review for a pharmaceutical R&D investment opportunity.',
+                'amount': 45000.00,
+                'expert_payout': 36000.00,
+                'currency': 'ZAR',
                 'terms_accepted': True,
                 'terms_accepted_at': timezone.now() - timedelta(days=42),
                 'completed_at': timezone.now() - timedelta(days=25),
@@ -463,11 +489,9 @@ class Command(BaseCommand):
                     'reviewer': client,
                     'reviewee': expert_profile.user,
                     'rating': 5,
-                    'comment': 'Exceptional expertise and professionalism. Naledi provided invaluable insights into the Nigerian payments landscape that directly informed our investment decision. Highly recommended.',
+                    'comment': 'Dr Molefe provided exceptional technical insight into the clinical study design. His expertise in computational biology was invaluable for our due diligence process. Highly recommended for complex biotech assessments.',
                     'is_public': True,
                 }
             )
             if created:
-                self.stdout.write(self.style.SUCCESS('  Created review on completed booking'))
-            else:
-                self.stdout.write('  Review already exists')
+                self.stdout.write(self.style.SUCCESS('  Created review for completed booking'))

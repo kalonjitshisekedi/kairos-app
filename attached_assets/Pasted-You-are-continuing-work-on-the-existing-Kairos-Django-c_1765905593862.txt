@@ -1,0 +1,180 @@
+You are continuing work on the existing Kairos Django codebase. Do not rebuild. Do not remove core features. Fix the issues listed below end-to-end.
+
+Critical rules:
+- Do not stop early.
+- Do not leave TODOs.
+- If something breaks, fix it and continue until everything works.
+- British English and sentence case everywhere.
+- Premium, discreet, enterprise-first tone (not a marketplace).
+
+────────────────────────────────────────
+1) Fix logout (blank page issue)
+────────────────────────────────────────
+Problem: Clicking “Log out” results in a blank page.
+
+Tasks:
+- Locate the logout view/URL in accounts (e.g., accounts:logout).
+- Ensure logout properly:
+  - ends the session
+  - redirects to a sensible page (home or login) with a success message
+- Confirm the logout URL returns a valid HTTP response (no empty template, no missing redirect).
+
+Implementation notes:
+- Prefer Django’s built-in logout() + redirect.
+- Add a regression test for logout (pytest) so it cannot break again.
+
+Acceptance criteria:
+- Logging out always redirects to home (or login) and the page renders normally.
+- No blank screen.
+
+────────────────────────────────────────
+2) Admin users should not see “Submit a request” CTA
+────────────────────────────────────────
+Problem: Admin accounts should not have a CTA to request services.
+
+Tasks:
+- Update templates/base.html navbar logic:
+  - If user.is_staff (or is_superuser), remove “Submit a request” CTA from navbar.
+  - Replace with an Operations CTA:
+    - Button: “Operations” (btn-primary) linking to core:admin_dashboard (or equivalent)
+  - Keep normal navigation links (Why Kairos, Blog, Contact us) if desired, but no client CTA.
+
+Acceptance criteria:
+- Admin sees “Operations” as primary CTA, not “Submit a request”.
+- Non-admin users still see “Submit a request”.
+
+────────────────────────────────────────
+3) Currency and pricing language: use rand and remove public pricing
+────────────────────────────────────────
+Requirements:
+- Currency should be ZAR (R), not USD.
+- Remove any customer-facing language suggesting direct payments in-app for now.
+- Payments are business process: invoice / purchase order / bank transfer.
+
+Tasks:
+- Search the codebase/templates for:
+  - "$", "USD", "dollars", "Stripe checkout", "pay now", "card payment"
+- Replace with invoice-led wording:
+  - “Invoices and purchase orders supported.”
+  - “Payment terms available for approved organisations.”
+  - “Engagement pricing is confirmed in your proposal.”
+- Ensure no pages show public rates or price tables.
+
+If any model fields or fixtures contain currency:
+- Set default currency to “ZAR”.
+- Display format: “R 12,000” (use a consistent formatter).
+
+Acceptance criteria:
+- All pricing references use rand.
+- No Stripe “pay now” flow is implied to clients.
+- Any payment pages are either hidden or clearly labelled “invoice only”.
+
+────────────────────────────────────────
+4) Update contact email domain
+────────────────────────────────────────
+Requirement: Use a more conventional domain like .co.za or .com.
+
+Tasks:
+- Replace contact@kairos.africa with one of:
+  - contact@kairos.co.za  (preferred for South Africa)
+  - OR contact@kairos.com if .co.za is not intended
+Pick one and apply consistently across:
+- contact us page
+- footer
+- README
+
+Acceptance criteria:
+- No old email remains in templates or docs.
+
+────────────────────────────────────────
+5) Admin user display name in navbar dropdown
+────────────────────────────────────────
+Problem: When logged in as admin, the navbar shows generic user name and “Account” behaviour.
+
+Tasks:
+- In navbar dropdown label, show:
+  - If staff: “Admin” (or “Operations”) rather than first_name.
+  - Example: “Admin” with a shield icon.
+- Ensure the dropdown includes:
+  - Dashboard
+  - Operations (for staff)
+  - Settings
+  - Log out
+
+Acceptance criteria:
+- Admin can clearly see they are in admin mode.
+
+────────────────────────────────────────
+6) Seed data: expert diversity and Africa positioning
+────────────────────────────────────────
+Update seed_demo data to reflect a credible expert network.
+
+Requirements:
+- Remove anything that strongly emphasises “X years of experience” as the primary value.
+- Emphasise specialism, track record, and domain expertise.
+- Include multiple expert archetypes:
+  1) STEM PhD specialist (e.g., computational biology / ML / materials science)
+  2) Retired academic (professor emeritus) with applied advisory experience
+  3) Young PhD / early-career specialist with niche expertise and publications
+  4) Industry veteran (optional) with senior leadership background
+
+Tasks:
+- Update expert seed profiles to include:
+  - headline focused on expertise and domain
+  - specialisms/tags (STEM, policy, finance, etc.)
+  - anonymised project types (e.g., “technical due diligence”, “clinical study design”, “risk model review”)
+  - privacy tier settings
+- Ensure at least 4 demo experts exist and appear correctly where experts are used internally.
+
+Update “Why Africa” section on the Why Kairos page:
+- Focus on the quality of young professionals and research talent produced across the continent.
+- Keep it premium and globally credible.
+- Avoid “charity” tone.
+- Suggested framing:
+  - “Africa produces exceptional technical and scientific talent.”
+  - “Kairos helps organisations access specialised insight with local context and global standards.”
+
+Acceptance criteria:
+- Seed experts are diverse, credible, and not framed as gig workers.
+- “Why Africa” copy is confidence-led and premium.
+
+────────────────────────────────────────
+7) Payments: invoice-only mode (disable Stripe UI)
+────────────────────────────────────────
+Requirement:
+- Payment is done via invoice/PO processes, not Stripe checkout.
+
+Tasks:
+- Hide or disable any Stripe checkout buttons or payment actions in UI.
+- Keep payment models (if they exist) but treat them as internal bookkeeping only.
+- Update proposal or engagement pages to show:
+  - “Payment method: invoice”
+  - “Billing contact: …”
+  - “PO number: … (optional)”
+- Add fields to ClientRequest or Engagement model if needed:
+  - billing_email
+  - organisation_name
+  - po_number (optional)
+  - invoice_status (draft/sent/paid)
+
+If adding fields:
+- Create migrations.
+- Update admin screens.
+- Update seed_demo to populate realistic billing fields.
+
+Acceptance criteria:
+- No Stripe checkout flows appear anywhere.
+- App supports invoice-based workflow.
+
+────────────────────────────────────────
+Final verification checklist
+────────────────────────────────────────
+- Logout works and redirects properly (no blank page)
+- Admin navbar shows “Operations” CTA and admin label
+- Currency displayed in rand
+- Contact email updated everywhere
+- Seed_demo creates multiple experts (STEM PhD, retired academic, young PhD specialist)
+- Why Kairos “Why Africa” section updated with premium, talent-led messaging
+- No “years of experience” is used as the main marketing hook (specialism is)
+
+Proceed with changes, run migrations if needed, update README, and ensure the app works.

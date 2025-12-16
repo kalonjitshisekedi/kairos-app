@@ -26,6 +26,9 @@ class ClientRequestAdmin(admin.ModelAdmin):
             'fields': ('proposed_price', 'expert_payout'),
             'classes': ('collapse',)
         }),
+        ('Billing', {
+            'fields': ('billing_email', 'organisation_name', 'po_number', 'invoice_status')
+        }),
         ('Admin notes', {
             'fields': ('admin_notes',)
         }),

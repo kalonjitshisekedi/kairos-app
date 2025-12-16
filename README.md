@@ -430,10 +430,10 @@ This command is idempotent and safe to run multiple times.
 
 | Role | Email | Password |
 |------|-------|----------|
-| Super admin | admin@kairos.africa | KairosAdmin123! |
-| Operations (staff) | ops@kairos.africa | KairosOps123! |
-| Client | client@kairos.africa | KairosClient123! |
-| Expert | expert@kairos.africa | KairosExpert123! |
+| Super admin | admin@kairos.co.za | KairosAdmin123! |
+| Operations (staff) | ops@kairos.co.za | KairosOps123! |
+| Client | client@kairos.co.za | KairosClient123! |
+| Expert | dr.molefe@kairos.co.za | KairosExpert123! |
 
 ### What gets created
 
@@ -455,22 +455,22 @@ This command is idempotent and safe to run multiple times.
 **Public pages:**
 1. Home → Blog (should show 3 posts)
 2. Home → Why Kairos
-3. Home → Contact us (should show contact@kairos.africa)
+3. Home → Contact us (should show contact@kairos.co.za)
 4. Verify navbar shows: Log in → Create an account → Submit a request
 
 **Admin workflow:**
-1. Log in as admin@kairos.africa
+1. Log in as admin@kairos.co.za
 2. Access Django admin at `/admin/`
 3. View and manage blog posts
 4. Access Operations dashboard at `/operations/`
 
 **Client workflow:**
-1. Log in as client@kairos.africa
+1. Log in as client@kairos.co.za
 2. Submit a request via "Submit a request" button
 3. View dashboard and existing requests/engagements
 
 **Expert workflow:**
-1. Log in as expert@kairos.africa
+1. Log in as dr.molefe@kairos.co.za
 2. Access expert dashboard (shows assigned engagements)
 3. View profile and availability settings
 

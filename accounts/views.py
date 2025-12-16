@@ -68,6 +68,22 @@ class CustomLoginView(LoginView):
 
 class CustomLogoutView(LogoutView):
     next_page = 'core:home'
+    http_method_names = ['get', 'post', 'options']
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            AuditLog.objects.create(
+                user=request.user,
+                event_type=AuditLog.EventType.USER_LOGOUT,
+                description='User logged out',
+                ip_address=request.META.get('REMOTE_ADDR'),
+                user_agent=request.META.get('HTTP_USER_AGENT', '')[:500]
+            )
+        messages.success(request, 'You have been successfully logged out.')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
 
 
 class CustomPasswordResetView(PasswordResetView):

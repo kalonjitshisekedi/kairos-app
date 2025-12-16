@@ -53,6 +53,14 @@ class ClientRequest(models.Model):
     expert_payout = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text='Expert payout amount')
     admin_notes = models.TextField(blank=True)
     internal_priority = models.IntegerField(default=0, help_text='Internal priority score')
+    billing_email = models.EmailField(blank=True, help_text='Invoice billing email')
+    organisation_name = models.CharField(max_length=200, blank=True, help_text='Organisation for invoicing')
+    po_number = models.CharField(max_length=100, blank=True, help_text='Purchase order number')
+    invoice_status = models.CharField(max_length=20, choices=[
+        ('draft', 'Draft'),
+        ('sent', 'Sent'),
+        ('paid', 'Paid'),
+    ], default='draft', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -128,7 +136,7 @@ class Booking(models.Model):
     external_meeting_link = models.URLField(blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Engagement price - set by admin')
     expert_payout = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='Expert payout amount')
-    currency = models.CharField(max_length=3, default='GBP')
+    currency = models.CharField(max_length=3, default='ZAR')
     terms_accepted = models.BooleanField(default=False)
     terms_accepted_at = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
