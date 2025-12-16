@@ -1,26 +1,64 @@
 {% extends 'base.html' %}
 
-{% block title %}Expert directory{% endblock %}
+{% block title %}Find Experts{% endblock %}
+
+{% block extra_css %}
+<style>
+    .expert-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .expert-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    }
+    .expert-avatar {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid var(--kairos-off-white);
+    }
+    .expert-avatar-placeholder {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
+<section class="hero py-4">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="mb-3" style="font-size: 2.5rem;">Find vetted experts</h1>
+                <p class="tagline mb-0">Connect with verified professionals across industries.<br>Every expert is thoroughly vetted for credentials and experience.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <div class="container py-4">
-    <h1 class="mb-4">Find an expert</h1>
-    
     <div class="row">
-        <div class="col-md-3">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h6 class="mb-0">Filters</h6>
+        <div class="col-lg-3 mb-4">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-header bg-white border-bottom">
+                    <h6 class="mb-0 fw-semibold"><i class="bi bi-funnel me-2"></i>Filter experts</h6>
                 </div>
                 <div class="card-body">
-                    <form method="get">
-                        <div class="mb-3">
-                            <label class="form-label">Search</label>
+                    <form method="get" id="filterForm">
+                        <div class="mb-4">
+                            <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.05em;">Search</label>
                             <input type="text" name="search" class="form-control" value="{{ search }}" placeholder="Name or keyword">
                         </div>
                         
-                        <div class="mb-3">
-                            <label class="form-label">Disciplines</label>
+                        <div class="mb-4">
+                            <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.05em;">Expertise</label>
                             {% for tag in discipline_tags %}
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="expertise" value="{{ tag.slug }}" id="tag_{{ tag.slug }}" {% if tag.slug in selected_expertise %}checked{% endif %}>
@@ -29,8 +67,8 @@
                             {% endfor %}
                         </div>
                         
-                        <div class="mb-3">
-                            <label class="form-label">Price range (60 min)</label>
+                        <div class="mb-4">
+                            <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.05em;">Price range (ZAR/hr)</label>
                             <div class="row g-2">
                                 <div class="col">
                                     <input type="number" name="min_price" class="form-control form-control-sm" placeholder="Min" value="{{ min_price }}">
@@ -41,8 +79,8 @@
                             </div>
                         </div>
                         
-                        <div class="mb-3">
-                            <label class="form-label">Sort by</label>
+                        <div class="mb-4">
+                            <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.05em;">Sort by</label>
                             <select name="sort" class="form-select form-select-sm">
                                 <option value="rating" {% if sort == 'rating' %}selected{% endif %}>Highest rated</option>
                                 <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Price: low to high</option>
@@ -50,46 +88,62 @@
                             </select>
                         </div>
                         
-                        <button type="submit" class="btn btn-primary w-100">Apply filters</button>
-                        <a href="{% url 'experts:directory' %}" class="btn btn-outline-secondary w-100 mt-2">Clear</a>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-sm">Apply filters</button>
+                            <a href="{% url 'experts:directory' %}" class="btn btn-outline-secondary btn-sm">Clear all</a>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
         
-        <div class="col-md-9">
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <p class="mb-0 text-muted">
+                    {% if experts %}
+                        Showing {{ experts.paginator.count }} vetted expert{{ experts.paginator.count|pluralize }}
+                    {% else %}
+                        No experts found
+                    {% endif %}
+                </p>
+                <span class="badge badge-vetted"><i class="bi bi-patch-check-fill me-1"></i>All Vetted</span>
+            </div>
+            
             {% if experts %}
                 <div class="row g-4">
                     {% for expert in experts %}
                         <div class="col-md-6 col-lg-4">
                             <div class="card h-100 expert-card">
-                                <div class="card-body">
-                                    <div class="text-center mb-3">
-                                        {% if expert.avatar %}
-                                            <img src="{{ expert.avatar.url }}" alt="{{ expert.user.full_name }}" class="avatar">
-                                        {% else %}
-                                            <div class="avatar bg-secondary d-inline-flex align-items-center justify-content-center text-white" style="width: 80px; height: 80px; border-radius: 50%;">
-                                                <span class="fs-4">{{ expert.user.first_name.0 }}{{ expert.user.last_name.0 }}</span>
-                                            </div>
+                                <div class="card-body p-4 text-center">
+                                    {% if expert.avatar %}
+                                        <img src="{{ expert.avatar.url }}" alt="{{ expert.user.full_name }}" class="expert-avatar mb-3">
+                                    {% else %}
+                                        <div class="expert-avatar-placeholder bg-dark text-white mx-auto mb-3">
+                                            {{ expert.user.first_name.0 }}{{ expert.user.last_name.0 }}
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
+                                        <h5 class="card-title mb-0">{{ expert.user.full_name }}</h5>
+                                        {% if expert.is_verified %}
+                                            <span class="badge badge-vetted" title="Credentials verified"><i class="bi bi-patch-check-fill"></i> Vetted</span>
                                         {% endif %}
                                     </div>
-                                    <h5 class="card-title text-center mb-1">
-                                        {{ expert.user.full_name }}
-                                        {% if expert.is_verified %}
-                                            <i class="bi bi-patch-check-fill text-success" title="Credentials verified"></i>
-                                        {% endif %}
-                                    </h5>
-                                    <p class="text-muted small text-center mb-2">{{ expert.headline|truncatechars:80 }}</p>
+                                    
+                                    <p class="text-muted small mb-2">{{ expert.headline|truncatechars:80 }}</p>
+                                    
                                     {% if expert.affiliation %}
-                                        <p class="text-muted small text-center mb-2"><i class="bi bi-building me-1"></i>{{ expert.affiliation }}</p>
+                                        <p class="text-muted small mb-2"><i class="bi bi-building me-1"></i>{{ expert.affiliation }}</p>
                                     {% endif %}
-                                    <div class="text-center mb-2">
+                                    
+                                    <div class="mb-3">
                                         {% for tag in expert.expertise_tags.all|slice:":3" %}
-                                            <span class="badge bg-light text-dark">{{ tag.name }}</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">{{ tag.name }}</span>
                                         {% endfor %}
                                     </div>
+                                    
                                     {% if expert.average_rating > 0 %}
-                                        <div class="rating-stars text-center mb-2">
+                                        <div class="rating-stars mb-2">
                                             {% for i in "12345" %}
                                                 {% if forloop.counter <= expert.average_rating %}
                                                     <i class="bi bi-star-fill"></i>
@@ -97,17 +151,19 @@
                                                     <i class="bi bi-star"></i>
                                                 {% endif %}
                                             {% endfor %}
-                                            <span class="text-muted small">({{ expert.total_reviews }})</span>
+                                            <span class="text-muted small ms-1">({{ expert.total_reviews }})</span>
                                         </div>
                                     {% endif %}
-                                    <p class="text-center mb-0">
-                                        {% if expert.rate_60_min > 0 %}
-                                            <strong>&pound;{{ expert.rate_60_min }}</strong> / 60 min
-                                        {% endif %}
-                                    </p>
+                                    
+                                    {% if expert.rate_60_min > 0 %}
+                                        <p class="mb-0">
+                                            <strong class="text-dark">R{{ expert.rate_60_min|floatformat:0 }}</strong>
+                                            <span class="text-muted small">/ hour</span>
+                                        </p>
+                                    {% endif %}
                                 </div>
-                                <div class="card-footer bg-white border-0 text-center">
-                                    <a href="{% url 'experts:profile' pk=expert.pk %}" class="btn btn-outline-primary btn-sm">View profile</a>
+                                <div class="card-footer bg-white border-0 text-center pb-4">
+                                    <a href="{% url 'experts:profile' pk=expert.pk %}" class="btn btn-outline-primary btn-sm w-100">View profile</a>
                                 </div>
                             </div>
                         </div>
@@ -115,14 +171,14 @@
                 </div>
                 
                 {% if experts.has_other_pages %}
-                    <nav class="mt-4">
+                    <nav class="mt-5">
                         <ul class="pagination justify-content-center">
                             {% if experts.has_previous %}
-                                <li class="page-item"><a class="page-link" href="?page={{ experts.previous_page_number }}&{{ request.GET.urlencode }}">&laquo;</a></li>
+                                <li class="page-item"><a class="page-link" href="?page={{ experts.previous_page_number }}&{{ request.GET.urlencode }}">&laquo; Previous</a></li>
                             {% endif %}
-                            <li class="page-item active"><span class="page-link">{{ experts.number }} of {{ experts.paginator.num_pages }}</span></li>
+                            <li class="page-item active"><span class="page-link bg-dark border-dark">{{ experts.number }} of {{ experts.paginator.num_pages }}</span></li>
                             {% if experts.has_next %}
-                                <li class="page-item"><a class="page-link" href="?page={{ experts.next_page_number }}&{{ request.GET.urlencode }}">&raquo;</a></li>
+                                <li class="page-item"><a class="page-link" href="?page={{ experts.next_page_number }}&{{ request.GET.urlencode }}">Next &raquo;</a></li>
                             {% endif %}
                         </ul>
                     </nav>
@@ -135,6 +191,14 @@
                     <a href="{% url 'experts:directory' %}" class="btn btn-primary">Clear filters</a>
                 </div>
             {% endif %}
+            
+            <div class="card mt-5 bg-light border-0">
+                <div class="card-body p-4 text-center">
+                    <h5 class="fw-semibold mb-2">Need help finding the right expert?</h5>
+                    <p class="text-muted mb-3">Tell us about your project and our team will match you with the ideal expert for your needs.</p>
+                    <a href="{% url 'core:contact' %}" class="btn btn-accent">Get in touch</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

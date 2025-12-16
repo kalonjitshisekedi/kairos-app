@@ -71,6 +71,36 @@ def how_it_works(request):
     return render(request, 'core/how_it_works.html')
 
 
+def why_businesses(request):
+    return render(request, 'core/why_businesses.html')
+
+
+def contact(request):
+    from .forms import ContactInquiryForm
+    
+    if request.method == 'POST':
+        form = ContactInquiryForm(request.POST)
+        if form.is_valid():
+            inquiry = form.save()
+            AuditLog.objects.create(
+                user=request.user if request.user.is_authenticated else None,
+                event_type=AuditLog.EventType.ADMIN_ACTION,
+                description=f'Contact inquiry submitted: {inquiry.name} ({inquiry.email})',
+                ip_address=request.META.get('REMOTE_ADDR'),
+                metadata={
+                    'inquiry_id': str(inquiry.id),
+                    'inquiry_type': inquiry.inquiry_type,
+                    'popia_consent': inquiry.popia_consent
+                }
+            )
+            messages.success(request, 'Thank you for your inquiry. Our team will be in touch within 24-48 hours.')
+            return redirect('core:contact')
+    else:
+        form = ContactInquiryForm()
+    
+    return render(request, 'core/contact.html', {'form': form})
+
+
 @staff_member_required
 def admin_dashboard(request):
     now = timezone.now()

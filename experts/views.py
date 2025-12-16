@@ -18,9 +18,84 @@ from .forms import (
 
 
 def expert_directory(request):
-    """Legacy directory view - redirects to careers page."""
-    from django.shortcuts import redirect
-    return redirect('experts:careers')
+    """Expert directory with improved filtering and vetted badges."""
+    experts = ExpertProfile.objects.filter(
+        verification_status='verified',
+        is_publicly_listed=True
+    ).select_related('user').prefetch_related('expertise_tags')
+    
+    search = request.GET.get('search', '')
+    if search:
+        experts = experts.filter(
+            Q(user__first_name__icontains=search) |
+            Q(user__last_name__icontains=search) |
+            Q(headline__icontains=search) |
+            Q(bio__icontains=search)
+        )
+    
+    expertise = request.GET.getlist('expertise')
+    if expertise:
+        experts = experts.filter(expertise_tags__slug__in=expertise).distinct()
+    
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    if min_price:
+        experts = experts.filter(rate_60_min__gte=min_price)
+    if max_price:
+        experts = experts.filter(rate_60_min__lte=max_price)
+    
+    sort = request.GET.get('sort', 'rating')
+    if sort == 'price_low':
+        experts = experts.order_by('rate_60_min')
+    elif sort == 'price_high':
+        experts = experts.order_by('-rate_60_min')
+    else:
+        experts = experts.order_by('-average_rating', '-total_reviews')
+    
+    paginator = Paginator(experts, 12)
+    page = request.GET.get('page')
+    experts = paginator.get_page(page)
+    
+    discipline_tags = ExpertiseTag.objects.filter(tag_type='discipline')
+    
+    context = {
+        'experts': experts,
+        'discipline_tags': discipline_tags,
+        'search': search,
+        'selected_expertise': expertise,
+        'min_price': min_price,
+        'max_price': max_price,
+        'sort': sort,
+    }
+    return render(request, 'experts/directory.html', context)
+
+
+def join_as_expert(request):
+    """Careers page for experts with application form."""
+    from .forms_application import ExpertApplicationForm
+    
+    if request.method == 'POST':
+        form = ExpertApplicationForm(request.POST, request.FILES)
+        if form.is_valid():
+            application = form.save()
+            AuditLog.objects.create(
+                user=request.user if request.user.is_authenticated else None,
+                event_type=AuditLog.EventType.ADMIN_ACTION,
+                description=f'Expert application submitted: {application.full_name} ({application.email})',
+                ip_address=request.META.get('REMOTE_ADDR'),
+                metadata={
+                    'application_id': str(application.id),
+                    'expertise_areas': application.expertise_areas,
+                    'popia_consent': application.popia_consent,
+                    'has_cv': bool(application.cv_file)
+                }
+            )
+            messages.success(request, 'Thank you for your application! Our team will review it and contact you within 5 business days.')
+            return redirect('experts:join')
+    else:
+        form = ExpertApplicationForm()
+    
+    return render(request, 'experts/join.html', {'form': form})
 
 
 def careers(request):

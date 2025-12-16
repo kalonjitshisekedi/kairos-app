@@ -1,7 +1,35 @@
 """
 Core models for the Kairos platform.
 """
+import uuid
 from django.db import models
+
+
+class ContactInquiry(models.Model):
+    class InquiryType(models.TextChoices):
+        GENERAL = 'general', 'General Inquiry'
+        PROJECT = 'project', 'Project Matching'
+        PARTNERSHIP = 'partnership', 'Business Partnership'
+        SUPPORT = 'support', 'Technical Support'
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=200)
+    email = models.EmailField()
+    company = models.CharField(max_length=200, blank=True)
+    inquiry_type = models.CharField(max_length=20, choices=InquiryType.choices, default=InquiryType.GENERAL)
+    message = models.TextField()
+    popia_consent = models.BooleanField(default=False)
+    is_resolved = models.BooleanField(default=False)
+    resolved_by = models.CharField(max_length=200, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    resolved_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'core_contact_inquiry'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.name} - {self.get_inquiry_type_display()}'
 
 
 class SiteSettings(models.Model):

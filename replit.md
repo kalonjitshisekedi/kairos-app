@@ -4,11 +4,14 @@
 Kairos is a SaaS platform connecting clients with verified PhD experts, professors, and industry specialists for premium consultations. The platform emphasises brilliance, expertise, and global service capability.
 
 ## Recent Changes
+- **December 2024**: Added SVG logo and "Get In Touch" button in navbar
+- **December 2024**: Created "Why Businesses Benefit" page for South African market context
+- **December 2024**: Created "Get In Touch" contact page with POPIA-compliant form
+- **December 2024**: Created "Join as Expert" careers page with CV upload, LinkedIn, GitHub, ORCID fields
+- **December 2024**: Enhanced Expert Directory with "Vetted" badges and improved filtering
+- **December 2024**: Added 10 dummy experts via seed_experts management command
+- **December 2024**: Added ContactInquiry and ExpertApplication models
 - **December 2024**: Redesigned UI with elegant black/white color scheme and gold accent color
-- **December 2024**: Created new "Careers" page with domain/expertise/skill-based search
-- **December 2024**: Removed pricing visibility from public pages (shown after consultation)
-- **December 2024**: Updated navigation structure and messaging to emphasise expert brilliance
-- **December 2024**: Added comprehensive AWS deployment documentation in README.md
 
 ## Project Architecture
 
@@ -24,8 +27,11 @@ Kairos is a SaaS platform connecting clients with verified PhD experts, professo
 ### Key Files
 - `kairos/settings.py` - Django configuration
 - `templates/base.html` - Base template with global styling (black/white/gold theme)
-- `templates/experts/careers.html` - Main expert search page (skill-based)
-- `templates/experts/profile.html` - Expert profile (pricing hidden until consultation)
+- `templates/experts/directory.html` - Expert directory with vetted badges and filters
+- `templates/experts/join.html` - Expert application form (CV, LinkedIn, GitHub, ORCID)
+- `templates/core/why_businesses.html` - Why businesses benefit page (South African context)
+- `templates/core/contact.html` - Contact form with POPIA compliance
+- `core/management/commands/seed_experts.py` - Seed 10 dummy experts
 
 ### Design System
 - **Primary colors**: Black (#0a0a0a), white (#fafafa)

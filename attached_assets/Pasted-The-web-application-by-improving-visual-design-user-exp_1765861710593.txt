@@ -1,0 +1,53 @@
+The  web application by improving visual design, user experience, and adding comprehensive pages for expert management, career opportunities, and client matching.
+Return Format
+
+Provide specific, actionable code implementations and design recommendations organized by component:
+
+    HTML/CSS code snippets for UI improvements with mobile-responsive design
+    Suggestions for stock image sources and placement (free licensed sources)
+    Design mockups or detailed descriptions for expert selection and skills interfaces
+    Complete Careers page with application form (CV upload, LinkedIn, Github, ORCID fields)
+    Expert directory page displaying 10 vetted experts with fields of expertise, profiles, and credentials
+    "Why Businesses Benefit" page addressing South African business context
+    "Get In Touch" page and button for project matching inquiries (for companies and individuals)
+    Logo design specifications or SVG code for holding logo
+    Contact/consultation button implementation
+    Step-by-step AWS domain linking instructions with deployment details
+    Documentation detailing all 10 dummy experts (names, expertise, credentials, verification status)
+
+Warnings
+
+    Ensure all stock images are properly licensed (recommend Unsplash, Pexels, Pixabay)
+    Expert/skills selection interface must be mobile-responsive for South African mobile-first users
+    CV upload functionality requires secure file handling; clarify storage method (Replit database, cloud storage)
+    Display clear "Vetted Expert" badges to build trust and credibility
+    Domain linking instructions must specify which AWS service is being used (Route 53, CloudFront, S3)
+    Contact forms must comply with POPIA (Protection of Personal Information Act) for South African data protection
+    Careers page should clearly communicate flexibility, competitive rates, and time autonomy to attract expert talent
+    Expert profiles should include verification indicators and credentials to reassure clients
+    Avoid overly complex navigation; ensure intuitive flow between expert browsing, project matching, and career opportunities
+    "Get In Touch" form should be accessible from multiple pages (header button, dedicated page, expert profiles)
+
+Context
+
+The web application is being developed on Replit for a Johannesburg-based consulting service called Kairos. The application serves three user types:
+
+    Clients/Companies: Seeking vetted experts for projects
+    Individual Professionals: Looking to hire experts or learn about opportunities
+    Expert Candidates: Interested in joining the Kairos network
+
+Current application requirements:
+
+    Expert selection and skills interface needing UX/UI improvements
+    Careers page explaining benefits of joining Kairos (flexibility, your time, your rates)
+    Expert application form with CV upload and professional profile links (LinkedIn, Github, ORCID)
+    Expert directory displaying 10 vetted experts with expertise fields and credentials
+    "Why Businesses Benefit" page addressing South African business pain points
+    "Get In Touch" page for project matching and inquiries
+    Holding logo and branding elements
+    Consultation/contact call-to-action buttons throughout application
+    AWS domain deployment documentation
+
+Target audience: South African businesses, professionals, and expert consultants seeking flexible engagement models. Design should reflect local business culture while maintaining professional standards. All experts should be clearly marked as "vetted" to build client confidence.
+
+Dummy expert documentation should include: name, field of expertise, years of experience, credentials/certifications, LinkedIn profile link, verification status, brief bio, and specialization areas.

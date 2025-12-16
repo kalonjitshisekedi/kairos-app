@@ -209,3 +209,35 @@ class VerificationDocument(models.Model):
 
     def __str__(self):
         return f'{self.get_document_type_display()} - {self.expert}'
+
+
+class ExpertApplication(models.Model):
+    class ApplicationStatus(models.TextChoices):
+        PENDING = 'pending', 'Pending Review'
+        APPROVED = 'approved', 'Approved'
+        REJECTED = 'rejected', 'Rejected'
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    full_name = models.CharField(max_length=200)
+    email = models.EmailField()
+    phone = models.CharField(max_length=50, blank=True)
+    linkedin_url = models.URLField(blank=True)
+    github_url = models.URLField(blank=True)
+    orcid_id = models.CharField(max_length=50, blank=True)
+    expertise_areas = models.TextField()
+    years_experience = models.IntegerField(default=0)
+    bio = models.TextField(blank=True)
+    cv_file = models.FileField(upload_to='applications/', blank=True, null=True)
+    status = models.CharField(max_length=20, choices=ApplicationStatus.choices, default=ApplicationStatus.PENDING)
+    popia_consent = models.BooleanField(default=False)
+    admin_notes = models.TextField(blank=True)
+    reviewed_by = models.CharField(max_length=200, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'experts_application'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.full_name} - {self.get_status_display()}'

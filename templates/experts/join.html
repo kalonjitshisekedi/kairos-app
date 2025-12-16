@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block title %}Join as Expert{% endblock %}
+
+{% block content %}
+<section class="hero text-center">
+    <div class="container">
+        <p class="text-accent text-uppercase small fw-semibold mb-3" style="letter-spacing: 0.1em;">Careers at Kairos</p>
+        <h1 class="mb-3">Share your expertise</h1>
+        <p class="tagline mb-4">Join a network of vetted professionals. Set your own rates,<br>work on your schedule, and connect with clients who value your expertise.</p>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-5">
+                <h3 class="fw-semibold mb-4">Why join Kairos?</h3>
+                
+                <div class="d-flex mb-4">
+                    <div class="feature-icon me-3 flex-shrink-0" style="width: 48px; height: 48px;">
+                        <i class="bi bi-clock"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-semibold mb-2">Your time, your schedule</h5>
+                        <p class="text-muted mb-0">Set your own availability. Work when it suits you, from wherever you are.</p>
+                    </div>
+                </div>
+                
+                <div class="d-flex mb-4">
+                    <div class="feature-icon me-3 flex-shrink-0" style="width: 48px; height: 48px;">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-semibold mb-2">Your rates, your terms</h5>
+                        <p class="text-muted mb-0">You decide what your expertise is worth. Set competitive rates that reflect your value.</p>
+                    </div>
+                </div>
+                
+                <div class="d-flex mb-4">
+                    <div class="feature-icon me-3 flex-shrink-0" style="width: 48px; height: 48px;">
+                        <i class="bi bi-globe2"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-semibold mb-2">Global reach</h5>
+                        <p class="text-muted mb-0">Connect with clients from South Africa and around the world. Expand your professional network.</p>
+                    </div>
+                </div>
+                
+                <div class="d-flex mb-4">
+                    <div class="feature-icon me-3 flex-shrink-0" style="width: 48px; height: 48px;">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-semibold mb-2">Vetted badge</h5>
+                        <p class="text-muted mb-0">Once verified, you receive a "Vetted Expert" badge that builds trust with potential clients.</p>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <div class="card bg-light border-0">
+                    <div class="card-body p-4">
+                        <h6 class="fw-semibold mb-3">What we look for</h6>
+                        <ul class="list-unstyled mb-0 small text-muted">
+                            <li class="mb-2"><i class="bi bi-check-circle text-accent me-2"></i>Verified credentials (degrees, certifications)</li>
+                            <li class="mb-2"><i class="bi bi-check-circle text-accent me-2"></i>5+ years professional experience</li>
+                            <li class="mb-2"><i class="bi bi-check-circle text-accent me-2"></i>Strong communication skills</li>
+                            <li class="mb-0"><i class="bi bi-check-circle text-accent me-2"></i>Active professional profile (LinkedIn, ORCID)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-lg">
+                    <div class="card-body p-5">
+                        <h4 class="fw-semibold mb-4">Apply to join our network</h4>
+                        
+                        <form method="post" action="{% url 'experts:join' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                            {% endif %}
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Full name <span class="text-danger">*</span></label>
+                                    <input type="text" name="full_name" class="form-control {% if form.full_name.errors %}is-invalid{% endif %}" value="{{ form.full_name.value|default:'' }}" required>
+                                    {% if form.full_name.errors %}<div class="invalid-feedback">{{ form.full_name.errors.0 }}</div>{% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email address <span class="text-danger">*</span></label>
+                                    <input type="email" name="email" class="form-control {% if form.email.errors %}is-invalid{% endif %}" value="{{ form.email.value|default:'' }}" required>
+                                    {% if form.email.errors %}<div class="invalid-feedback">{{ form.email.errors.0 }}</div>{% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3 mt-3">
+                                <label class="form-label">Phone number</label>
+                                <input type="tel" name="phone" class="form-control" placeholder="+27..." value="{{ form.phone.value|default:'' }}">
+                            </div>
+                            
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">LinkedIn profile URL</label>
+                                    <input type="url" name="linkedin_url" class="form-control" placeholder="https://linkedin.com/in/..." value="{{ form.linkedin_url.value|default:'' }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">GitHub profile URL</label>
+                                    <input type="url" name="github_url" class="form-control" placeholder="https://github.com/..." value="{{ form.github_url.value|default:'' }}">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">ORCID ID</label>
+                                <input type="text" name="orcid_id" class="form-control" placeholder="0000-0000-0000-0000" value="{{ form.orcid_id.value|default:'' }}">
+                                <small class="text-muted">Optional: Your ORCID researcher identifier</small>
+                            </div>
+                            
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-8">
+                                    <label class="form-label">Areas of expertise <span class="text-danger">*</span></label>
+                                    <input type="text" name="expertise_areas" class="form-control {% if form.expertise_areas.errors %}is-invalid{% endif %}" placeholder="e.g. Machine Learning, Financial Analysis, Strategic Consulting" value="{{ form.expertise_areas.value|default:'' }}" required>
+                                    {% if form.expertise_areas.errors %}<div class="invalid-feedback">{{ form.expertise_areas.errors.0 }}</div>{% endif %}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Years of experience</label>
+                                    <select name="years_experience" class="form-select">
+                                        <option value="0">Select...</option>
+                                        <option value="3" {% if form.years_experience.value == '3' %}selected{% endif %}>3-5 years</option>
+                                        <option value="5" {% if form.years_experience.value == '5' %}selected{% endif %}>5-10 years</option>
+                                        <option value="10" {% if form.years_experience.value == '10' %}selected{% endif %}>10-15 years</option>
+                                        <option value="15" {% if form.years_experience.value == '15' %}selected{% endif %}>15-20 years</option>
+                                        <option value="20" {% if form.years_experience.value == '20' %}selected{% endif %}>20+ years</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Professional bio</label>
+                                <textarea name="bio" class="form-control" rows="4" placeholder="Tell us about your background, achievements, and what makes you an expert in your field...">{{ form.bio.value|default:'' }}</textarea>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">CV / Resume</label>
+                                <input type="file" name="cv_file" class="form-control {% if form.cv_file.errors %}is-invalid{% endif %}" accept=".pdf,.doc,.docx">
+                                <small class="text-muted">Upload your CV in PDF, DOC, or DOCX format (max 10MB)</small>
+                                {% if form.cv_file.errors %}<div class="invalid-feedback d-block">{{ form.cv_file.errors.0 }}</div>{% endif %}
+                            </div>
+                            
+                            <div class="form-check mb-4">
+                                <input class="form-check-input {% if form.popia_consent.errors %}is-invalid{% endif %}" type="checkbox" name="popia_consent" id="popia_consent" required>
+                                <label class="form-check-label small" for="popia_consent">
+                                    I consent to Kairos processing my personal information as described in the <a href="{% url 'core:privacy' %}">Privacy Policy</a> in compliance with the Protection of Personal Information Act (POPIA). I understand my CV and application details will be stored securely and reviewed by the Kairos team. <span class="text-danger">*</span>
+                                </label>
+                                {% if form.popia_consent.errors %}<div class="invalid-feedback d-block">{{ form.popia_consent.errors.0 }}</div>{% endif %}
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="bi bi-send me-2"></i>Submit application
+                            </button>
+                            
+                            <p class="text-muted small text-center mt-3 mb-0">Applications are typically reviewed within 5 business days.</p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h3 class="fw-semibold mb-3">How it works for experts</h3>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="bg-kairos text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px;">
+                        <span class="fw-bold">1</span>
+                    </div>
+                    <h5 class="fw-semibold mb-2">Apply and get verified</h5>
+                    <p class="text-muted">Submit your application. Our team will verify your credentials and professional background.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="bg-kairos text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px;">
+                        <span class="fw-bold">2</span>
+                    </div>
+                    <h5 class="fw-semibold mb-2">Build your profile</h5>
+                    <p class="text-muted">Once approved, create your expert profile. Set your rates, availability, and showcase your expertise.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="bg-kairos text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px;">
+                        <span class="fw-bold">3</span>
+                    </div>
+                    <h5 class="fw-semibold mb-2">Start consulting</h5>
+                    <p class="text-muted">Accept bookings from clients, conduct consultations, and receive secure payments.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

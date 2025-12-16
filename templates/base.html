@@ -18,6 +18,7 @@
             --kairos-accent-hover: #b8943f;
             --kairos-white: #fafafa;
             --kairos-off-white: #f5f5f5;
+            --kairos-success: #10b981;
         }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -104,6 +105,16 @@
             background-color: var(--kairos-accent);
             color: var(--kairos-black);
         }
+        .badge-vetted {
+            background-color: var(--kairos-success);
+            color: white;
+            font-weight: 600;
+            padding: 0.35em 0.8em;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
         .badge-pending {
             background-color: var(--kairos-light-gray);
             color: white;
@@ -111,6 +122,15 @@
         .badge-incomplete {
             background-color: #9ca3af;
             color: white;
+        }
+        .kairos-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .kairos-logo svg {
+            height: 32px;
+            width: auto;
         }
         .card {
             border: 1px solid rgba(0,0,0,0.08);
@@ -206,20 +226,36 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'core:home' %}">Kairos</a>
+            <a class="navbar-brand kairos-logo" href="{% url 'core:home' %}">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="20" r="18" stroke="#c9a962" stroke-width="2.5"/>
+                    <path d="M20 8 L20 20 L28 26" stroke="#c9a962" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="3" fill="#c9a962"/>
+                </svg>
+                <span>Kairos</span>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'experts:directory' %}">Find Experts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:why_businesses' %}">For Businesses</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'core:how_it_works' %}">How it works</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'experts:careers' %}">Careers</a>
+                        <a class="nav-link" href="{% url 'experts:join' %}">Join as Expert</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
+                    <li class="nav-item me-2">
+                        <a class="btn btn-accent" href="{% url 'core:contact' %}"><i class="bi bi-chat-dots me-1"></i>Get In Touch</a>
+                    </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
@@ -285,8 +321,10 @@
                 <div class="col-md-4">
                     <h6 class="mb-3">Platform</h6>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="{% url 'experts:careers' %}">Find expertise</a></li>
-                        <li class="mb-2"><a href="{% url 'core:how_it_works' %}">How it works</a></li>
+                        <li class="mb-2"><a href="{% url 'experts:directory' %}">Find experts</a></li>
+                        <li class="mb-2"><a href="{% url 'core:why_businesses' %}">For businesses</a></li>
+                        <li class="mb-2"><a href="{% url 'experts:join' %}">Join as expert</a></li>
+                        <li class="mb-2"><a href="{% url 'core:contact' %}">Get in touch</a></li>
                     </ul>
                 </div>
             </div>
