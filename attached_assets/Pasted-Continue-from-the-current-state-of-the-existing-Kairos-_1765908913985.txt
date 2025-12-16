@@ -1,0 +1,83 @@
+Continue from the current state of the existing Kairos Django project. Do not rebuild. Do not revert.
+
+Context:
+Replit implemented the 3 homepage CTAs and added “Expert careers” to the navbar.
+It also updated most CTA labels site-wide, but it stopped right after noting that two form page titles were intentionally kept as:
+- “Submit a request”
+- “Apply to join our network”
+Then it hit the quota limit before finishing the remaining consistency work.
+
+Your task now is to finish the remaining updates and verify everything works.
+
+Critical rules:
+- Do not stop early.
+- Do not leave TODOs.
+- If anything breaks, fix it and continue.
+- British English and sentence case everywhere.
+- Keep premium, enterprise-grade wording (not marketplace).
+
+────────────────────────────────────────
+1) Update the remaining form page titles
+────────────────────────────────────────
+Even if they were previously “kept as-is”, we now want consistency.
+
+Find the templates/views for:
+A) consultations:submit_request page title and heading
+- Replace “Submit a request” with:
+  - “Request expert matching”
+- Ensure the browser title ({% block title %}) and the on-page H1/H2 heading match.
+
+B) experts careers / join application page title and heading
+- Replace “Apply to join our network” (or similar) with:
+  - “Join the expert network”
+- Ensure the browser title and on-page heading match.
+
+Keep the wording professional and clear. Do not use “apply” in the primary heading.
+
+────────────────────────────────────────
+2) Verify all navigation and CTAs are consistent
+────────────────────────────────────────
+Run a quick search in the codebase for old text and replace where appropriate:
+- “Submit a request”
+- “Apply to join”
+- “Apply to become an expert”
+- “Get started” (if it now conflicts with the enterprise tone)
+
+Target consistent labels:
+- “Request expert matching”
+- “How it works”
+- “Join the expert network”
+- “Expert careers”
+- “Contact us”
+
+Do not change content where “submit” is used inside form helper text describing the action (only headings/buttons/titles should match the new CTA language).
+
+────────────────────────────────────────
+3) QA checklist (must be done)
+────────────────────────────────────────
+- Restart server and click through:
+  - Home page (3 CTAs visible and correct)
+  - Request expert matching page
+  - Expert careers page (/experts/careers/)
+  - Blog index
+  - Contact us
+- Confirm no broken links in navbar or footer.
+- Confirm no pages show “Submit a request” or “Apply to join” as a heading/title anymore.
+
+────────────────────────────────────────
+4) Documentation update
+────────────────────────────────────────
+Update README.md if it references old button labels, so it uses:
+- “Request expert matching”
+- “Join the expert network”
+And ensure the click-through checklist matches the current UI text.
+
+────────────────────────────────────────
+Final output requirement
+────────────────────────────────────────
+At the end, provide a short summary:
+- Files changed
+- Exactly what text was updated
+- Confirm the QA checklist passed
+
+Now proceed and complete these remaining tasks.
