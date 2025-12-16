@@ -6,6 +6,11 @@ Kairos is a premium, confidential, enterprise-focused expert network. The platfo
 **Tagline**: "Don't guess. Know."
 
 ## Recent Changes
+- **December 2025**: Comprehensive premium UI redesign with dark luxury theme (#1a1a1a), gold accents (#c9a962), elegant serif typography
+- **December 2025**: Implemented tiered privacy access controls: public (all), semi-private (verified clients only), private (admin-matched)
+- **December 2025**: Semi-private access now requires email_verified=True on client accounts
+- **December 2025**: Expert directory shows access restriction notice for unauthenticated users
+- **December 2025**: Updated 15+ templates with premium styling and concierge-led language
 - **December 2024**: Transformed platform from public marketplace to enterprise-focused expert network
 - **December 2024**: Removed hourly rates; pricing is now per-engagement negotiated by Kairos team
 - **December 2024**: Added privacy levels for experts (public, semi-private, private)
