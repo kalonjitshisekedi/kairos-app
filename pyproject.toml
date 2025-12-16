@@ -17,3 +17,7 @@ dependencies = [
     "stripe>=14.0.1",
     "whitenoise>=6.11.0",
 ]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "kairos.settings"
+python_files = ["test_*.py", "*_test.py", "tests.py"]

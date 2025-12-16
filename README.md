@@ -441,13 +441,17 @@ This command is idempotent and safe to run multiple times.
 - Super admin with full access
 - Operations user (staff only, no superuser)
 - Client user (Morgan Naidoo from Umkhonto Capital)
-- Expert user (Naledi Mbeki with 18 years fintech/risk experience)
+- 4 expert profiles with diverse specialisms:
+  - Dr Thabo Molefe: Computational biology specialist, ML for drug discovery
+  - Prof Nomvula Dlamini: Regulatory policy and financial systems (emeritus)
+  - Dr Adaeze Okonkwo: Early-career PhD, materials science and renewable energy
+  - Dr Johan van Wyk: Quantitative finance specialist, risk model development
 
 **Content:**
+- 16 expertise tags across disciplines and industries
 - 3 published blog posts
-- 1 pending client request
+- 1 pending client request (awaiting match)
 - 1 matched/scheduled engagement
-- 1 ongoing engagement (in progress)
 - 1 completed engagement with review
 
 ### Quick click-through test checklist

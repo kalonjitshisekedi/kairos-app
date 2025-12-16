@@ -1,0 +1,136 @@
+Continue from the current state of the existing Kairos Django project. Do not rebuild. Do not revert changes.
+
+Context:
+Replit stopped after reporting:
+- “All 6 tests pass”
+- It ran ripgrep to find and replace the old email domain
+- It restarted the Django server
+- It was about to address the architect review concerns and finish remaining fixes, but hit quota.
+
+Your task is to resume from exactly here and complete all remaining items. Do not stop early. Do not leave TODOs. If something breaks, fix it and continue until the app works end-to-end.
+
+Keep British English and sentence case everywhere. Maintain the premium, confidential expert network tone. No marketplace framing.
+
+────────────────────────────────────────
+1) Verify logout fix is complete (no blank page)
+────────────────────────────────────────
+- Manually test logout in the browser.
+- Ensure logout is a POST-only action with CSRF protection, OR implement a safe GET logout if the current UX depends on it, but do it correctly (no blank response).
+- Regardless of method, logout must always redirect to home (or login) with a success message and render normally.
+- Ensure nav “Log out” triggers the correct HTTP method.
+  If logout is POST-only, replace the dropdown “Log out” link with a small form + button styled as a dropdown item.
+
+Acceptance criteria:
+- Logout never returns a blank page.
+- Logout works consistently across authenticated roles (client, expert, admin).
+
+────────────────────────────────────────
+2) Admin navbar behaviour (no “Submit a request” CTA)
+────────────────────────────────────────
+- When user.is_staff is true:
+  - Remove/hide “Submit a request” CTA.
+  - Show “Operations” as the primary CTA (btn-primary) linking to the admin dashboard route.
+  - In the user dropdown label, show “Admin” (or “Operations”) instead of first name.
+
+- When user is not staff:
+  - Keep “Submit a request” CTA for client/expert users.
+
+Acceptance criteria:
+- Admin users never see a client CTA to request services.
+- Admin CTA and label are clear and premium.
+
+────────────────────────────────────────
+3) Email domain consistency
+────────────────────────────────────────
+- Choose ONE contact email and use it everywhere:
+  Preferred: contact@kairos.co.za
+- Update:
+  - Contact us page (display + mailto)
+  - Footer
+  - README
+  - Any settings/default_from_email references if applicable
+
+Acceptance criteria:
+- No remaining references to kairos.africa email in templates/docs (unless intentionally used elsewhere).
+- Use ripgrep to confirm.
+
+────────────────────────────────────────
+4) Currency and payment language (invoice-based, rand)
+────────────────────────────────────────
+- Ensure all currency references are ZAR (rand), displayed as “R …”.
+- Remove any client-facing “pay now”, “Stripe checkout”, or card payment language.
+- Replace with invoice/PO language:
+  - “Invoices and purchase orders supported.”
+  - “Payment is managed through invoice for approved organisations.”
+
+- If there are payment buttons/flows visible, hide them and keep payment models internal only.
+
+Acceptance criteria:
+- No USD/$ wording in the UI.
+- No Stripe checkout UI visible to clients.
+- Any mention of pricing is proposal/invoice based.
+
+────────────────────────────────────────
+5) Seed demo data improvements (experts + engagements)
+────────────────────────────────────────
+Update the existing seed_demo command to create realistic demo entities:
+
+Users:
+- admin@kairos.co.za (superuser + staff) password KairosAdmin123!
+- ops@kairos.co.za (staff only) password KairosOps123!
+- client@kairos.co.za password KairosClient123!
+- expert@kairos.co.za password KairosExpert123!
+
+Experts:
+Create at least 4 experts reflecting diversity:
+1) STEM PhD specialist (e.g. ML / computational biology / materials)
+2) Retired academic (professor emeritus) with applied advisory
+3) Young PhD specialist (early-career, niche expertise)
+4) Industry veteran specialist (optional)
+
+Important copy rule:
+- Do not emphasise “X years of experience” as the primary value.
+- Emphasise specialism, technical skill, domain expertise, and project types.
+(Years of experience can exist as a field but must not be the headline marketing hook.)
+
+Engagements/projects:
+Seed realistic workflow objects so dashboards are not empty:
+- 1 submitted client request
+- 1 matched/scheduled engagement
+- 1 ongoing engagement
+- 1 completed engagement (optionally with a review)
+Use whatever existing models exist (requests/bookings/engagements) and map status fields accordingly.
+
+Blog:
+Ensure 3 published blog posts exist so /blog/ is not empty.
+
+Acceptance criteria:
+- python manage.py seed_demo runs cleanly, is idempotent, and results are visible in UI.
+
+────────────────────────────────────────
+6) Update “Why Africa” copy (premium, talent-led)
+────────────────────────────────────────
+On the Why Kairos / philosophy page:
+- Update the “Why Africa” section to focus on the quality of young professionals and technical talent produced on the continent.
+- Keep it premium and globally credible, not charity framing.
+- Example themes:
+  - “Africa produces exceptional technical and scientific talent.”
+  - “Kairos surfaces specialised insight with local context and global standards.”
+
+Acceptance criteria:
+- Updated section reads premium and confidence-led.
+
+────────────────────────────────────────
+7) Final verification and documentation
+────────────────────────────────────────
+- Run migrations if any model changes were made.
+- Run tests (pytest) and ensure they still pass.
+- Update README demo accounts section with:
+  - seed_demo instructions
+  - demo emails/passwords
+  - what demo data gets created
+  - click-through checklist to verify the platform works
+
+Finally, summarise what was changed and confirm each acceptance criterion is met.
+
+Now proceed and finish all tasks.
