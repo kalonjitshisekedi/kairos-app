@@ -459,8 +459,10 @@ This command is idempotent and safe to run multiple times.
 **Public pages:**
 1. Home → Blog (should show 3 posts)
 2. Home → Why Kairos
-3. Home → Contact us (should show contact@kairos.co.za)
-4. Verify navbar shows: Log in → Create an account → Submit a request
+3. Home → Expertise (new page showing expertise clusters)
+4. Home → Contact us (should show contact@kairos.co.za)
+5. Verify navbar shows: Why Kairos, How it works, For enterprise, Expertise, Blog, Contact us
+6. Verify navbar CTAs: Log in → Create an account → Request expert matching
 
 **Admin workflow:**
 1. Log in as admin@kairos.co.za
@@ -470,7 +472,7 @@ This command is idempotent and safe to run multiple times.
 
 **Client workflow:**
 1. Log in as client@kairos.co.za
-2. Submit a request via "Submit a request" button
+2. Submit a request via "Request expert matching" button
 3. View dashboard and existing requests/engagements
 
 **Expert workflow:**

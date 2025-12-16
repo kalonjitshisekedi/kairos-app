@@ -64,9 +64,9 @@
                 <div class="card p-4" style="background-color: var(--kairos-ivory);">
                     <h6 class="fw-semibold mb-3"><i class="bi bi-stars text-gold me-2"></i>What we look for</h6>
                     <ul class="list-unstyled mb-0 small text-muted">
-                        <li class="mb-2"><i class="bi bi-check-circle text-gold me-2"></i>10+ years of professional experience</li>
-                        <li class="mb-2"><i class="bi bi-check-circle text-gold me-2"></i>Senior roles in your field</li>
-                        <li class="mb-2"><i class="bi bi-check-circle text-gold me-2"></i>Deep sector or domain expertise</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-gold me-2"></i>Demonstrable specialist expertise</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-gold me-2"></i>Recognised capability in your field</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-gold me-2"></i>Evidence of applied work (research, delivery, advisory, leadership)</li>
                         <li class="mb-0"><i class="bi bi-check-circle text-gold me-2"></i>Commitment to confidentiality</li>
                     </ul>
                 </div>
@@ -75,7 +75,7 @@
             <div class="col-lg-7">
                 <div class="card">
                     <div class="card-body p-5">
-                        <h4 class="fw-semibold mb-4" style="font-family: var(--font-serif);">Apply to join our network</h4>
+                        <h4 class="fw-semibold mb-4" style="font-family: var(--font-serif);">Join the expert network</h4>
                         
                         <form method="post" action="{% url 'experts:join' %}" enctype="multipart/form-data">
                             {% csrf_token %}
@@ -99,7 +99,7 @@
                             
                             <div class="mb-3 mt-3">
                                 <label class="form-label">Phone number</label>
-                                <input type="tel" name="phone" class="form-control" placeholder="+44..." value="{{ form.phone.value|default:'' }}">
+                                <input type="tel" name="phone" class="form-control" placeholder="+27 82 123 4567" value="{{ form.phone.value|default:'' }}">
                             </div>
                             
                             <div class="row g-3 mb-3">

@@ -79,6 +79,10 @@ def why_kairos(request):
     return render(request, 'core/why_kairos.html')
 
 
+def expertise(request):
+    return render(request, 'core/expertise.html')
+
+
 def contact(request):
     from .forms import ContactInquiryForm
     

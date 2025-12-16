@@ -1,0 +1,182 @@
+Continue in the existing Kairos Django codebase. Do not rebuild. Do not revert.
+
+Context:
+Some UI and content changes were partially implemented but issues remain:
+- A pound sign (£) is still visible in the UI.
+- Expert careers page still says “10+ years of professional experience”.
+- Phone number default uses +44 instead of South Africa.
+- “Join the expert network” link on the contact form points to the wrong page.
+- Expert search page returns nothing / search is broken.
+- The homepage and navbar structure feels odd and redundant (“Expert network” + “Expert careers”).
+- We want a premium expert network, not an expert marketplace directory.
+
+Critical rules:
+- Do not stop early.
+- Do not leave TODOs.
+- If something breaks, fix it and continue.
+- British English, sentence case, premium tone.
+- South Africa-first (soft), not UK-centric.
+- Do not show individual expert profiles publicly. Do not create “browse experts” behaviour.
+
+────────────────────────────────────────
+1) Remove all pound signs and UK currency references
+────────────────────────────────────────
+- Search entire repo for: “£”, “GBP”, “pound”
+- Replace any currency display with South African rand format:
+  - “R 1,200” (space after R, comma thousands)
+- If currency appears in any seed data or templates, update it.
+- Update any tests expecting £ to R.
+
+Acceptance criteria:
+- No £ symbol anywhere in the UI or templates or seeded content.
+
+────────────────────────────────────────
+2) Remove “10+ years experience” and experience-first language
+────────────────────────────────────────
+On the expert careers page (and anywhere else):
+- Replace “10+ years of professional experience” with skill-first language:
+  Examples:
+  - “Demonstrable specialist expertise”
+  - “Recognised capability in your field”
+  - “Evidence of applied work (research, delivery, advisory, leadership)”
+- Remove any copy that frames entry primarily by years.
+- Keep it inclusive of: STEM PhDs, retired academics, young PhDs, and industry specialists.
+
+Acceptance criteria:
+- No “10+ years” requirement appears anywhere.
+- The “what we look for” section is skill-first.
+
+────────────────────────────────────────
+3) South Africa phone default (+27) instead of +44
+────────────────────────────────────────
+Locate the contact form / request form phone field:
+- Ensure default country code is +27 (South Africa).
+- If you are using a placeholder, use:
+  - “+27 82 123 4567”
+- If you are using a select input or library, set default country to ZA.
+
+Acceptance criteria:
+- No +44 default anywhere in forms.
+- Placeholders reflect South Africa.
+
+────────────────────────────────────────
+4) Fix contact form “Join the expert network” link target
+────────────────────────────────────────
+On the contact page, any expert CTA must link to:
+- /experts/careers/  (experts:careers)
+
+Ensure there are no links pointing to experts:join if that is not the correct page.
+
+Acceptance criteria:
+- All expert-joining CTAs go to experts:careers.
+
+────────────────────────────────────────
+5) Redesign navigation to remove redundancy and marketplace feel
+────────────────────────────────────────
+We do NOT want both “Expert network” and “Expert careers” as separate top-level nav items.
+
+New nav structure (top-level):
+- Why Kairos
+- How it works
+- For enterprise
+- Expertise (NEW)
+- Blog
+- Contact us
+
+Remove:
+- Expert network
+- Expert careers
+
+Replace with:
+- Expertise (a new page that shows capability areas, not people)
+
+CTA on navbar (non-admin):
+- Primary button: “Request expert matching”
+
+Auth controls:
+- Log in link
+- Create an account outline button
+
+Admin:
+- Primary button becomes “Operations” and no client CTA.
+
+Acceptance criteria:
+- Navbar no longer shows “Expert network” or “Expert careers”.
+- Navbar includes “Expertise”.
+
+────────────────────────────────────────
+6) Create “Expertise” page (not a directory)
+────────────────────────────────────────
+Create a new page: /expertise/
+
+Purpose:
+- Show the breadth of the network without listing individuals.
+- Present curated expertise clusters and example engagement types.
+- Allow enterprise buyers to understand coverage.
+
+Page sections:
+- Hero: “Expertise across critical domains”
+- Expertise clusters (cards):
+  - e.g., machine learning and data science
+  - computational biology and genomics
+  - public health and epidemiology
+  - fintech and risk
+  - climate and energy systems
+  - supply chain and operations
+  - policy, regulation, and governance
+- “How engagements work” mini section
+- CTA: “Request expert matching”
+- CTA: “Join the expert network” (links to experts:careers)
+
+Implementation:
+- Core view + URL + template: templates/core/expertise.html
+- Add link in navbar and footer.
+
+Acceptance criteria:
+- Expertise page exists, looks premium, and does not show any individual experts.
+
+────────────────────────────────────────
+7) Disable or remove public expert search/directory
+────────────────────────────────────────
+Problem: “Expert page search can’t find anything” and we do not want public browsing anyway.
+
+Tasks:
+- Either remove the directory route from public nav entirely, OR gate it behind verified users/admin only.
+- If the route remains accessible, it should:
+  - show a message: “Access to profiles is available after verification.”
+  - not expose individual profiles publicly.
+
+Acceptance criteria:
+- No public expert browsing experience.
+- Search issues no longer matter publicly because the directory is not public.
+- Verified users/admin can still access internal views if needed.
+
+────────────────────────────────────────
+8) Homepage CTA labels and structure (tighten)
+────────────────────────────────────────
+Homepage hero should have three CTAs:
+- Primary: “Request expert matching”
+- Secondary: “How it works”
+- Secondary: “Join the expert network” (go to experts:careers)
+
+Ensure the CTA copy does not mention browsing experts.
+
+Acceptance criteria:
+- Homepage hero CTAs correct and consistent.
+- No mention of browsing individuals.
+
+────────────────────────────────────────
+9) Final QA and documentation
+────────────────────────────────────────
+- Run search to confirm no “£”, “10+ years”, “+44”.
+- Click through:
+  - Home
+  - Expertise
+  - Why Kairos
+  - How it works
+  - Contact us
+  - Blog
+- Confirm contact CTA to expert careers is correct.
+- Update README if it references old nav items.
+
+Deliver a short summary of files changed and confirm acceptance criteria met.

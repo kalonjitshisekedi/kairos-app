@@ -69,7 +69,7 @@ class TestNavbarForAdminUsers:
     """Tests for admin navbar display."""
 
     def test_admin_sees_operations_button(self, db):
-        """Test that admin users see Operations button instead of Submit a request."""
+        """Test that admin users see Operations button instead of Request expert matching."""
         admin_user = User.objects.create_user(
             email='admin@test.com',
             password='adminpass123',
@@ -86,11 +86,11 @@ class TestNavbarForAdminUsers:
         assert response.status_code == 200
         content = response.content.decode()
         assert 'Operations' in content
-        assert 'bi-shield-fill' in content
+        assert 'bi-gear-fill' in content
 
-    def test_client_sees_submit_request_button(self, authenticated_client):
-        """Test that non-admin users see Submit a request button."""
+    def test_client_sees_request_expert_matching_button(self, authenticated_client):
+        """Test that non-admin users see Request expert matching button."""
         response = authenticated_client.get(reverse('core:home'))
         assert response.status_code == 200
         content = response.content.decode()
-        assert 'Submit a request' in content
+        assert 'Request expert matching' in content

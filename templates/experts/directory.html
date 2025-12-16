@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Expert network{% endblock %}
+{% block title %}Expert directory{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -39,8 +39,8 @@
         <div class="row align-items-center">
             <div class="col-lg-8 mx-auto text-center">
                 <p class="text-gold text-uppercase small fw-semibold mb-3 letter-spacing-wide">Vetted professionals</p>
-                <h1 class="mb-3">Expert network</h1>
-                <p class="tagline mb-0">Access our curated network of vetted professionals.<br>Every expert is thoroughly verified for credentials and experience.</p>
+                <h1 class="mb-3">Expert directory</h1>
+                <p class="tagline mb-0">Our curated network of vetted professionals.<br>Access is available to verified clients and administrators.</p>
             </div>
         </div>
     </div>
@@ -89,15 +89,17 @@
             </div>
             
             <div class="col-lg-9">
-                {% if not user.is_authenticated %}
-                <div class="alert alert-light border mb-4 d-flex align-items-center">
-                    <i class="bi bi-lock text-gold me-3"></i>
-                    <div>
-                        <strong>Viewing public profiles only.</strong>
-                        <a href="{% url 'accounts:login' %}" class="text-gold">Log in</a> or <a href="{% url 'accounts:signup' %}" class="text-gold">create an account</a> to access our full network of vetted experts.
+                {% if not user.is_authenticated or not user.email_verified %}
+                <div class="card card-premium text-center p-5 mb-4">
+                    <i class="bi bi-lock display-4 text-gold mb-3"></i>
+                    <h4 class="fw-semibold mb-3" style="font-family: var(--font-serif);">Access to profiles is available after verification</h4>
+                    <p class="text-muted mb-4">Our expert network is not publicly browsable. To access profiles, please create an account or contact us to discuss your requirements.</p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a href="{% url 'consultations:submit_request' %}" class="btn btn-primary">Request expert matching</a>
+                        <a href="{% url 'core:contact' %}" class="btn btn-outline-primary">Contact us</a>
                     </div>
                 </div>
-                {% endif %}
+                {% else %}
                 
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <p class="mb-0 text-muted">
@@ -184,6 +186,7 @@
                         <p class="text-muted">Try adjusting your filters or search terms.</p>
                         <a href="{% url 'experts:directory' %}" class="btn btn-primary">Clear filters</a>
                     </div>
+                {% endif %}
                 {% endif %}
                 
                 <div class="card card-premium mt-5 text-center">
