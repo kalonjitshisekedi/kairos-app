@@ -5,7 +5,7 @@
 {% block content %}
 <section class="hero py-5">
     <div class="container text-center">
-        <p class="text-gold text-uppercase small fw-semibold mb-3 letter-spacing-wide">Expert network</p>
+        <p class="text-gold text-uppercase small fw-medium mb-3 letter-spacing-wide">Expert network</p>
         <h1 class="mb-3">Join the Kairos expert network</h1>
         <p class="tagline mb-0">Work with enterprise clients on meaningful engagements.<br>Your expertise, protected and valued.</p>
     </div>
@@ -15,8 +15,8 @@
     <div class="container">
         <div class="row g-5">
             <div class="col-lg-5">
-                <p class="text-gold text-uppercase small fw-semibold mb-3 letter-spacing-wide">Why Kairos</p>
-                <h3 class="fw-semibold mb-4" style="font-family: var(--font-display);">Why join the network?</h3>
+                <p class="text-gold text-uppercase small fw-medium mb-3 letter-spacing-wide">Why Kairos</p>
+                <h3 class="fw-semibold mb-4" style="font-family: var(--font-serif);">Why join the network?</h3>
                 <div class="divider-gold mb-4"></div>
                 
                 <div class="d-flex mb-4">
@@ -61,7 +61,7 @@
                 
                 <hr class="my-4">
                 
-                <div class="card card-premium p-4">
+                <div class="card p-4" style="background-color: var(--kairos-ivory);">
                     <h6 class="fw-semibold mb-3"><i class="bi bi-stars text-gold me-2"></i>What we look for</h6>
                     <ul class="list-unstyled mb-0 small text-muted">
                         <li class="mb-2"><i class="bi bi-check-circle text-gold me-2"></i>10+ years of professional experience</li>
@@ -73,9 +73,9 @@
             </div>
             
             <div class="col-lg-7">
-                <div class="card card-premium shadow-premium">
+                <div class="card">
                     <div class="card-body p-5">
-                        <h4 class="fw-semibold mb-4" style="font-family: var(--font-display);">Apply to join our network</h4>
+                        <h4 class="fw-semibold mb-4" style="font-family: var(--font-serif);">Apply to join our network</h4>
                         
                         <form method="post" action="{% url 'experts:join' %}" enctype="multipart/form-data">
                             {% csrf_token %}
@@ -156,7 +156,7 @@
                                 {% if form.popia_consent.errors %}<div class="invalid-feedback d-block">{{ form.popia_consent.errors.0 }}</div>{% endif %}
                             </div>
                             
-                            <button type="submit" class="btn btn-accent btn-lg w-100">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
                                 <i class="bi bi-send me-2"></i>Submit application
                             </button>
                             
@@ -169,37 +169,37 @@
     </div>
 </section>
 
-<section class="py-5 bg-cream">
+<section class="py-5" style="background-color: #F1F5F9;">
     <div class="container">
         <div class="text-center mb-5">
-            <p class="text-gold text-uppercase small fw-semibold mb-3 letter-spacing-wide">The process</p>
-            <h3 class="fw-semibold mb-3" style="font-family: var(--font-display);">How it works for experts</h3>
+            <p class="text-gold text-uppercase small fw-medium mb-3 letter-spacing-wide">The process</p>
+            <h3 class="fw-semibold mb-3" style="font-family: var(--font-serif);">How it works for experts</h3>
             <div class="divider-gold mx-auto"></div>
         </div>
         
         <div class="row g-4">
             <div class="col-lg-4">
-                <div class="card card-premium h-100 text-center p-4 p-lg-5">
-                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-4 mx-auto" style="width: 56px; height: 56px; background: var(--kairos-gradient);">
-                        <span class="fw-bold text-dark fs-5">1</span>
+                <div class="card h-100 text-center p-4 p-lg-5">
+                    <div class="d-inline-flex align-items-center justify-content-center mb-4 mx-auto" style="width: 48px; height: 48px; background: var(--kairos-gold); border-radius: 2px;">
+                        <span class="fw-bold" style="color: var(--kairos-midnight); font-size: 1.25rem;">1</span>
                     </div>
                     <h5 class="fw-semibold mb-3">Apply and get vetted</h5>
                     <p class="text-muted mb-0">Submit your application. Our team reviews your background and expertise. Status: applied → vetted → active.</p>
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card card-premium h-100 text-center p-4 p-lg-5">
-                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-4 mx-auto" style="width: 56px; height: 56px; background: var(--kairos-gradient);">
-                        <span class="fw-bold text-dark fs-5">2</span>
+                <div class="card h-100 text-center p-4 p-lg-5">
+                    <div class="d-inline-flex align-items-center justify-content-center mb-4 mx-auto" style="width: 48px; height: 48px; background: var(--kairos-gold); border-radius: 2px;">
+                        <span class="fw-bold" style="color: var(--kairos-midnight); font-size: 1.25rem;">2</span>
                     </div>
                     <h5 class="fw-semibold mb-3">Get matched</h5>
                     <p class="text-muted mb-0">Our team matches you with suitable client requests. You decide which engagements to accept.</p>
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card card-premium h-100 text-center p-4 p-lg-5">
-                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-4 mx-auto" style="width: 56px; height: 56px; background: var(--kairos-gradient);">
-                        <span class="fw-bold text-dark fs-5">3</span>
+                <div class="card h-100 text-center p-4 p-lg-5">
+                    <div class="d-inline-flex align-items-center justify-content-center mb-4 mx-auto" style="width: 48px; height: 48px; background: var(--kairos-gold); border-radius: 2px;">
+                        <span class="fw-bold" style="color: var(--kairos-midnight); font-size: 1.25rem;">3</span>
                     </div>
                     <h5 class="fw-semibold mb-3">Deliver and get paid</h5>
                     <p class="text-muted mb-0">Complete the engagement. Kairos handles invoicing and ensures you receive secure, reliable payment.</p>

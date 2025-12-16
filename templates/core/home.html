@@ -5,31 +5,31 @@
 {% block content %}
 <section class="hero text-center" style="padding: 8rem 0;">
     <div class="container position-relative">
-        <p class="text-gold text-uppercase small fw-semibold mb-4 letter-spacing-wide animate-fade-in">Confidential expert network</p>
-        <h1 class="mb-4 animate-fade-in" style="animation-delay: 0.1s;">Don't guess. Know.</h1>
-        <p class="tagline mb-5 mx-auto animate-fade-in" style="max-width: 600px; animation-delay: 0.2s;">
+        <p class="text-gold text-uppercase small fw-medium mb-4 letter-spacing-wide">Confidential expert network</p>
+        <h1 class="mb-4" style="font-style: italic;">Don't guess. Know.</h1>
+        <p class="tagline mb-5 mx-auto" style="max-width: 600px;">
             Confidential access to vetted expertise.<br>
             Insight when it matters most.
         </p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap animate-fade-in" style="animation-delay: 0.3s;">
-            <a href="{% url 'consultations:submit_request' %}" class="btn btn-accent btn-lg px-5">Submit a request</a>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{% url 'consultations:submit_request' %}" class="btn btn-primary btn-lg px-5">Submit a request</a>
             <a href="{% url 'core:how_it_works' %}" class="btn btn-outline-light btn-lg px-4">How it works</a>
         </div>
-        <div class="mt-5 pt-4 animate-fade-in" style="animation-delay: 0.4s;">
+        <div class="mt-5 pt-4">
             <p class="small text-white opacity-50 mb-3">Trusted by leading enterprises for confidential research</p>
             <div class="d-flex justify-content-center gap-5 opacity-50">
-                <span class="text-white" style="font-family: var(--font-display); font-size: 1.25rem;">Fortune 500</span>
-                <span class="text-white" style="font-family: var(--font-display); font-size: 1.25rem;">Private Equity</span>
-                <span class="text-white" style="font-family: var(--font-display); font-size: 1.25rem;">Strategy Consulting</span>
+                <span class="text-white" style="font-family: var(--font-serif); font-size: 1.25rem;">Fortune 500</span>
+                <span class="text-white" style="font-family: var(--font-serif); font-size: 1.25rem;">Private Equity</span>
+                <span class="text-white" style="font-family: var(--font-serif); font-size: 1.25rem;">Strategy Consulting</span>
             </div>
         </div>
     </div>
 </section>
 
-<section class="py-5 py-lg-6" style="padding-top: 5rem; padding-bottom: 5rem;">
+<section class="py-5" style="padding-top: 5rem; padding-bottom: 5rem;">
     <div class="container">
         <div class="text-center mb-5">
-            <p class="text-gold text-uppercase small fw-semibold mb-3 letter-spacing-wide">Why Kairos</p>
+            <p class="text-gold text-uppercase small fw-medium mb-3 letter-spacing-wide">Why Kairos</p>
             <h2 class="section-title mb-3">Enterprise-grade expertise</h2>
             <div class="divider-gold mx-auto mb-4"></div>
             <p class="text-muted mx-auto" style="max-width: 600px;">Delivered with the discretion and rigour your most sensitive projects demand</p>
@@ -40,7 +40,7 @@
                     <div class="feature-icon mb-4 mx-auto">
                         <i class="bi bi-shield-lock"></i>
                     </div>
-                    <h5 class="fw-semibold mb-3" style="font-family: var(--font-display);">Confidential engagements</h5>
+                    <h5 class="fw-semibold mb-3">Confidential engagements</h5>
                     <p class="text-muted mb-0">Every engagement is protected under strict confidentiality protocols. Your research, discussions, and strategic questions remain between you and your expert.</p>
                 </div>
             </div>
@@ -49,7 +49,7 @@
                     <div class="feature-icon feature-icon-gold mb-4 mx-auto">
                         <i class="bi bi-person-check"></i>
                     </div>
-                    <h5 class="fw-semibold mb-3" style="font-family: var(--font-display);">Concierge matching</h5>
+                    <h5 class="fw-semibold mb-3">Concierge matching</h5>
                     <p class="text-muted mb-0">Our team hand-selects experts based on your specific needs. No browsing, no self-service. We find precisely the right expertise for your challenge.</p>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                     <div class="feature-icon mb-4 mx-auto">
                         <i class="bi bi-building"></i>
                     </div>
-                    <h5 class="fw-semibold mb-3" style="font-family: var(--font-display);">Enterprise-ready</h5>
+                    <h5 class="fw-semibold mb-3">Enterprise-ready</h5>
                     <p class="text-muted mb-0">Built for enterprise research and advisory needs. Compliance-ready, with NDA options, secure communications, and audit trails.</p>
                 </div>
             </div>
@@ -66,43 +66,43 @@
     </div>
 </section>
 
-<section class="py-5 bg-cream" style="padding-top: 5rem; padding-bottom: 5rem;">
+<section class="py-5 bg-ivory" style="padding-top: 5rem; padding-bottom: 5rem; background-color: #F1F5F9;">
     <div class="container">
         <div class="text-center mb-5">
-            <p class="text-gold text-uppercase small fw-semibold mb-3 letter-spacing-wide">The Process</p>
+            <p class="text-gold text-uppercase small fw-medium mb-3 letter-spacing-wide">The process</p>
             <h2 class="section-title mb-3">Three steps to insight</h2>
             <div class="divider-gold mx-auto"></div>
         </div>
         <div class="row g-4 g-lg-5">
             <div class="col-lg-4">
-                <div class="card card-premium h-100 p-4 p-lg-5">
+                <div class="card h-100 p-4 p-lg-5">
                     <div class="text-center">
-                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-4" style="width: 56px; height: 56px; background: var(--kairos-gradient);">
-                            <span class="fw-bold text-dark fs-5">1</span>
+                        <div class="d-inline-flex align-items-center justify-content-center mb-4" style="width: 48px; height: 48px; background: var(--kairos-gold); border-radius: 2px;">
+                            <span class="fw-bold" style="color: var(--kairos-midnight); font-size: 1.25rem;">1</span>
                         </div>
-                        <h5 class="fw-semibold mb-3" style="font-family: var(--font-display);">Submit your brief</h5>
+                        <h5 class="fw-semibold mb-3">Submit your brief</h5>
                         <p class="text-muted mb-0">Tell us about your challenge, research question, or advisory need. Include context and requirements. Your brief is kept strictly confidential.</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card card-premium h-100 p-4 p-lg-5">
+                <div class="card h-100 p-4 p-lg-5">
                     <div class="text-center">
-                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-4" style="width: 56px; height: 56px; background: var(--kairos-gradient);">
-                            <span class="fw-bold text-dark fs-5">2</span>
+                        <div class="d-inline-flex align-items-center justify-content-center mb-4" style="width: 48px; height: 48px; background: var(--kairos-gold); border-radius: 2px;">
+                            <span class="fw-bold" style="color: var(--kairos-midnight); font-size: 1.25rem;">2</span>
                         </div>
-                        <h5 class="fw-semibold mb-3" style="font-family: var(--font-display);">We match you</h5>
+                        <h5 class="fw-semibold mb-3">We match you</h5>
                         <p class="text-muted mb-0">Our team reviews your request and identifies the ideal expert from our vetted network. We handle all coordination and scheduling.</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card card-premium h-100 p-4 p-lg-5">
+                <div class="card h-100 p-4 p-lg-5">
                     <div class="text-center">
-                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-4" style="width: 56px; height: 56px; background: var(--kairos-gradient);">
-                            <span class="fw-bold text-dark fs-5">3</span>
+                        <div class="d-inline-flex align-items-center justify-content-center mb-4" style="width: 48px; height: 48px; background: var(--kairos-gold); border-radius: 2px;">
+                            <span class="fw-bold" style="color: var(--kairos-midnight); font-size: 1.25rem;">3</span>
                         </div>
-                        <h5 class="fw-semibold mb-3" style="font-family: var(--font-display);">Engage with confidence</h5>
+                        <h5 class="fw-semibold mb-3">Engage with confidence</h5>
                         <p class="text-muted mb-0">Connect with your matched expert through our secure platform. Receive insights, research, or advisory support tailored to your needs.</p>
                     </div>
                 </div>
@@ -115,7 +115,7 @@
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
-                <p class="text-gold text-uppercase small fw-semibold mb-3 letter-spacing-wide">Engagement types</p>
+                <p class="text-gold text-uppercase small fw-medium mb-3 letter-spacing-wide">Engagement types</p>
                 <h2 class="section-title mb-4">Flexible formats for every need</h2>
                 <div class="divider-gold mb-4"></div>
                 <div class="mb-4 pb-3 border-bottom">
@@ -153,10 +153,10 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="card card-dark p-5 shadow-premium">
+                <div class="card card-dark p-5">
                     <div class="text-center">
                         <i class="bi bi-quote display-1 text-gold opacity-50"></i>
-                        <p class="fs-5 mb-4 mt-3" style="font-family: var(--font-display); line-height: 1.6;">"Kairos connected us with exactly the right expert within 48 hours. The insights we received were invaluable to our investment decision."</p>
+                        <p class="fs-5 mb-4 mt-3" style="font-family: var(--font-serif); line-height: 1.6;">"Kairos connected us with exactly the right expert within 48 hours. The insights we received were invaluable to our investment decision."</p>
                         <p class="text-gold mb-1 fw-semibold">Private Equity Partner</p>
                         <p class="small opacity-60">London</p>
                     </div>
@@ -167,17 +167,17 @@
 </section>
 
 {% if tags %}
-<section class="py-5 bg-cream" style="padding-top: 4rem; padding-bottom: 4rem;">
+<section class="py-5" style="padding-top: 4rem; padding-bottom: 4rem; background-color: #F1F5F9;">
     <div class="container">
         <div class="text-center mb-5">
-            <p class="text-gold text-uppercase small fw-semibold mb-3 letter-spacing-wide">Expertise</p>
+            <p class="text-gold text-uppercase small fw-medium mb-3 letter-spacing-wide">Expertise</p>
             <h2 class="section-title mb-3">Areas of expertise</h2>
             <div class="divider-gold mx-auto mb-4"></div>
             <p class="text-muted">Our network spans these disciplines and many more</p>
         </div>
         <div class="d-flex flex-wrap justify-content-center gap-2">
             {% for tag in tags %}
-                <span class="btn btn-outline-secondary btn-sm disabled" style="border-radius: 20px; padding: 0.5rem 1.25rem;">{{ tag.name }}</span>
+                <span class="btn btn-outline-secondary btn-sm disabled" style="border-radius: 2px; padding: 0.5rem 1.25rem;">{{ tag.name }}</span>
             {% endfor %}
         </div>
     </div>
@@ -188,32 +188,32 @@
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6 order-lg-2">
-                <p class="text-gold text-uppercase small fw-semibold mb-3 letter-spacing-wide">For experts</p>
+                <p class="text-gold text-uppercase small fw-medium mb-3 letter-spacing-wide">For experts</p>
                 <h2 class="section-title mb-4">Join the Kairos expert network</h2>
                 <div class="divider-gold mb-4"></div>
                 <p class="text-muted mb-4">Join a curated network of senior professionals. Work on meaningful engagements with enterprise clients who value your expertise and respect your time.</p>
                 <ul class="list-unstyled mb-4">
                     <li class="mb-3 d-flex align-items-center">
-                        <span class="d-inline-flex align-items-center justify-content-center rounded-circle me-3" style="width: 28px; height: 28px; background: var(--kairos-gradient);">
-                            <i class="bi bi-check2 text-dark small"></i>
+                        <span class="d-inline-flex align-items-center justify-content-center me-3" style="width: 24px; height: 24px; background: var(--kairos-gold); border-radius: 2px;">
+                            <i class="bi bi-check2" style="color: var(--kairos-midnight); font-size: 0.875rem;"></i>
                         </span>
                         <span>Vetted, high-quality engagements</span>
                     </li>
                     <li class="mb-3 d-flex align-items-center">
-                        <span class="d-inline-flex align-items-center justify-content-center rounded-circle me-3" style="width: 28px; height: 28px; background: var(--kairos-gradient);">
-                            <i class="bi bi-check2 text-dark small"></i>
+                        <span class="d-inline-flex align-items-center justify-content-center me-3" style="width: 24px; height: 24px; background: var(--kairos-gold); border-radius: 2px;">
+                            <i class="bi bi-check2" style="color: var(--kairos-midnight); font-size: 0.875rem;"></i>
                         </span>
                         <span>Control your availability and preferences</span>
                     </li>
                     <li class="mb-3 d-flex align-items-center">
-                        <span class="d-inline-flex align-items-center justify-content-center rounded-circle me-3" style="width: 28px; height: 28px; background: var(--kairos-gradient);">
-                            <i class="bi bi-check2 text-dark small"></i>
+                        <span class="d-inline-flex align-items-center justify-content-center me-3" style="width: 24px; height: 24px; background: var(--kairos-gold); border-radius: 2px;">
+                            <i class="bi bi-check2" style="color: var(--kairos-midnight); font-size: 0.875rem;"></i>
                         </span>
                         <span>Confidential, professionally managed client work</span>
                     </li>
                     <li class="mb-3 d-flex align-items-center">
-                        <span class="d-inline-flex align-items-center justify-content-center rounded-circle me-3" style="width: 28px; height: 28px; background: var(--kairos-gradient);">
-                            <i class="bi bi-check2 text-dark small"></i>
+                        <span class="d-inline-flex align-items-center justify-content-center me-3" style="width: 24px; height: 24px; background: var(--kairos-gold); border-radius: 2px;">
+                            <i class="bi bi-check2" style="color: var(--kairos-midnight); font-size: 0.875rem;"></i>
                         </span>
                         <span>Secure, reliable payments</span>
                     </li>
@@ -221,13 +221,11 @@
                 <a href="{% url 'experts:join' %}" class="btn btn-primary btn-lg px-4">Apply to join</a>
             </div>
             <div class="col-lg-6 order-lg-1">
-                <div class="card card-premium p-5 text-center shadow-premium">
-                    <div class="animate-float">
-                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-4" style="width: 120px; height: 120px; background: var(--kairos-gradient);">
-                            <i class="bi bi-lightbulb display-4 text-dark"></i>
-                        </div>
+                <div class="card p-5 text-center">
+                    <div class="d-inline-flex align-items-center justify-content-center mx-auto mb-4" style="width: 100px; height: 100px; background: var(--kairos-gold); border-radius: 4px;">
+                        <i class="bi bi-lightbulb display-4" style="color: var(--kairos-midnight);"></i>
                     </div>
-                    <h4 class="fw-semibold mb-3" style="font-family: var(--font-display);">Transform knowledge into impact</h4>
+                    <h4 class="fw-semibold mb-3" style="font-family: var(--font-serif);">Transform knowledge into impact</h4>
                     <p class="text-muted mb-0">Your expertise. Meaningful engagements. Fair compensation.</p>
                 </div>
             </div>
@@ -235,23 +233,23 @@
     </div>
 </section>
 
-<section class="py-5 bg-kairos-gradient" style="padding-top: 5rem; padding-bottom: 5rem;">
+<section class="py-5 bg-kairos" style="padding-top: 5rem; padding-bottom: 5rem;">
     <div class="container text-center text-white">
-        <p class="text-uppercase small fw-semibold mb-3 letter-spacing-wide opacity-75">Ready to begin?</p>
-        <h2 class="section-title mb-4" style="font-family: var(--font-display);">Access world-class expertise</h2>
+        <p class="text-uppercase small fw-medium mb-3 letter-spacing-wide opacity-75">Ready to begin?</p>
+        <h2 class="section-title mb-4" style="font-family: var(--font-serif);">Access world-class expertise</h2>
         <p class="opacity-75 mb-5 mx-auto" style="max-width: 500px;">Submit your request and our team will respond within 24 hours to discuss your needs.</p>
         <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a href="{% url 'consultations:submit_request' %}" class="btn btn-accent btn-lg px-5">Submit a request</a>
+            <a href="{% url 'consultations:submit_request' %}" class="btn btn-primary btn-lg px-5">Submit a request</a>
             <a href="{% url 'core:contact' %}" class="btn btn-outline-light btn-lg px-4">Get in touch</a>
         </div>
     </div>
 </section>
 
-<div class="bg-cream py-3">
-    <div class="container text-center">
-        <p class="mb-0 small text-muted">
+<div class="privacy-banner text-center">
+    <div class="container">
+        <p class="mb-0">
             <i class="bi bi-shield-check text-gold me-2"></i>
-            All engagements are managed through Kairos for confidentiality and protection.
+            Engagements are managed through Kairos for confidentiality and protection.
         </p>
     </div>
 </div>

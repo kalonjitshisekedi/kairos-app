@@ -8,10 +8,10 @@
         <div class="row justify-content-center">
             <div class="col-md-5 col-lg-4">
                 <div class="text-center mb-4">
-                    <h2 style="font-family: var(--font-display);">Welcome back</h2>
+                    <h2 style="font-family: var(--font-serif);">Welcome back</h2>
                     <p class="text-muted">Log in to your Kairos account</p>
                 </div>
-                <div class="card card-premium shadow-premium">
+                <div class="card">
                     <div class="card-body p-4 p-lg-5">
                         <form method="post">
                             {% csrf_token %}
@@ -32,7 +32,7 @@
                             {% if form.non_field_errors %}
                                 <div class="alert alert-danger">{{ form.non_field_errors.0 }}</div>
                             {% endif %}
-                            <button type="submit" class="btn btn-accent w-100 btn-lg">Log in</button>
+                            <button type="submit" class="btn btn-primary w-100 btn-lg">Log in</button>
                         </form>
                         <div class="text-center mt-4">
                             <a href="{% url 'accounts:password_reset' %}" class="text-muted small">Forgot your password?</a>

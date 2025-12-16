@@ -6,7 +6,14 @@ Kairos is a premium, confidential, enterprise-focused expert network. The platfo
 **Tagline**: "Don't guess. Know."
 
 ## Recent Changes
-- **December 2025**: Comprehensive premium UI redesign with dark luxury theme (#1a1a1a), gold accents (#c9a962), elegant serif typography
+- **December 2025**: Implemented comprehensive enterprise design system overhaul:
+  - New color palette: Midnight charcoal (#0F172A), Slate ink (#1E293B), Ivory white (#F8FAFC)
+  - Primary action color: Indigo (#4338CA)
+  - Verification/premium accent: Muted gold (#C4B37A)
+  - Typography: Source Serif 4 for headings, Inter for body text
+  - Removed all gradients, shadows, and playful animations
+  - Flat cards with subtle borders, no elevation on hover
+  - Enterprise-grade, authority-focused visual language
 - **December 2025**: Implemented tiered privacy access controls: public (all), semi-private (verified clients only), private (admin-matched)
 - **December 2025**: Semi-private access now requires email_verified=True on client accounts
 - **December 2025**: Expert directory shows access restriction notice for unauthenticated users
@@ -62,17 +69,35 @@ Kairos is a premium, confidential, enterprise-focused expert network. The platfo
 - `Booking` - Engagement between client and expert with service_type
 
 ### Key Templates
-- `templates/base.html` - Base template with global styling (black/white/gold theme)
+- `templates/base.html` - Base template with global styling and design system
 - `templates/core/home.html` - Homepage with enterprise positioning
 - `templates/consultations/submit_request.html` - Enterprise client request form
 - `templates/experts/directory.html` - Expert directory (vetted experts only)
 - `templates/experts/join.html` - Expert application form
 
 ### Design System
-- **Primary colors**: Black (#0a0a0a), white (#fafafa)
-- **Accent color**: Gold (#c9a962)
-- **Typography**: Inter font family
-- **Framework**: Bootstrap 5 with custom CSS variables
+**Colour Palette:**
+- Primary backgrounds: Midnight charcoal (#0F172A), Slate ink (#1E293B), Ivory white (#F8FAFC)
+- Primary action: Indigo (#4338CA)
+- Verification/premium accent: Muted gold (#C4B37A)
+- Text: Primary (#0F172A), Secondary (#64748B)
+- Borders: #CBD5E1
+- Status: Success (#15803D), Warning (#B45309), Error (#B91C1C)
+
+**Typography:**
+- Headings: Source Serif 4 (serif)
+- Body/UI: Inter (sans-serif)
+
+**Design Principles:**
+- No gradients
+- No shadows by default
+- Flat cards with subtle borders
+- Hover effects use colour or border changes, not elevation
+- Fade transitions only (150-200ms)
+- Skeleton loaders instead of spinners
+- Enterprise trust, discretion, and authority
+
+**Framework**: Bootstrap 5 with custom CSS variables
 
 ## Running the Project
 ```bash

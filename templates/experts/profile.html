@@ -18,27 +18,27 @@
     <div class="container">
         <div class="row g-5">
             <div class="col-lg-8">
-                <div class="card card-premium shadow-premium mb-4 expert-profile">
+                <div class="card mb-4 expert-profile">
                     <div class="card-body p-5">
                         <div class="row align-items-center">
                             <div class="col-md-4 text-center mb-4 mb-md-0">
                                 {% if expert.avatar %}
                                     <img src="{{ expert.avatar.url }}" alt="{{ expert.user.full_name }}" class="avatar-large mb-3">
                                 {% else %}
-                                    <div class="avatar-large d-inline-flex align-items-center justify-content-center text-white mb-3" style="width: 160px; height: 160px; border-radius: 50%; background: var(--kairos-gradient);">
-                                        <span class="display-4">{{ expert.user.first_name.0 }}{{ expert.user.last_name.0 }}</span>
+                                    <div class="avatar-large d-inline-flex align-items-center justify-content-center text-white mb-3" style="width: 160px; height: 160px; border-radius: 50%; background: var(--kairos-gold);">
+                                        <span class="display-4" style="color: var(--kairos-midnight);">{{ expert.user.first_name.0 }}{{ expert.user.last_name.0 }}</span>
                                     </div>
                                 {% endif %}
                                 {% if expert.is_verified %}
                                     <div class="mb-2">
-                                        <span class="badge badge-vetted">
+                                        <span class="badge-verified">
                                             <i class="bi bi-patch-check-fill me-1"></i> Vetted expert
                                         </span>
                                     </div>
                                 {% endif %}
                             </div>
                             <div class="col-md-8">
-                                <h1 class="mb-2" style="font-family: var(--font-display);">
+                                <h1 class="mb-2" style="font-family: var(--font-serif);">
                                     {{ expert.user.full_name }}
                                     {% if expert.pronouns %}<span class="text-muted small">({{ expert.pronouns }})</span>{% endif %}
                                 </h1>
@@ -55,26 +55,14 @@
                                 {% if expert.languages %}
                                     <p class="text-muted mb-2"><i class="bi bi-translate me-2"></i>{{ expert.languages|join:", " }}</p>
                                 {% endif %}
-                                {% if expert.average_rating > 0 %}
-                                    <div class="rating-stars mb-2">
-                                        {% for i in "12345" %}
-                                            {% if forloop.counter <= expert.average_rating %}
-                                                <i class="bi bi-star-fill"></i>
-                                            {% else %}
-                                                <i class="bi bi-star"></i>
-                                            {% endif %}
-                                        {% endfor %}
-                                        <span class="text-muted ms-1">({{ expert.total_reviews }} reviews)</span>
-                                    </div>
-                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card card-premium mb-4">
+                <div class="card mb-4">
                     <div class="card-header bg-white p-4 border-bottom">
-                        <h5 class="mb-0" style="font-family: var(--font-display);">About</h5>
+                        <h5 class="mb-0" style="font-family: var(--font-serif);">About</h5>
                     </div>
                     <div class="card-body p-4">
                         <p>{{ expert.bio|linebreaks }}</p>
@@ -82,7 +70,7 @@
                         <h6 class="mt-4 mb-3 fw-semibold">Areas of expertise</h6>
                         <div class="mb-3">
                             {% for tag in expert.expertise_tags.all %}
-                                <span class="badge bg-dark me-1 mb-1 py-2 px-3">{{ tag.name }}</span>
+                                <span class="badge-status me-1 mb-1">{{ tag.name }}</span>
                             {% empty %}
                                 <span class="text-muted">No expertise tags listed</span>
                             {% endfor %}
@@ -96,9 +84,9 @@
                 </div>
 
                 {% if expert.publications.exists %}
-                <div class="card card-premium mb-4">
+                <div class="card mb-4">
                     <div class="card-header bg-white p-4 border-bottom">
-                        <h5 class="mb-0" style="font-family: var(--font-display);">Selected publications</h5>
+                        <h5 class="mb-0" style="font-family: var(--font-serif);">Selected publications</h5>
                     </div>
                     <div class="card-body p-4">
                         <ul class="list-unstyled mb-0">
@@ -124,9 +112,9 @@
                 {% endif %}
 
                 {% if expert.notable_projects.exists %}
-                <div class="card card-premium mb-4">
+                <div class="card mb-4">
                     <div class="card-header bg-white p-4 border-bottom">
-                        <h5 class="mb-0" style="font-family: var(--font-display);">Notable projects</h5>
+                        <h5 class="mb-0" style="font-family: var(--font-serif);">Notable projects</h5>
                     </div>
                     <div class="card-body p-4">
                         <ul class="list-unstyled mb-0">
@@ -145,55 +133,30 @@
                     </div>
                 </div>
                 {% endif %}
-
-                {% if reviews %}
-                <div class="card card-premium mb-4">
-                    <div class="card-header bg-white p-4 border-bottom">
-                        <h5 class="mb-0" style="font-family: var(--font-display);">Client reviews</h5>
-                    </div>
-                    <div class="card-body p-4">
-                        {% for booking in reviews %}
-                            <div class="{% if not forloop.last %}border-bottom pb-4 mb-4{% endif %}">
-                                <div class="rating-stars mb-2">
-                                    {% for i in "12345" %}
-                                        {% if forloop.counter <= booking.review.rating %}
-                                            <i class="bi bi-star-fill"></i>
-                                        {% else %}
-                                            <i class="bi bi-star"></i>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                                <p class="mb-2">{{ booking.review.comment }}</p>
-                                <p class="text-muted small mb-0">{{ booking.client.first_name }} - {{ booking.review.created_at|date:"j M Y" }}</p>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
             </div>
 
             <div class="col-lg-4">
-                <div class="card card-premium shadow-premium sticky-top" style="top: 100px;">
+                <div class="card sticky-top" style="top: 100px;">
                     <div class="card-header bg-white p-4 border-bottom">
-                        <h5 class="mb-0" style="font-family: var(--font-display);">Request a consultation</h5>
+                        <h5 class="mb-0" style="font-family: var(--font-serif);">Request a consultation</h5>
                     </div>
                     <div class="card-body p-4">
                         <p class="text-muted small mb-4">Interested in working with this expert? Submit a request and our team will facilitate the engagement.</p>
                         
                         <div class="d-grid gap-3">
-                            <a href="{% url 'consultations:submit_request' %}" class="btn btn-accent btn-lg">
+                            <a href="{% url 'consultations:submit_request' %}" class="btn btn-primary btn-lg">
                                 <i class="bi bi-send me-2"></i>Submit a request
                             </a>
-                            <a href="{% url 'core:contact' %}" class="btn btn-outline-primary">
+                            <a href="{% url 'core:contact' %}" class="btn btn-secondary">
                                 Get in touch
                             </a>
                         </div>
                         
-                        <div class="card bg-cream border-0 mt-4">
+                        <div class="card mt-4" style="background-color: var(--kairos-ivory); border: 1px solid var(--kairos-border);">
                             <div class="card-body p-3">
                                 <p class="small mb-0 text-muted">
                                     <i class="bi bi-shield-check text-gold me-2"></i>
-                                    All engagements are managed through Kairos for confidentiality and protection.
+                                    Engagements are managed through Kairos for confidentiality and protection.
                                 </p>
                             </div>
                         </div>

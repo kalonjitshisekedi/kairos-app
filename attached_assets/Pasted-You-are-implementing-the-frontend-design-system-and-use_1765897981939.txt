@@ -1,0 +1,241 @@
+You are implementing the frontend design system and user experience for an
+existing Django-based SaaS platform called “Kairos”.
+
+Kairos is a premium, confidential expert network for enterprise clients.
+It must NOT resemble a marketplace, gig platform, or consumer SaaS.
+
+This task focuses on:
+- visual design system
+- layout
+- frontend behaviour
+- UX patterns
+- component styling
+
+You must follow all rules below exactly.
+
+────────────────────────
+GLOBAL DESIGN PRINCIPLES
+────────────────────────
+
+- Design for enterprise trust, discretion, and authority
+- Target audience: senior executives, investors, researchers, policy leaders
+- No playful UI
+- No startup aesthetics
+- No bright colours, gradients, or gimmicks
+- Everything should feel calm, expensive, and intentional
+
+────────────────────────
+COLOUR PALETTE (STRICT)
+────────────────────────
+
+Primary backgrounds:
+- Midnight charcoal: #0F172A
+- Slate ink: #1E293B
+- Ivory white: #F8FAFC
+
+Accent colours:
+- Indigo (primary action): #4338CA
+- Muted gold (verification / premium): #C4B37A
+
+Text & borders:
+- Primary text: #0F172A
+- Secondary text: #64748B
+- Borders/dividers: #CBD5E1
+
+Status colours (muted only):
+- Success: #15803D
+- Warning: #B45309
+- Error: #B91C1C
+
+Rules:
+- No gradients
+- No shadows by default
+- Accent colours used sparingly
+- Gold only for verification or featured status
+
+────────────────────────
+TYPOGRAPHY
+────────────────────────
+
+Use only two font families.
+
+Headings (H1–H3):
+- Serif font: “Source Serif 4” or “Libre Baskerville”
+- Weight: regular to medium
+- Use sparingly
+
+Body text, UI, forms:
+- Sans-serif: “Inter” or “IBM Plex Sans”
+- High legibility
+- Sentence case only (never title case)
+
+Do NOT mix more than two fonts.
+
+────────────────────────
+LAYOUT & SPACING
+────────────────────────
+
+- Max content width: 1200px
+- Generous whitespace
+- Vertical rhythm over horizontal clutter
+- No dense stacking
+- Cards are flat with subtle borders
+- Hover effects use colour or border changes, not elevation
+
+────────────────────────
+COMPONENT STYLING RULES
+────────────────────────
+
+Buttons:
+- Primary: indigo background, white text
+- Secondary: outline only
+- No rounded “pill” buttons
+- No icons unless necessary
+
+Forms:
+- Calm, professional language
+- Multi-step flows where appropriate
+- Progress indicators for long forms
+- Save draft functionality where possible
+
+Badges:
+- Verification badge uses muted gold
+- Status badges are rectangular, minimal
+- No star ratings or numeric scores
+
+────────────────────────
+HOMEPAGE UX
+────────────────────────
+
+Hero section:
+- Minimal copy
+- No stock photos
+- Optional abstract geometric background or grid texture
+- Display:
+  “Confidential access to vetted expertise”
+  “Don’t guess. Know.”
+
+Primary CTA:
+- “Submit a request”
+
+Secondary CTA:
+- “Join the expert network”
+
+Below hero:
+- Quiet trust signals:
+  - Confidential engagements
+  - Vetted professionals
+  - Enterprise-grade discretion
+
+────────────────────────
+CLIENT EXPERIENCE
+────────────────────────
+
+Client request flow:
+- Multi-step form
+- Calm, consulting-style language
+- No pricing shown at submission
+- Fields include:
+  - organisation
+  - challenge description
+  - engagement type
+  - urgency
+  - confidentiality level
+
+Client dashboard:
+- Timeline-based layout
+- Status indicators only
+- No gamification
+- No notifications overload
+
+Proposal view:
+- Structured document-style layout
+- Sections:
+  - scope
+  - engagement type
+  - timeline
+  - confidentiality
+  - pricing (only here)
+- Actions:
+  - accept proposal
+  - request clarification
+
+────────────────────────
+EXPERT EXPERIENCE
+────────────────────────
+
+Expert dashboard:
+- Minimalist
+- Focus on:
+  - engagements
+  - availability
+  - earnings summary
+  - visibility level
+- No public-facing performance metrics
+- No ratings or leaderboards
+
+Expert profile (client-facing):
+- Looks like an executive bio, not a freelancer card
+- Show:
+  - name or anonymised title
+  - headline
+  - years of experience
+  - sectors and domains
+  - anonymised project examples
+  - verification badge
+- Do NOT show:
+  - hourly rates
+  - calendars
+  - reviews
+
+────────────────────────
+PRIVACY & DISCRETION UX
+────────────────────────
+
+- No email or phone numbers visible
+- Messaging only inside Kairos
+- Files watermarked “Provided via Kairos”
+- Subtle banner reminder:
+  “Engagements are managed through Kairos for confidentiality and protection”
+
+────────────────────────
+ADMIN / CONCIERGE UI
+────────────────────────
+
+- Dark mode default
+- Table-based workflows
+- Dense but readable
+- Keyboard-friendly
+- Clear separation between:
+  - internal notes
+  - client-visible data
+
+────────────────────────
+INTERACTIONS & MOTION
+────────────────────────
+
+- Transitions: fade only (150–200ms)
+- Skeleton loaders (no spinners)
+- No bouncing, sliding, or playful animations
+
+────────────────────────
+ACCESSIBILITY
+────────────────────────
+
+- WCAG AA contrast
+- Keyboard navigation
+- Clear focus states
+- Do not rely on colour alone for meaning
+
+────────────────────────
+FINAL REQUIREMENTS
+────────────────────────
+
+- UI must feel enterprise-grade
+- No marketplace cues
+- No visible pricing outside proposals
+- No consumer SaaS patterns
+- Design must reinforce trust and discretion
+
+Implement this system consistently across all pages.
+Do not stop until all components follow these rules.

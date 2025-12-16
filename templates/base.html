@@ -7,88 +7,73 @@
     <title>{% block title %}Kairos{% endblock %} | Don't guess. Know.</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --kairos-black: #0a0a0a;
-            --kairos-dark: #111111;
-            --kairos-charcoal: #1a1a1a;
-            --kairos-gray: #2d2d2d;
-            --kairos-light-gray: #6b6b6b;
-            --kairos-muted: #9a9a9a;
-            --kairos-gold: #c9a962;
-            --kairos-gold-light: #d4b978;
-            --kairos-gold-dark: #b8943f;
-            --kairos-white: #fafafa;
-            --kairos-off-white: #f5f5f5;
-            --kairos-cream: #f8f6f3;
-            --kairos-success: #10b981;
-            --kairos-gradient: linear-gradient(135deg, #c9a962 0%, #d4b978 50%, #b8943f 100%);
-            --kairos-dark-gradient: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
-            --font-display: 'Playfair Display', Georgia, serif;
-            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --kairos-midnight: #0F172A;
+            --kairos-slate: #1E293B;
+            --kairos-ivory: #F8FAFC;
+            --kairos-indigo: #4338CA;
+            --kairos-indigo-hover: #3730A3;
+            --kairos-gold: #C4B37A;
+            --kairos-text-primary: #0F172A;
+            --kairos-text-secondary: #64748B;
+            --kairos-border: #CBD5E1;
+            --kairos-success: #15803D;
+            --kairos-warning: #B45309;
+            --kairos-error: #B91C1C;
+            --font-serif: 'Source Serif 4', Georgia, serif;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --transition-fade: opacity 150ms ease, color 150ms ease, background-color 150ms ease, border-color 150ms ease;
         }
         * {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
         body {
-            font-family: var(--font-body);
+            font-family: var(--font-sans);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background-color: var(--kairos-white);
-            color: var(--kairos-black);
+            background-color: var(--kairos-ivory);
+            color: var(--kairos-text-primary);
             font-size: 15px;
             line-height: 1.7;
         }
         h1, h2, h3, .display-heading {
-            font-family: var(--font-display);
+            font-family: var(--font-serif);
             font-weight: 500;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.01em;
+        }
+        h4, h5, h6 {
+            font-family: var(--font-sans);
+            font-weight: 600;
         }
         .navbar {
-            background-color: var(--kairos-black) !important;
+            background-color: var(--kairos-midnight) !important;
             border-bottom: 1px solid rgba(255,255,255,0.08);
             padding: 1rem 0;
-            transition: var(--transition-smooth);
+            transition: var(--transition-fade);
         }
         .navbar.scrolled {
             padding: 0.75rem 0;
-            backdrop-filter: blur(12px);
         }
         .navbar-brand {
-            font-family: var(--font-display);
-            font-weight: 600;
+            font-family: var(--font-serif);
+            font-weight: 500;
             font-size: 1.5rem;
-            color: var(--kairos-white) !important;
+            color: var(--kairos-ivory) !important;
             letter-spacing: -0.01em;
         }
         .navbar-nav .nav-link {
-            color: rgba(255,255,255,0.75) !important;
+            color: rgba(248,250,252,0.75) !important;
             font-weight: 400;
             font-size: 0.9rem;
             padding: 0.5rem 1rem !important;
-            transition: var(--transition-smooth);
-            position: relative;
+            transition: var(--transition-fade);
         }
         .navbar-nav .nav-link:hover {
-            color: var(--kairos-white) !important;
-        }
-        .navbar-nav .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 1rem;
-            right: 1rem;
-            height: 1px;
-            background: var(--kairos-gold);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-        .navbar-nav .nav-link:hover::after {
-            transform: scaleX(1);
+            color: var(--kairos-ivory) !important;
         }
         .navbar-toggler {
             border-color: rgba(255,255,255,0.2);
@@ -102,8 +87,8 @@
             font-size: 0.875rem;
             padding: 0.75rem 1.5rem;
             border-radius: 4px;
-            transition: var(--transition-smooth);
-            letter-spacing: 0.02em;
+            transition: var(--transition-fade);
+            letter-spacing: 0.01em;
         }
         .btn-lg {
             padding: 1rem 2rem;
@@ -114,62 +99,36 @@
             font-size: 0.8125rem;
         }
         .btn-primary {
-            background-color: var(--kairos-black);
-            border-color: var(--kairos-black);
-            color: var(--kairos-white);
+            background-color: var(--kairos-indigo);
+            border-color: var(--kairos-indigo);
+            color: white;
         }
         .btn-primary:hover {
-            background-color: var(--kairos-charcoal);
-            border-color: var(--kairos-charcoal);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background-color: var(--kairos-indigo-hover);
+            border-color: var(--kairos-indigo-hover);
+            color: white;
         }
-        .btn-accent {
-            background: var(--kairos-gradient);
-            border: none;
-            color: var(--kairos-black);
-            font-weight: 600;
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-accent::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s ease;
-        }
-        .btn-accent:hover {
-            color: var(--kairos-black);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(201, 169, 98, 0.35);
-        }
-        .btn-accent:hover::before {
-            left: 100%;
-        }
+        .btn-secondary,
         .btn-outline-primary {
-            border: 1.5px solid var(--kairos-black);
-            color: var(--kairos-black);
             background: transparent;
+            border: 1.5px solid var(--kairos-text-primary);
+            color: var(--kairos-text-primary);
         }
+        .btn-secondary:hover,
         .btn-outline-primary:hover {
-            background-color: var(--kairos-black);
-            border-color: var(--kairos-black);
-            color: var(--kairos-white);
-            transform: translateY(-2px);
+            background-color: var(--kairos-text-primary);
+            border-color: var(--kairos-text-primary);
+            color: white;
         }
         .btn-outline-light {
-            border: 1.5px solid rgba(255,255,255,0.6);
-            color: var(--kairos-white);
+            border: 1.5px solid rgba(248,250,252,0.6);
+            color: var(--kairos-ivory);
             background: transparent;
         }
         .btn-outline-light:hover {
-            background-color: var(--kairos-white);
-            border-color: var(--kairos-white);
-            color: var(--kairos-black);
+            background-color: var(--kairos-ivory);
+            border-color: var(--kairos-ivory);
+            color: var(--kairos-midnight);
         }
         .btn-outline-gold {
             border: 1.5px solid var(--kairos-gold);
@@ -178,46 +137,51 @@
         }
         .btn-outline-gold:hover {
             background: var(--kairos-gold);
-            color: var(--kairos-black);
+            color: var(--kairos-midnight);
+        }
+        .btn-accent {
+            background-color: var(--kairos-gold);
+            border: none;
+            color: var(--kairos-midnight);
+            font-weight: 600;
+        }
+        .btn-accent:hover {
+            background-color: #B3A26B;
+            color: var(--kairos-midnight);
         }
         .bg-kairos {
-            background-color: var(--kairos-black);
+            background-color: var(--kairos-midnight);
         }
-        .bg-kairos-gradient {
-            background: var(--kairos-dark-gradient);
+        .bg-kairos-slate {
+            background-color: var(--kairos-slate);
         }
-        .bg-kairos-accent {
-            background: var(--kairos-gradient);
-        }
-        .bg-cream {
-            background-color: var(--kairos-cream);
+        .bg-ivory {
+            background-color: var(--kairos-ivory);
         }
         .text-kairos {
-            color: var(--kairos-black);
+            color: var(--kairos-text-primary);
         }
         .text-gold {
             color: var(--kairos-gold);
         }
-        .text-gradient {
-            background: var(--kairos-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .text-secondary-muted {
+            color: var(--kairos-text-secondary);
         }
         .badge-verified {
-            background: var(--kairos-gradient);
-            color: var(--kairos-black);
-            font-weight: 600;
-        }
-        .badge-vetted {
-            background-color: var(--kairos-success);
-            color: white;
+            background-color: var(--kairos-gold);
+            color: var(--kairos-midnight);
             font-weight: 600;
             padding: 0.35em 0.8em;
-            border-radius: 4px;
+            border-radius: 2px;
             font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+        }
+        .badge-status {
+            background-color: var(--kairos-slate);
+            color: var(--kairos-ivory);
+            font-weight: 500;
+            padding: 0.35em 0.8em;
+            border-radius: 2px;
+            font-size: 0.75rem;
         }
         .kairos-logo {
             display: inline-flex;
@@ -229,83 +193,67 @@
             width: auto;
         }
         .card {
-            border: none;
-            background: var(--kairos-white);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            transition: var(--transition-smooth);
-            border-radius: 12px;
+            border: 1px solid var(--kairos-border);
+            background: white;
+            transition: var(--transition-fade);
+            border-radius: 4px;
             overflow: hidden;
         }
         .card:hover {
-            box-shadow: 0 16px 48px rgba(0,0,0,0.1);
-            transform: translateY(-4px);
-        }
-        .card-premium {
-            border: 1px solid rgba(201, 169, 98, 0.2);
-            background: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+            border-color: var(--kairos-text-secondary);
         }
         .card-dark {
-            background: var(--kairos-charcoal);
-            color: var(--kairos-white);
+            background: var(--kairos-slate);
+            color: var(--kairos-ivory);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .card-dark:hover {
+            border-color: rgba(255,255,255,0.2);
         }
         .expert-card .avatar {
             width: 80px;
             height: 80px;
             object-fit: cover;
             border-radius: 50%;
-            border: 3px solid var(--kairos-gold);
+            border: 2px solid var(--kairos-border);
         }
         .expert-profile .avatar-large {
             width: 160px;
             height: 160px;
             object-fit: cover;
             border-radius: 50%;
-            border: 4px solid var(--kairos-gold);
-            box-shadow: 0 8px 32px rgba(201, 169, 98, 0.25);
-        }
-        .rating-stars {
-            color: var(--kairos-gold);
+            border: 2px solid var(--kairos-border);
         }
         footer {
             margin-top: auto;
-            background: var(--kairos-dark-gradient);
-            color: var(--kairos-white);
+            background: var(--kairos-midnight);
+            color: var(--kairos-ivory);
             border-top: 1px solid rgba(255,255,255,0.05);
         }
         footer a {
-            color: rgba(255,255,255,0.6);
+            color: rgba(248,250,252,0.6);
             text-decoration: none;
-            transition: var(--transition-smooth);
+            transition: var(--transition-fade);
         }
         footer a:hover {
-            color: var(--kairos-gold);
+            color: var(--kairos-ivory);
         }
         footer h5, footer h6 {
-            font-family: var(--font-display);
-            color: var(--kairos-white);
+            font-family: var(--font-sans);
+            color: var(--kairos-ivory);
+            font-weight: 600;
         }
         .hero {
-            background: var(--kairos-dark-gradient);
-            color: var(--kairos-white);
+            background: var(--kairos-midnight);
+            color: var(--kairos-ivory);
             padding: 6rem 0;
             position: relative;
-            overflow: hidden;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(ellipse at 50% 0%, rgba(201, 169, 98, 0.08) 0%, transparent 60%);
-            pointer-events: none;
         }
         .hero h1 {
-            font-family: var(--font-display);
+            font-family: var(--font-serif);
             font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 500;
-            letter-spacing: -0.03em;
+            font-weight: 400;
+            letter-spacing: -0.02em;
             line-height: 1.1;
         }
         .hero .tagline {
@@ -315,102 +263,92 @@
             line-height: 1.8;
         }
         .section-title {
-            font-family: var(--font-display);
+            font-family: var(--font-serif);
             font-weight: 500;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.01em;
         }
         .feature-icon {
-            width: 64px;
-            height: 64px;
-            border-radius: 16px;
+            width: 56px;
+            height: 56px;
+            border-radius: 4px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: var(--kairos-black);
-            color: var(--kairos-gold);
-            font-size: 1.5rem;
-            transition: var(--transition-smooth);
-        }
-        .feature-icon:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            background: var(--kairos-midnight);
+            color: var(--kairos-ivory);
+            font-size: 1.25rem;
+            transition: var(--transition-fade);
         }
         .feature-icon-gold {
-            background: var(--kairos-gradient);
-            color: var(--kairos-black);
+            background: var(--kairos-gold);
+            color: var(--kairos-midnight);
         }
         .text-muted {
-            color: var(--kairos-muted) !important;
+            color: var(--kairos-text-secondary) !important;
         }
         .form-control, .form-select {
-            border: 1.5px solid #e5e5e5;
-            border-radius: 8px;
+            border: 1px solid var(--kairos-border);
+            border-radius: 4px;
             padding: 0.875rem 1rem;
             font-size: 0.9375rem;
-            transition: var(--transition-smooth);
+            transition: var(--transition-fade);
         }
         .form-control:focus, .form-select:focus {
-            border-color: var(--kairos-gold);
-            box-shadow: 0 0 0 3px rgba(201, 169, 98, 0.15);
+            border-color: var(--kairos-indigo);
+            box-shadow: 0 0 0 2px rgba(67, 56, 202, 0.15);
         }
         .form-control::placeholder {
-            color: var(--kairos-muted);
+            color: var(--kairos-text-secondary);
         }
         .form-label {
             font-weight: 500;
             font-size: 0.875rem;
             margin-bottom: 0.5rem;
-            color: var(--kairos-charcoal);
+            color: var(--kairos-text-primary);
         }
         .bg-light {
-            background-color: var(--kairos-cream) !important;
+            background-color: var(--kairos-ivory) !important;
         }
         main {
             flex: 1;
         }
         .dropdown-menu {
-            border: none;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-            border-radius: 12px;
+            border: 1px solid var(--kairos-border);
+            border-radius: 4px;
             padding: 0.5rem;
         }
         .dropdown-item {
-            border-radius: 8px;
+            border-radius: 2px;
             padding: 0.625rem 1rem;
             font-size: 0.9rem;
-            transition: var(--transition-smooth);
+            transition: var(--transition-fade);
         }
         .dropdown-item:hover {
-            background-color: var(--kairos-cream);
+            background-color: var(--kairos-ivory);
         }
         .divider-gold {
             width: 60px;
-            height: 3px;
-            background: var(--kairos-gradient);
-            border-radius: 2px;
+            height: 2px;
+            background: var(--kairos-gold);
         }
-        .progress-bar-custom {
-            background: var(--kairos-gradient);
+        .skeleton-loader {
+            background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
         }
-        .shadow-premium {
-            box-shadow: 0 24px 64px rgba(0,0,0,0.12);
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
         .animate-fade-in {
-            animation: fadeIn 0.6s ease-out;
+            animation: fadeIn 200ms ease-out;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-float {
-            animation: float 6s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         .letter-spacing-wide {
-            letter-spacing: 0.15em;
+            letter-spacing: 0.1em;
         }
         .uppercase {
             text-transform: uppercase;
@@ -419,35 +357,52 @@
             border-color: var(--kairos-gold) !important;
         }
         .alert {
-            border: none;
-            border-radius: 12px;
+            border: 1px solid;
+            border-radius: 4px;
         }
         .alert-success {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: #065f46;
+            background-color: rgba(21, 128, 61, 0.08);
+            border-color: rgba(21, 128, 61, 0.2);
+            color: var(--kairos-success);
         }
         .alert-danger {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: #991b1b;
+            background-color: rgba(185, 28, 28, 0.08);
+            border-color: rgba(185, 28, 28, 0.2);
+            color: var(--kairos-error);
         }
         .alert-warning {
-            background-color: rgba(245, 158, 11, 0.1);
-            color: #92400e;
+            background-color: rgba(180, 83, 9, 0.08);
+            border-color: rgba(180, 83, 9, 0.2);
+            color: var(--kairos-warning);
         }
         .alert-info {
-            background-color: rgba(59, 130, 246, 0.1);
-            color: #1e40af;
+            background-color: rgba(67, 56, 202, 0.08);
+            border-color: rgba(67, 56, 202, 0.2);
+            color: var(--kairos-indigo);
+        }
+        .privacy-banner {
+            background-color: var(--kairos-ivory);
+            border: 1px solid var(--kairos-border);
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            color: var(--kairos-text-secondary);
         }
         @media (max-width: 991.98px) {
             .navbar-collapse {
-                background: var(--kairos-black);
+                background: var(--kairos-midnight);
                 padding: 1rem;
                 margin-top: 1rem;
-                border-radius: 12px;
+                border-radius: 4px;
             }
-            .navbar-nav .nav-link::after {
-                display: none;
-            }
+        }
+        :focus-visible {
+            outline: 2px solid var(--kairos-indigo);
+            outline-offset: 2px;
+        }
+        .max-w-content {
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -457,16 +412,9 @@
         <div class="container">
             <a class="navbar-brand kairos-logo" href="{% url 'core:home' %}">
                 <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="20" cy="20" r="18" stroke="url(#goldGradient)" stroke-width="2"/>
-                    <path d="M20 8 L20 20 L28 26" stroke="url(#goldGradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="20" cy="20" r="3" fill="url(#goldGradient)"/>
-                    <defs>
-                        <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#c9a962"/>
-                            <stop offset="50%" stop-color="#d4b978"/>
-                            <stop offset="100%" stop-color="#b8943f"/>
-                        </linearGradient>
-                    </defs>
+                    <circle cx="20" cy="20" r="18" stroke="#C4B37A" stroke-width="2"/>
+                    <path d="M20 8 L20 20 L28 26" stroke="#C4B37A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="3" fill="#C4B37A"/>
                 </svg>
                 <span>Kairos</span>
             </a>
@@ -517,7 +465,7 @@
                             <a class="nav-link" href="{% url 'accounts:login' %}">Log in</a>
                         </li>
                         <li class="nav-item ms-lg-2">
-                            <a class="btn btn-accent btn-sm" href="{% url 'accounts:signup' %}">Get started</a>
+                            <a class="btn btn-primary btn-sm" href="{% url 'accounts:signup' %}">Get started</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -546,13 +494,13 @@
                 <div class="col-lg-4 mb-4 mb-lg-0">
                     <div class="kairos-logo mb-3">
                         <svg viewBox="0 0 40 40" width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="20" cy="20" r="18" stroke="#c9a962" stroke-width="2"/>
-                            <path d="M20 8 L20 20 L28 26" stroke="#c9a962" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <circle cx="20" cy="20" r="3" fill="#c9a962"/>
+                            <circle cx="20" cy="20" r="18" stroke="#C4B37A" stroke-width="2"/>
+                            <path d="M20 8 L20 20 L28 26" stroke="#C4B37A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="20" cy="20" r="3" fill="#C4B37A"/>
                         </svg>
-                        <span class="text-white fs-5 fw-semibold" style="font-family: var(--font-display);">Kairos</span>
+                        <span class="text-white fs-5 fw-semibold" style="font-family: var(--font-serif);">Kairos</span>
                     </div>
-                    <p class="text-gold mb-2" style="font-family: var(--font-display); font-size: 1.125rem;">Don't guess. Know.</p>
+                    <p class="text-gold mb-2" style="font-family: var(--font-serif); font-size: 1.125rem;">Don't guess. Know.</p>
                     <p class="small opacity-60">Confidential expert network for enterprise research and advisory. Connecting decision-makers with vetted expertise.</p>
                 </div>
                 <div class="col-6 col-lg-2">
@@ -590,28 +538,16 @@
             <hr class="my-4 opacity-10">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <p class="mb-0 opacity-50 small">&copy; {% now "Y" %} Kairos. All rights reserved.</p>
+                    <p class="small opacity-50 mb-0">&copy; {% now "Y" %} Kairos. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <p class="mb-0 opacity-50 small">Enterprise-grade expertise, delivered confidentially.</p>
+                    <p class="small opacity-50 mb-0">Confidential expert network</p>
                 </div>
             </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const navbar = document.querySelector('.navbar');
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 50) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-            });
-        });
-    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
