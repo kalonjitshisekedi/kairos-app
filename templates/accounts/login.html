@@ -3,43 +3,47 @@
 {% block title %}Log in{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card">
-                <div class="card-body p-4">
-                    <h2 class="text-center mb-4">Log in to Kairos</h2>
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="id_username" class="form-label">Email address</label>
-                            {{ form.username }}
-                            {% if form.username.errors %}
-                                <div class="text-danger small">{{ form.username.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="mb-3">
-                            <label for="id_password" class="form-label">Password</label>
-                            {{ form.password }}
-                            {% if form.password.errors %}
-                                <div class="text-danger small">{{ form.password.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-                        {% if form.non_field_errors %}
-                            <div class="alert alert-danger">{{ form.non_field_errors.0 }}</div>
-                        {% endif %}
-                        <button type="submit" class="btn btn-primary w-100">Log in</button>
-                    </form>
-                    <div class="text-center mt-3">
-                        <a href="{% url 'accounts:password_reset' %}">Forgot your password?</a>
-                    </div>
-                    <hr>
-                    <p class="text-center mb-0">
-                        Don't have an account? <a href="{% url 'accounts:signup' %}">Sign up</a>
-                    </p>
+<section class="py-5" style="padding-top: 4rem; padding-bottom: 4rem;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-lg-4">
+                <div class="text-center mb-4">
+                    <h2 style="font-family: var(--font-display);">Welcome back</h2>
+                    <p class="text-muted">Log in to your Kairos account</p>
                 </div>
+                <div class="card card-premium shadow-premium">
+                    <div class="card-body p-4 p-lg-5">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-4">
+                                <label for="id_username" class="form-label">Email address</label>
+                                {{ form.username }}
+                                {% if form.username.errors %}
+                                    <div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-4">
+                                <label for="id_password" class="form-label">Password</label>
+                                {{ form.password }}
+                                {% if form.password.errors %}
+                                    <div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">{{ form.non_field_errors.0 }}</div>
+                            {% endif %}
+                            <button type="submit" class="btn btn-accent w-100 btn-lg">Log in</button>
+                        </form>
+                        <div class="text-center mt-4">
+                            <a href="{% url 'accounts:password_reset' %}" class="text-muted small">Forgot your password?</a>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center mt-4 text-muted">
+                    Don't have an account? <a href="{% url 'accounts:signup' %}" class="text-gold">Sign up</a>
+                </p>
             </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}

@@ -5,18 +5,18 @@
 {% block extra_css %}
 <style>
     .expert-card {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition: var(--transition-smooth);
     }
     .expert-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        transform: translateY(-8px);
+        box-shadow: 0 16px 48px rgba(0,0,0,0.12);
     }
     .expert-avatar {
         width: 100px;
         height: 100px;
         object-fit: cover;
         border-radius: 50%;
-        border: 3px solid var(--kairos-off-white);
+        border: 3px solid var(--kairos-gold);
     }
     .expert-avatar-placeholder {
         width: 100px;
@@ -27,170 +27,183 @@
         justify-content: center;
         font-size: 1.5rem;
         font-weight: 600;
+        background: var(--kairos-gradient);
+        color: var(--kairos-black);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="hero py-4">
+<section class="hero py-5">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8 mx-auto text-center">
-                <h1 class="mb-3" style="font-size: 2.5rem;">Expert network</h1>
+                <p class="text-gold text-uppercase small fw-semibold mb-3 letter-spacing-wide">Vetted professionals</p>
+                <h1 class="mb-3">Expert network</h1>
                 <p class="tagline mb-0">Access our curated network of vetted professionals.<br>Every expert is thoroughly verified for credentials and experience.</p>
             </div>
         </div>
     </div>
 </section>
 
-<div class="container py-4">
-    <div class="row">
-        <div class="col-lg-3 mb-4">
-            <div class="card sticky-top" style="top: 20px;">
-                <div class="card-header bg-white border-bottom">
-                    <h6 class="mb-0 fw-semibold"><i class="bi bi-funnel me-2"></i>Filter experts</h6>
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-3">
+                <div class="card card-premium sticky-top" style="top: 100px;">
+                    <div class="card-header bg-white p-4 border-bottom">
+                        <h6 class="mb-0 fw-semibold"><i class="bi bi-funnel me-2 text-gold"></i>Filter experts</h6>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="get" id="filterForm">
+                            <div class="mb-4">
+                                <label class="form-label small fw-semibold text-uppercase letter-spacing-wide" style="font-size: 0.7rem;">Search</label>
+                                <input type="text" name="search" class="form-control" value="{{ search }}" placeholder="Name or keyword">
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label small fw-semibold text-uppercase letter-spacing-wide" style="font-size: 0.7rem;">Expertise</label>
+                                {% for tag in discipline_tags %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="expertise" value="{{ tag.slug }}" id="tag_{{ tag.slug }}" {% if tag.slug in selected_expertise %}checked{% endif %}>
+                                        <label class="form-check-label small" for="tag_{{ tag.slug }}">{{ tag.name }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label small fw-semibold text-uppercase letter-spacing-wide" style="font-size: 0.7rem;">Sort by</label>
+                                <select name="sort" class="form-select form-select-sm">
+                                    <option value="rating" {% if sort == 'rating' %}selected{% endif %}>Highest rated</option>
+                                    <option value="experience_high" {% if sort == 'experience_high' %}selected{% endif %}>Most experienced</option>
+                                </select>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-sm">Apply filters</button>
+                                <a href="{% url 'experts:directory' %}" class="btn btn-outline-secondary btn-sm">Clear all</a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form method="get" id="filterForm">
-                        <div class="mb-4">
-                            <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.05em;">Search</label>
-                            <input type="text" name="search" class="form-control" value="{{ search }}" placeholder="Name or keyword">
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.05em;">Expertise</label>
-                            {% for tag in discipline_tags %}
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="expertise" value="{{ tag.slug }}" id="tag_{{ tag.slug }}" {% if tag.slug in selected_expertise %}checked{% endif %}>
-                                    <label class="form-check-label small" for="tag_{{ tag.slug }}">{{ tag.name }}</label>
-                                </div>
-                            {% endfor %}
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label class="form-label small fw-semibold text-uppercase" style="letter-spacing: 0.05em;">Sort by</label>
-                            <select name="sort" class="form-select form-select-sm">
-                                <option value="rating" {% if sort == 'rating' %}selected{% endif %}>Highest rated</option>
-                                <option value="experience_high" {% if sort == 'experience_high' %}selected{% endif %}>Most experienced</option>
-                            </select>
-                        </div>
-                        
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-sm">Apply filters</button>
-                            <a href="{% url 'experts:directory' %}" class="btn btn-outline-secondary btn-sm">Clear all</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-lg-9">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <p class="mb-0 text-muted">
-                    {% if experts %}
-                        Showing {{ experts.paginator.count }} vetted expert{{ experts.paginator.count|pluralize }}
-                    {% else %}
-                        No experts found
-                    {% endif %}
-                </p>
-                <span class="badge badge-vetted"><i class="bi bi-patch-check-fill me-1"></i>All Vetted</span>
             </div>
             
-            {% if experts %}
-                <div class="row g-4">
-                    {% for expert in experts %}
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card h-100 expert-card">
-                                <div class="card-body p-4 text-center">
-                                    {% if expert.avatar %}
-                                        <img src="{{ expert.avatar.url }}" alt="{{ expert.user.full_name }}" class="expert-avatar mb-3">
-                                    {% else %}
-                                        <div class="expert-avatar-placeholder bg-dark text-white mx-auto mb-3">
-                                            {{ expert.user.first_name.0 }}{{ expert.user.last_name.0 }}
-                                        </div>
-                                    {% endif %}
-                                    
-                                    <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
-                                        <h5 class="card-title mb-0">{{ expert.user.full_name }}</h5>
-                                        {% if expert.is_verified %}
-                                            <span class="badge badge-vetted" title="Credentials verified"><i class="bi bi-patch-check-fill"></i></span>
-                                        {% endif %}
-                                    </div>
-                                    
-                                    <p class="text-muted small mb-2">{{ expert.headline|truncatechars:80 }}</p>
-                                    
-                                    {% if expert.affiliation %}
-                                        <p class="text-muted small mb-2"><i class="bi bi-building me-1"></i>{{ expert.affiliation }}</p>
-                                    {% endif %}
-                                    
-                                    {% if expert.years_experience > 0 %}
-                                        <p class="text-muted small mb-2"><i class="bi bi-briefcase me-1"></i>{{ expert.years_experience }}+ years experience</p>
-                                    {% endif %}
-                                    
-                                    <div class="mb-3">
-                                        {% for tag in expert.expertise_tags.all|slice:":3" %}
-                                            <span class="badge bg-light text-dark me-1 mb-1">{{ tag.name }}</span>
-                                        {% endfor %}
-                                    </div>
-                                    
-                                    {% if expert.average_rating > 0 %}
-                                        <div class="rating-stars mb-2">
-                                            {% for i in "12345" %}
-                                                {% if forloop.counter <= expert.average_rating %}
-                                                    <i class="bi bi-star-fill"></i>
-                                                {% else %}
-                                                    <i class="bi bi-star"></i>
-                                                {% endif %}
-                                            {% endfor %}
-                                            <span class="text-muted small ms-1">({{ expert.total_reviews }})</span>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                <div class="card-footer bg-white border-0 text-center pb-4">
-                                    <a href="{% url 'experts:profile' pk=expert.pk %}" class="btn btn-outline-primary btn-sm w-100">View profile</a>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
+            <div class="col-lg-9">
+                {% if not user.is_authenticated %}
+                <div class="alert alert-light border mb-4 d-flex align-items-center">
+                    <i class="bi bi-lock text-gold me-3"></i>
+                    <div>
+                        <strong>Viewing public profiles only.</strong>
+                        <a href="{% url 'accounts:login' %}" class="text-gold">Log in</a> or <a href="{% url 'accounts:signup' %}" class="text-gold">create an account</a> to access our full network of vetted experts.
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <p class="mb-0 text-muted">
+                        {% if experts %}
+                            Showing {{ experts.paginator.count }} vetted expert{{ experts.paginator.count|pluralize }}
+                        {% else %}
+                            No experts found
+                        {% endif %}
+                    </p>
+                    <span class="badge badge-vetted"><i class="bi bi-patch-check-fill me-1"></i>All vetted</span>
                 </div>
                 
-                {% if experts.has_other_pages %}
-                    <nav class="mt-5">
-                        <ul class="pagination justify-content-center">
-                            {% if experts.has_previous %}
-                                <li class="page-item"><a class="page-link" href="?page={{ experts.previous_page_number }}&{{ request.GET.urlencode }}">&laquo; Previous</a></li>
-                            {% endif %}
-                            <li class="page-item active"><span class="page-link bg-dark border-dark">{{ experts.number }} of {{ experts.paginator.num_pages }}</span></li>
-                            {% if experts.has_next %}
-                                <li class="page-item"><a class="page-link" href="?page={{ experts.next_page_number }}&{{ request.GET.urlencode }}">Next &raquo;</a></li>
-                            {% endif %}
-                        </ul>
-                    </nav>
+                {% if experts %}
+                    <div class="row g-4">
+                        {% for expert in experts %}
+                            <div class="col-md-6 col-xl-4">
+                                <div class="card card-premium h-100 expert-card">
+                                    <div class="card-body p-4 text-center">
+                                        {% if expert.avatar %}
+                                            <img src="{{ expert.avatar.url }}" alt="{{ expert.user.full_name }}" class="expert-avatar mb-3">
+                                        {% else %}
+                                            <div class="expert-avatar-placeholder mx-auto mb-3">
+                                                {{ expert.user.first_name.0 }}{{ expert.user.last_name.0 }}
+                                            </div>
+                                        {% endif %}
+                                        
+                                        <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
+                                            <h5 class="card-title mb-0" style="font-family: var(--font-display);">{{ expert.user.full_name }}</h5>
+                                            {% if expert.is_verified %}
+                                                <span class="badge badge-vetted" title="Credentials verified"><i class="bi bi-patch-check-fill"></i></span>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <p class="text-muted small mb-2">{{ expert.headline|truncatechars:80 }}</p>
+                                        
+                                        {% if expert.years_experience > 0 %}
+                                            <p class="text-muted small mb-2"><i class="bi bi-briefcase me-1"></i>{{ expert.years_experience }}+ years</p>
+                                        {% endif %}
+                                        
+                                        <div class="mb-3">
+                                            {% for tag in expert.expertise_tags.all|slice:":3" %}
+                                                <span class="badge bg-light text-dark me-1 mb-1" style="font-size: 0.75rem;">{{ tag.name }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        
+                                        {% if expert.average_rating > 0 %}
+                                            <div class="rating-stars mb-2">
+                                                {% for i in "12345" %}
+                                                    {% if forloop.counter <= expert.average_rating %}
+                                                        <i class="bi bi-star-fill"></i>
+                                                    {% else %}
+                                                        <i class="bi bi-star"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <span class="text-muted small ms-1">({{ expert.total_reviews }})</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="card-footer bg-white border-0 text-center pb-4">
+                                        <a href="{% url 'experts:profile' pk=expert.pk %}" class="btn btn-outline-primary btn-sm w-100">View profile</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if experts.has_other_pages %}
+                        <nav class="mt-5">
+                            <ul class="pagination justify-content-center">
+                                {% if experts.has_previous %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ experts.previous_page_number }}&{{ request.GET.urlencode }}">&laquo; Previous</a></li>
+                                {% endif %}
+                                <li class="page-item active"><span class="page-link" style="background: var(--kairos-gradient); border-color: var(--kairos-gold);">{{ experts.number }} of {{ experts.paginator.num_pages }}</span></li>
+                                {% if experts.has_next %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ experts.next_page_number }}&{{ request.GET.urlencode }}">Next &raquo;</a></li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-search display-1 text-muted"></i>
+                        <h3 class="mt-3" style="font-family: var(--font-display);">No experts found</h3>
+                        <p class="text-muted">Try adjusting your filters or search terms.</p>
+                        <a href="{% url 'experts:directory' %}" class="btn btn-primary">Clear filters</a>
+                    </div>
                 {% endif %}
-            {% else %}
-                <div class="text-center py-5">
-                    <i class="bi bi-search display-1 text-muted"></i>
-                    <h3 class="mt-3">No experts found</h3>
-                    <p class="text-muted">Try adjusting your filters or search terms.</p>
-                    <a href="{% url 'experts:directory' %}" class="btn btn-primary">Clear filters</a>
-                </div>
-            {% endif %}
-            
-            <div class="card mt-5 bg-light border-0">
-                <div class="card-body p-4 text-center">
-                    <h5 class="fw-semibold mb-2">Need help finding the right expert?</h5>
-                    <p class="text-muted mb-3">Submit a request and our team will match you with the ideal expert for your needs.</p>
-                    <a href="{% url 'consultations:submit_request' %}" class="btn btn-accent">Submit a request</a>
+                
+                <div class="card card-premium mt-5 text-center">
+                    <div class="card-body p-5">
+                        <h4 class="fw-semibold mb-3" style="font-family: var(--font-display);">Need help finding the right expert?</h4>
+                        <p class="text-muted mb-4">Submit a request and our team will match you with the ideal expert for your specific needs.</p>
+                        <a href="{% url 'consultations:submit_request' %}" class="btn btn-accent btn-lg">Submit a request</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<div class="bg-dark text-white py-3">
-    <div class="container text-center small">
-        <i class="bi bi-shield-check me-2"></i>
-        Engagements are managed through Kairos for confidentiality and protection.
+<div class="bg-cream py-3">
+    <div class="container text-center">
+        <p class="mb-0 small text-muted">
+            <i class="bi bi-shield-check text-gold me-2"></i>
+            All engagements are managed through Kairos for confidentiality and protection.
+        </p>
     </div>
 </div>
 {% endblock %}

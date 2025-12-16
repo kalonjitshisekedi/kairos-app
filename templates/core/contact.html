@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %}Get In Touch{% endblock %}
+{% block title %}Get in touch{% endblock %}
 
 {% block content %}
-<section class="hero py-4">
+<section class="hero py-5">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8 mx-auto text-center">
-                <p class="text-accent text-uppercase small fw-semibold mb-3" style="letter-spacing: 0.1em;">Contact Us</p>
-                <h1 class="mb-3" style="font-size: 2.5rem;">Get in touch</h1>
+                <p class="text-gold text-uppercase small fw-semibold mb-3 letter-spacing-wide">Contact us</p>
+                <h1 class="mb-3">Get in touch</h1>
                 <p class="tagline">Ready to access world-class expertise? Tell us about your needs<br>and we'll help you find the perfect match.</p>
             </div>
         </div>
@@ -19,53 +19,51 @@
     <div class="container">
         <div class="row g-5">
             <div class="col-lg-5">
-                <h3 class="fw-semibold mb-4">How can we help?</h3>
+                <h3 class="fw-semibold mb-4" style="font-family: var(--font-display);">How can we help?</h3>
                 
                 <div class="d-flex mb-4">
-                    <div class="feature-icon me-3 flex-shrink-0" style="width: 48px; height: 48px;">
+                    <div class="feature-icon me-3 flex-shrink-0" style="width: 56px; height: 56px;">
                         <i class="bi bi-people"></i>
                     </div>
                     <div>
-                        <h5 class="fw-semibold mb-2">Project matching</h5>
-                        <p class="text-muted mb-0">Describe your project and we'll match you with vetted experts who have the exact skills you need.</p>
+                        <h5 class="fw-semibold mb-2">Expert matching</h5>
+                        <p class="text-muted mb-0">Describe your project and we'll match you with vetted experts who have the exact expertise you need.</p>
                     </div>
                 </div>
                 
                 <div class="d-flex mb-4">
-                    <div class="feature-icon me-3 flex-shrink-0" style="width: 48px; height: 48px;">
-                        <i class="bi bi-briefcase"></i>
+                    <div class="feature-icon feature-icon-gold me-3 flex-shrink-0" style="width: 56px; height: 56px;">
+                        <i class="bi bi-building"></i>
                     </div>
                     <div>
-                        <h5 class="fw-semibold mb-2">Business partnerships</h5>
-                        <p class="text-muted mb-0">Interested in partnering with Kairos? Let's discuss how we can work together.</p>
+                        <h5 class="fw-semibold mb-2">Enterprise partnerships</h5>
+                        <p class="text-muted mb-0">Interested in partnering with Kairos for ongoing research or advisory needs? Let's discuss.</p>
                     </div>
                 </div>
                 
                 <div class="d-flex mb-4">
-                    <div class="feature-icon me-3 flex-shrink-0" style="width: 48px; height: 48px;">
+                    <div class="feature-icon me-3 flex-shrink-0" style="width: 56px; height: 56px;">
                         <i class="bi bi-question-circle"></i>
                     </div>
                     <div>
-                        <h5 class="fw-semibold mb-2">General inquiries</h5>
-                        <p class="text-muted mb-0">Have questions about how Kairos works? We're here to help.</p>
+                        <h5 class="fw-semibold mb-2">General enquiries</h5>
+                        <p class="text-muted mb-0">Have questions about how Kairos works? Our team is here to help.</p>
                     </div>
                 </div>
                 
                 <hr class="my-4">
                 
-                <div class="card bg-light border-0">
-                    <div class="card-body p-4">
-                        <h6 class="fw-semibold mb-3"><i class="bi bi-geo-alt text-accent me-2"></i>Our location</h6>
-                        <p class="text-muted mb-0">Johannesburg, South Africa</p>
-                        <p class="text-muted small mb-0">Serving clients across Africa and globally</p>
-                    </div>
+                <div class="card card-premium p-4">
+                    <h6 class="fw-semibold mb-3"><i class="bi bi-geo-alt text-gold me-2"></i>Our location</h6>
+                    <p class="text-muted mb-1">Johannesburg, South Africa</p>
+                    <p class="text-muted small mb-0">Serving clients across Africa and globally</p>
                 </div>
             </div>
             
             <div class="col-lg-7">
-                <div class="card border-0 shadow-lg">
+                <div class="card card-premium shadow-premium">
                     <div class="card-body p-5">
-                        <h4 class="fw-semibold mb-4">Send us a message</h4>
+                        <h4 class="fw-semibold mb-4" style="font-family: var(--font-display);">Send us a message</h4>
                         
                         <form method="post" action="{% url 'core:contact' %}">
                             {% csrf_token %}
@@ -88,17 +86,17 @@
                             </div>
                             
                             <div class="mb-3 mt-3">
-                                <label class="form-label">Company/Organisation</label>
+                                <label class="form-label">Company / Organisation</label>
                                 <input type="text" name="company" class="form-control" value="{{ form.company.value|default:'' }}">
                             </div>
                             
                             <div class="mb-3">
-                                <label class="form-label">Type of inquiry <span class="text-danger">*</span></label>
+                                <label class="form-label">Type of enquiry <span class="text-danger">*</span></label>
                                 <select name="inquiry_type" class="form-select" required>
-                                    <option value="general" {% if form.inquiry_type.value == 'general' %}selected{% endif %}>General Inquiry</option>
-                                    <option value="project" {% if form.inquiry_type.value == 'project' %}selected{% endif %}>Project Matching</option>
-                                    <option value="partnership" {% if form.inquiry_type.value == 'partnership' %}selected{% endif %}>Business Partnership</option>
-                                    <option value="support" {% if form.inquiry_type.value == 'support' %}selected{% endif %}>Technical Support</option>
+                                    <option value="general" {% if form.inquiry_type.value == 'general' %}selected{% endif %}>General enquiry</option>
+                                    <option value="project" {% if form.inquiry_type.value == 'project' %}selected{% endif %}>Expert matching</option>
+                                    <option value="partnership" {% if form.inquiry_type.value == 'partnership' %}selected{% endif %}>Enterprise partnership</option>
+                                    <option value="support" {% if form.inquiry_type.value == 'support' %}selected{% endif %}>Technical support</option>
                                 </select>
                             </div>
                             
@@ -111,12 +109,12 @@
                             <div class="form-check mb-4">
                                 <input class="form-check-input {% if form.popia_consent.errors %}is-invalid{% endif %}" type="checkbox" name="popia_consent" id="popia_consent" required>
                                 <label class="form-check-label small" for="popia_consent">
-                                    I consent to Kairos processing my personal information as described in the <a href="{% url 'core:privacy' %}">Privacy Policy</a> in compliance with the Protection of Personal Information Act (POPIA). I understand my data will be stored securely and used only for responding to this inquiry. <span class="text-danger">*</span>
+                                    I consent to Kairos processing my personal information as described in the <a href="{% url 'core:privacy' %}" class="text-gold">Privacy Policy</a> in compliance with the Protection of Personal Information Act (POPIA). I understand my data will be stored securely and used only for responding to this enquiry. <span class="text-danger">*</span>
                                 </label>
                                 {% if form.popia_consent.errors %}<div class="invalid-feedback d-block">{{ form.popia_consent.errors.0 }}</div>{% endif %}
                             </div>
                             
-                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <button type="submit" class="btn btn-accent btn-lg w-100">
                                 <i class="bi bi-send me-2"></i>Send message
                             </button>
                             
@@ -129,11 +127,11 @@
     </div>
 </section>
 
-<section class="py-5 bg-light">
+<section class="py-5 bg-cream">
     <div class="container text-center">
-        <h4 class="fw-semibold mb-3">Looking to join as an expert?</h4>
-        <p class="text-muted mb-4">Share your expertise with clients across Africa and earn on your own terms.</p>
-        <a href="{% url 'experts:join' %}" class="btn btn-outline-primary">Apply as an expert</a>
+        <h4 class="fw-semibold mb-3" style="font-family: var(--font-display);">Looking to join as an expert?</h4>
+        <p class="text-muted mb-4">Share your expertise with enterprise clients through our curated network.</p>
+        <a href="{% url 'experts:join' %}" class="btn btn-outline-primary btn-lg">Apply to join</a>
     </div>
 </section>
 {% endblock %}

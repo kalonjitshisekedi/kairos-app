@@ -18,12 +18,29 @@ from .forms import (
 
 
 def expert_directory(request):
-    """Expert directory with improved filtering and vetted badges."""
-    experts = ExpertProfile.objects.filter(
+    """Expert directory with improved filtering and vetted badges.
+    
+    Privacy levels control visibility:
+    - public: Visible to everyone
+    - semi_private: Visible only to verified clients (authenticated + email verified)
+    - private: Never shown in directory (matched by admin only)
+    """
+    base_query = ExpertProfile.objects.filter(
         verification_status__in=['vetted', 'active'],
         is_publicly_listed=True,
-        privacy_level__in=['public', 'semi_private']
     ).select_related('user').prefetch_related('expertise_tags')
+    
+    is_verified_client = (
+        request.user.is_authenticated and 
+        request.user.is_client and 
+        request.user.email_verified
+    )
+    is_admin = request.user.is_authenticated and request.user.is_admin
+    
+    if is_verified_client or is_admin:
+        experts = base_query.filter(privacy_level__in=['public', 'semi_private'])
+    else:
+        experts = base_query.filter(privacy_level='public')
     
     search = request.GET.get('search', '')
     if search:
@@ -144,6 +161,13 @@ def careers(request):
 
 
 def expert_profile(request, pk):
+    """View expert profile with privacy level enforcement.
+    
+    Access rules:
+    - public: Visible to everyone
+    - semi_private: Visible only to verified clients (authenticated + email verified), owner, or admin
+    - private: Visible only to owner or admin
+    """
     expert = get_object_or_404(
         ExpertProfile.objects.select_related('user').prefetch_related(
             'expertise_tags', 'publications', 'patents', 'notable_projects'
@@ -151,8 +175,24 @@ def expert_profile(request, pk):
         pk=pk
     )
     
-    if not expert.is_publicly_listed and not (request.user.is_authenticated and (request.user == expert.user or request.user.is_admin)):
+    is_own_profile = request.user.is_authenticated and request.user == expert.user
+    is_admin = request.user.is_authenticated and request.user.is_admin
+    is_verified_client = (
+        request.user.is_authenticated and 
+        request.user.is_client and 
+        request.user.email_verified
+    )
+    
+    if not expert.is_publicly_listed and not (is_own_profile or is_admin):
         messages.error(request, 'This expert profile is not available.')
+        return redirect('experts:directory')
+    
+    if expert.privacy_level == 'private' and not (is_own_profile or is_admin):
+        messages.error(request, 'This expert profile is private.')
+        return redirect('experts:directory')
+    
+    if expert.privacy_level == 'semi_private' and not (is_verified_client or is_own_profile or is_admin):
+        messages.error(request, 'This expert profile requires email verification to view. Please verify your email address.')
         return redirect('experts:directory')
     
     reviews = Booking.objects.filter(

@@ -3,105 +3,121 @@
 {% block title %}Submit a request{% endblock %}
 
 {% block content %}
-<section class="hero py-4">
+<section class="hero py-5">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center">
-                <h1 class="mb-3" style="font-size: 2.5rem;">Submit a request</h1>
-                <p class="tagline mb-0">Tell us about your challenge. Our team will match you with the ideal expert.</p>
+                <p class="text-gold text-uppercase small fw-semibold mb-3 letter-spacing-wide">Client request</p>
+                <h1 class="mb-3">Submit a request</h1>
+                <p class="tagline mb-0">Tell us about your challenge. Our team will match you with the ideal expert from our vetted network.</p>
             </div>
         </div>
     </div>
 </section>
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card shadow-sm">
-                <div class="card-body p-5">
-                    <form method="post">
-                        {% csrf_token %}
-                        
-                        <h5 class="fw-semibold mb-4">Your details</h5>
-                        
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-6">
-                                <label for="name" class="form-label">Your name <span class="text-danger">*</span></label>
-                                <input type="text" name="name" id="name" class="form-control" required {% if user.is_authenticated %}value="{{ user.full_name }}"{% endif %}>
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card card-premium shadow-premium">
+                    <div class="card-body p-5">
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="mb-4 pb-3 border-bottom">
+                                <h5 class="fw-semibold mb-1" style="font-family: var(--font-display);">Your details</h5>
+                                <p class="text-muted small mb-0">Tell us who you are</p>
                             </div>
-                            <div class="col-md-6">
-                                <label for="company" class="form-label">Company <span class="text-danger">*</span></label>
-                                <input type="text" name="company" id="company" class="form-control" required placeholder="Your organisation">
-                            </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="email" class="form-label">Email address <span class="text-danger">*</span></label>
-                            <input type="email" name="email" id="email" class="form-control" required {% if user.is_authenticated %}value="{{ user.email }}"{% endif %}>
-                        </div>
-
-                        <hr class="my-4">
-                        
-                        <h5 class="fw-semibold mb-4">Your request</h5>
-                        
-                        <div class="mb-4">
-                            <label for="problem_description" class="form-label">Describe your challenge <span class="text-danger">*</span></label>
-                            <textarea name="problem_description" id="problem_description" class="form-control" rows="6" required placeholder="Describe the problem you need help with, the context, and what outcomes you're looking for. The more detail you provide, the better we can match you."></textarea>
-                        </div>
-
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-4">
-                                <label for="engagement_type" class="form-label">Engagement type</label>
-                                <select name="engagement_type" id="engagement_type" class="form-select">
-                                    {% for value, label in engagement_types %}
-                                        <option value="{{ value }}">{{ label }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="timeline_urgency" class="form-label">Timeline</label>
-                                <select name="timeline_urgency" id="timeline_urgency" class="form-select">
-                                    {% for value, label in urgency_levels %}
-                                        <option value="{{ value }}">{{ label }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="confidentiality_level" class="form-label">Confidentiality</label>
-                                <select name="confidentiality_level" id="confidentiality_level" class="form-select">
-                                    {% for value, label in confidentiality_levels %}
-                                        <option value="{{ value }}">{{ label }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="alert alert-light border mb-4">
-                            <div class="d-flex">
-                                <i class="bi bi-shield-check text-accent me-3 fs-4"></i>
-                                <div>
-                                    <strong>Confidential handling</strong>
-                                    <p class="mb-0 small text-muted">Your request is treated with strict confidentiality. Details are only shared with matched experts under NDA when required.</p>
+                            
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label">Your name <span class="text-danger">*</span></label>
+                                    <input type="text" name="name" id="name" class="form-control" required {% if user.is_authenticated %}value="{{ user.full_name }}"{% endif %}>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="company" class="form-label">Company <span class="text-danger">*</span></label>
+                                    <input type="text" name="company" id="company" class="form-control" required placeholder="Your organisation">
                                 </div>
                             </div>
-                        </div>
+                            
+                            <div class="mb-4">
+                                <label for="email" class="form-label">Email address <span class="text-danger">*</span></label>
+                                <input type="email" name="email" id="email" class="form-control" required {% if user.is_authenticated %}value="{{ user.email }}"{% endif %}>
+                            </div>
 
-                        <button type="submit" class="btn btn-primary btn-lg w-100">
-                            <i class="bi bi-send me-2"></i>Submit request
-                        </button>
-                        
-                        <p class="text-muted small text-center mt-3 mb-0">Our team typically responds within 24-48 hours.</p>
-                    </form>
+                            <div class="mb-4 pb-3 border-bottom mt-5">
+                                <h5 class="fw-semibold mb-1" style="font-family: var(--font-display);">Your request</h5>
+                                <p class="text-muted small mb-0">Describe what you need help with</p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="problem_description" class="form-label">Describe your challenge <span class="text-danger">*</span></label>
+                                <textarea name="problem_description" id="problem_description" class="form-control" rows="6" required placeholder="Describe the problem you need help with, the context, and what outcomes you're looking for. The more detail you provide, the better we can match you with the right expert."></textarea>
+                            </div>
+
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-4">
+                                    <label for="engagement_type" class="form-label">Engagement type</label>
+                                    <select name="engagement_type" id="engagement_type" class="form-select">
+                                        {% for value, label in engagement_types %}
+                                            <option value="{{ value }}">{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <small class="text-muted">Type of engagement needed</small>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="timeline_urgency" class="form-label">Timeline</label>
+                                    <select name="timeline_urgency" id="timeline_urgency" class="form-select">
+                                        {% for value, label in urgency_levels %}
+                                            <option value="{{ value }}">{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <small class="text-muted">How urgent is this request?</small>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="confidentiality_level" class="form-label">Confidentiality</label>
+                                    <select name="confidentiality_level" id="confidentiality_level" class="form-select">
+                                        {% for value, label in confidentiality_levels %}
+                                            <option value="{{ value }}">{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <small class="text-muted">Level of confidentiality required</small>
+                                </div>
+                            </div>
+                            
+                            <div class="card bg-cream border-0 mb-4">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-start">
+                                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle me-3 flex-shrink-0" style="width: 40px; height: 40px; background: var(--kairos-gradient);">
+                                            <i class="bi bi-shield-lock text-dark"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-semibold mb-1">Confidential handling</h6>
+                                            <p class="mb-0 small text-muted">Your request is treated with strict confidentiality. Details are only shared with matched experts under NDA when required. You will never see public pricing—all engagement terms are negotiated privately.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-accent btn-lg w-100">
+                                <i class="bi bi-send me-2"></i>Submit request
+                            </button>
+                            
+                            <p class="text-muted small text-center mt-4 mb-0">Our team typically responds within 24-48 hours to discuss your needs and propose a matched expert.</p>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<div class="bg-dark text-white py-3">
-    <div class="container text-center small">
-        <i class="bi bi-shield-check me-2"></i>
-        Engagements are managed through Kairos for confidentiality and protection.
+<div class="bg-cream py-3">
+    <div class="container text-center">
+        <p class="mb-0 small text-muted">
+            <i class="bi bi-shield-check text-gold me-2"></i>
+            All engagements are managed through Kairos for confidentiality and protection.
+        </p>
     </div>
 </div>
 {% endblock %}
