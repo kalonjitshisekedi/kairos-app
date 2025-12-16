@@ -2,16 +2,63 @@
 Admin configuration for consultations app.
 """
 from django.contrib import admin
-from .models import Booking, BookingNote, BookingAttachment, Review, ExpertClientRating, ConciergeRequest
+from .models import Booking, BookingNote, BookingAttachment, Review, ExpertClientRating, ConciergeRequest, ClientRequest
+
+
+@admin.register(ClientRequest)
+class ClientRequestAdmin(admin.ModelAdmin):
+    list_display = ['name', 'company', 'engagement_type', 'status', 'timeline_urgency', 'matched_expert', 'created_at']
+    list_filter = ['status', 'engagement_type', 'timeline_urgency', 'confidentiality_level']
+    search_fields = ['name', 'company', 'email', 'problem_description']
+    date_hierarchy = 'created_at'
+    readonly_fields = ['created_at', 'updated_at']
+    fieldsets = (
+        ('Client details', {
+            'fields': ('name', 'company', 'email', 'client')
+        }),
+        ('Request details', {
+            'fields': ('problem_description', 'engagement_type', 'timeline_urgency', 'confidentiality_level', 'preferred_expertise')
+        }),
+        ('Matching', {
+            'fields': ('status', 'matched_expert', 'matched_by', 'matched_at', 'internal_priority')
+        }),
+        ('Pricing (confidential)', {
+            'fields': ('proposed_price', 'expert_payout'),
+            'classes': ('collapse',)
+        }),
+        ('Admin notes', {
+            'fields': ('admin_notes',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    filter_horizontal = ['preferred_expertise']
 
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
-    list_display = ['id', 'client', 'expert', 'status', 'scheduled_start', 'duration', 'amount']
-    list_filter = ['status', 'duration', 'created_at']
+    list_display = ['id', 'client', 'expert', 'service_type', 'status', 'scheduled_start', 'amount']
+    list_filter = ['status', 'service_type', 'created_at']
     search_fields = ['client__email', 'expert__user__email']
     date_hierarchy = 'created_at'
     readonly_fields = ['created_at', 'completed_at']
+    fieldsets = (
+        ('Engagement details', {
+            'fields': ('client', 'expert', 'client_request', 'service_type', 'scope', 'duration_description')
+        }),
+        ('Schedule', {
+            'fields': ('scheduled_start', 'scheduled_end', 'jitsi_room_id', 'external_meeting_link')
+        }),
+        ('Status', {
+            'fields': ('status', 'problem_statement')
+        }),
+        ('Pricing (confidential)', {
+            'fields': ('amount', 'expert_payout', 'currency'),
+            'classes': ('collapse',)
+        }),
+    )
 
 
 @admin.register(BookingNote)

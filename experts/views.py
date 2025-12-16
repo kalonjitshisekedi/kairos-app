@@ -13,15 +13,16 @@ from consultations.models import Booking
 from .models import ExpertProfile, ExpertiseTag, Publication, Patent, NotableProject, VerificationDocument
 from .forms import (
     ExpertProfileBasicForm, ExpertProfileAvatarForm, ExpertProfileExpertiseForm,
-    ExpertProfileRatesForm, PublicationForm, PatentForm, NotableProjectForm, VerificationDocumentForm
+    ExpertProfileExperienceForm, PublicationForm, PatentForm, NotableProjectForm, VerificationDocumentForm
 )
 
 
 def expert_directory(request):
     """Expert directory with improved filtering and vetted badges."""
     experts = ExpertProfile.objects.filter(
-        verification_status='verified',
-        is_publicly_listed=True
+        verification_status__in=['vetted', 'active'],
+        is_publicly_listed=True,
+        privacy_level__in=['public', 'semi_private']
     ).select_related('user').prefetch_related('expertise_tags')
     
     search = request.GET.get('search', '')
@@ -37,18 +38,9 @@ def expert_directory(request):
     if expertise:
         experts = experts.filter(expertise_tags__slug__in=expertise).distinct()
     
-    min_price = request.GET.get('min_price')
-    max_price = request.GET.get('max_price')
-    if min_price:
-        experts = experts.filter(rate_60_min__gte=min_price)
-    if max_price:
-        experts = experts.filter(rate_60_min__lte=max_price)
-    
     sort = request.GET.get('sort', 'rating')
-    if sort == 'price_low':
-        experts = experts.order_by('rate_60_min')
-    elif sort == 'price_high':
-        experts = experts.order_by('-rate_60_min')
+    if sort == 'experience_high':
+        experts = experts.order_by('-years_experience')
     else:
         experts = experts.order_by('-average_rating', '-total_reviews')
     
@@ -63,8 +55,6 @@ def expert_directory(request):
         'discipline_tags': discipline_tags,
         'search': search,
         'selected_expertise': expertise,
-        'min_price': min_price,
-        'max_price': max_price,
         'sort': sort,
     }
     return render(request, 'experts/directory.html', context)
@@ -101,8 +91,9 @@ def join_as_expert(request):
 def careers(request):
     """New careers page with skill/expertise-based search."""
     experts = ExpertProfile.objects.filter(
-        verification_status='verified',
-        is_publicly_listed=True
+        verification_status__in=['vetted', 'active'],
+        is_publicly_listed=True,
+        privacy_level__in=['public', 'semi_private']
     ).select_related('user')
     
     skills = request.GET.get('skills', '')
@@ -259,7 +250,7 @@ def profile_wizard(request):
             return redirect('experts:profile_wizard') + '?step=4'
         template = 'experts/wizard/step3_expertise.html'
     elif step == '4':
-        form = ExpertProfileRatesForm(request.POST or None, instance=profile)
+        form = ExpertProfileExperienceForm(request.POST or None, instance=profile)
         if request.method == 'POST' and form.is_valid():
             form.save()
             return redirect('experts:profile_wizard') + '?step=5'
@@ -279,17 +270,16 @@ def profile_wizard(request):
             return redirect('experts:profile_wizard') + '?step=6'
         template = 'experts/wizard/step5_verification.html'
     else:
-        if profile.verification_status == 'incomplete':
-            profile.verification_status = 'pending'
+        if profile.verification_status == 'applied':
             profile.verification_submitted_at = timezone.now()
             profile.save()
             AuditLog.objects.create(
                 user=request.user,
                 event_type=AuditLog.EventType.VERIFICATION_STATUS_CHANGED,
-                description='Profile submitted for verification',
+                description='Profile submitted for vetting',
                 ip_address=request.META.get('REMOTE_ADDR')
             )
-            messages.success(request, 'Your profile has been submitted for verification. We will review it shortly.')
+            messages.success(request, 'Your profile has been submitted for review. Our team will vet your application shortly.')
         return redirect('experts:dashboard')
     
     context = {
@@ -312,14 +302,14 @@ def edit_profile(request):
         basic_form = ExpertProfileBasicForm(request.POST, instance=profile)
         avatar_form = ExpertProfileAvatarForm(request.POST, request.FILES, instance=profile)
         expertise_form = ExpertProfileExpertiseForm(request.POST, instance=profile)
-        rates_form = ExpertProfileRatesForm(request.POST, instance=profile)
+        experience_form = ExpertProfileExperienceForm(request.POST, instance=profile)
         
-        if all([basic_form.is_valid(), avatar_form.is_valid(), expertise_form.is_valid(), rates_form.is_valid()]):
+        if all([basic_form.is_valid(), avatar_form.is_valid(), expertise_form.is_valid(), experience_form.is_valid()]):
             basic_form.save()
             if request.FILES.get('avatar'):
                 avatar_form.save()
             expertise_form.save()
-            rates_form.save()
+            experience_form.save()
             AuditLog.objects.create(
                 user=request.user,
                 event_type=AuditLog.EventType.PROFILE_UPDATED,
@@ -332,14 +322,14 @@ def edit_profile(request):
         basic_form = ExpertProfileBasicForm(instance=profile)
         avatar_form = ExpertProfileAvatarForm(instance=profile)
         expertise_form = ExpertProfileExpertiseForm(instance=profile)
-        rates_form = ExpertProfileRatesForm(instance=profile)
+        experience_form = ExpertProfileExperienceForm(instance=profile)
     
     context = {
         'profile': profile,
         'basic_form': basic_form,
         'avatar_form': avatar_form,
         'expertise_form': expertise_form,
-        'rates_form': rates_form,
+        'experience_form': experience_form,
     }
     return render(request, 'experts/edit_profile.html', context)
 

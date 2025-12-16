@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Access brilliant minds{% endblock %}
+{% block title %}Confidential expert network{% endblock %}
 
 {% block content %}
 <section class="hero text-center">
     <div class="container">
-        <p class="text-accent text-uppercase small fw-semibold mb-3" style="letter-spacing: 0.1em;">Brilliance on demand</p>
-        <h1 class="mb-3">Access the world's<br>leading minds</h1>
-        <p class="tagline mb-4">Connect with verified PhDs, professors, and industry experts<br>for premium consultations that transform your decisions.</p>
+        <p class="text-accent text-uppercase small fw-semibold mb-3" style="letter-spacing: 0.1em;">Confidential expert network</p>
+        <h1 class="mb-3">Don't guess. Know.</h1>
+        <p class="tagline mb-4">Confidential access to vetted expertise.<br>Insight when it matters most.</p>
         <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a href="{% url 'experts:careers' %}" class="btn btn-accent btn-lg px-4">Find an expert</a>
-            <a href="{% url 'consultations:concierge_request' %}" class="btn btn-outline-light btn-lg px-4">Request a match</a>
+            <a href="{% url 'consultations:submit_request' %}" class="btn btn-accent btn-lg px-4">Submit a request</a>
+            <a href="{% url 'core:how_it_works' %}" class="btn btn-outline-light btn-lg px-4">How it works</a>
         </div>
     </div>
 </section>
@@ -19,34 +19,34 @@
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="section-title mb-3">Why Kairos?</h2>
-            <p class="text-muted">Deep expertise, delivered globally</p>
+            <p class="text-muted">Enterprise-grade expertise, delivered confidentially</p>
         </div>
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="text-center">
                     <div class="feature-icon mb-3">
-                        <i class="bi bi-mortarboard fs-4"></i>
+                        <i class="bi bi-shield-lock fs-4"></i>
                     </div>
-                    <h5 class="fw-semibold mb-2">Verified brilliance</h5>
-                    <p class="text-muted">Every expert's credentials are rigorously verified. Access PhDs, professors, and specialists with proven track records in their fields.</p>
+                    <h5 class="fw-semibold mb-2">Confidential engagements</h5>
+                    <p class="text-muted">Every engagement is protected. Your research, discussions, and strategic questions remain strictly confidential.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="text-center">
                     <div class="feature-icon mb-3">
-                        <i class="bi bi-globe fs-4"></i>
+                        <i class="bi bi-person-check fs-4"></i>
                     </div>
-                    <h5 class="fw-semibold mb-2">Global reach</h5>
-                    <p class="text-muted">Our experts serve clients worldwide. No matter where you are, gain access to specialised knowledge that can transform your outcomes.</p>
+                    <h5 class="fw-semibold mb-2">Concierge matching</h5>
+                    <p class="text-muted">Our team hand-selects experts based on your specific needs. No browsing required—we find the right expertise for you.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="text-center">
                     <div class="feature-icon mb-3">
-                        <i class="bi bi-shield-check fs-4"></i>
+                        <i class="bi bi-briefcase fs-4"></i>
                     </div>
-                    <h5 class="fw-semibold mb-2">Confidential and secure</h5>
-                    <p class="text-muted">All consultations are private and secure. Your questions, documents, and discussions remain strictly confidential.</p>
+                    <h5 class="fw-semibold mb-2">Enterprise-ready</h5>
+                    <p class="text-muted">Designed for enterprise research and advisory needs. Compliance-ready, with NDA options and secure communications.</p>
                 </div>
             </div>
         </div>
@@ -65,8 +65,8 @@
                     <div class="bg-kairos text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px;">
                         <span class="fw-bold">1</span>
                     </div>
-                    <h5 class="fw-semibold mb-2">Describe your need</h5>
-                    <p class="text-muted">Search by domain, expertise, or skill. Browse verified expert profiles or submit a concierge request for personalised matching.</p>
+                    <h5 class="fw-semibold mb-2">Submit your brief</h5>
+                    <p class="text-muted">Tell us about your challenge, research question, or advisory need. Include as much context as you can—it helps us find the perfect match.</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -74,8 +74,8 @@
                     <div class="bg-kairos text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px;">
                         <span class="fw-bold">2</span>
                     </div>
-                    <h5 class="fw-semibold mb-2">Book a consultation</h5>
-                    <p class="text-muted">Choose a time that works for you. Describe your challenge, share relevant materials, and prepare for your session.</p>
+                    <h5 class="fw-semibold mb-2">We match you</h5>
+                    <p class="text-muted">Our team reviews your request and identifies the ideal expert from our vetted network. We handle the coordination.</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -83,8 +83,8 @@
                     <div class="bg-kairos text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 48px; height: 48px;">
                         <span class="fw-bold">3</span>
                     </div>
-                    <h5 class="fw-semibold mb-2">Get expert answers</h5>
-                    <p class="text-muted">Meet your expert in a private session. Gain insights, receive deliverables, and make decisions with confidence.</p>
+                    <h5 class="fw-semibold mb-2">Engage with confidence</h5>
+                    <p class="text-muted">Meet with your matched expert through our secure platform. Receive insights, research, or advisory support tailored to your needs.</p>
                 </div>
             </div>
         </div>
@@ -95,12 +95,12 @@
 <section class="py-5">
     <div class="container">
         <div class="text-center mb-4">
-            <h2 class="section-title mb-3">Explore expertise</h2>
-            <p class="text-muted">Find specialists across domains</p>
+            <h2 class="section-title mb-3">Areas of expertise</h2>
+            <p class="text-muted">Our network spans these disciplines and more</p>
         </div>
         <div class="d-flex flex-wrap justify-content-center gap-2">
             {% for tag in tags %}
-                <a href="{% url 'experts:careers' %}?expertise={{ tag.slug }}" class="btn btn-outline-primary btn-sm">{{ tag.name }}</a>
+                <span class="btn btn-outline-secondary btn-sm disabled">{{ tag.name }}</span>
             {% endfor %}
         </div>
     </div>
@@ -112,15 +112,15 @@
         <div class="row align-items-center">
             <div class="col-md-6 mb-4 mb-md-0">
                 <p class="text-accent text-uppercase small fw-semibold mb-2" style="letter-spacing: 0.1em;">For experts</p>
-                <h2 class="section-title mb-3">Share your expertise</h2>
-                <p class="text-muted mb-4">Join a curated network of verified experts. Set your own schedule, work with global clients, and monetise your knowledge.</p>
+                <h2 class="section-title mb-3">Join the Kairos expert network</h2>
+                <p class="text-muted mb-4">Join a curated network of senior professionals. Work on meaningful engagements with enterprise clients who value your expertise.</p>
                 <ul class="list-unstyled mb-4">
-                    <li class="mb-2"><i class="bi bi-check2 text-accent me-2"></i> Control your rates and availability</li>
-                    <li class="mb-2"><i class="bi bi-check2 text-accent me-2"></i> Build your professional profile</li>
-                    <li class="mb-2"><i class="bi bi-check2 text-accent me-2"></i> Receive verified client bookings</li>
+                    <li class="mb-2"><i class="bi bi-check2 text-accent me-2"></i> Vetted, high-quality engagements</li>
+                    <li class="mb-2"><i class="bi bi-check2 text-accent me-2"></i> Control your availability</li>
+                    <li class="mb-2"><i class="bi bi-check2 text-accent me-2"></i> Confidential client work</li>
                     <li class="mb-2"><i class="bi bi-check2 text-accent me-2"></i> Secure, reliable payments</li>
                 </ul>
-                <a href="{% url 'accounts:signup' %}" class="btn btn-primary">Apply as an expert</a>
+                <a href="{% url 'experts:join' %}" class="btn btn-primary">Apply to join</a>
             </div>
             <div class="col-md-6 text-center">
                 <div class="bg-white p-5 rounded shadow-sm">
@@ -134,12 +134,19 @@
 
 <section class="py-5">
     <div class="container text-center">
-        <h2 class="section-title mb-3">Ready to access brilliance?</h2>
-        <p class="text-muted mb-4">Start your journey to better decisions today</p>
+        <h2 class="section-title mb-3">Ready to access expertise?</h2>
+        <p class="text-muted mb-4">Submit your request and our team will be in touch</p>
         <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a href="{% url 'experts:careers' %}" class="btn btn-primary btn-lg px-4">Explore experts</a>
-            <a href="{% url 'accounts:signup' %}" class="btn btn-outline-primary btn-lg px-4">Create an account</a>
+            <a href="{% url 'consultations:submit_request' %}" class="btn btn-primary btn-lg px-4">Submit a request</a>
+            <a href="{% url 'core:contact' %}" class="btn btn-outline-primary btn-lg px-4">Get in touch</a>
         </div>
     </div>
 </section>
+
+<div class="bg-dark text-white py-3">
+    <div class="container text-center small">
+        <i class="bi bi-shield-check me-2"></i>
+        Engagements are managed through Kairos for confidentiality and protection.
+    </div>
+</div>
 {% endblock %}

@@ -15,35 +15,31 @@
             
             <div class="card">
                 <div class="card-header">
-                    <h4 class="mb-0">Consultation rates</h4>
+                    <h4 class="mb-0">Experience and visibility</h4>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted">Set your rates for consultation sessions. Leave blank any durations you don't want to offer.</p>
+                    <p class="text-muted">Tell us about your professional experience and how visible you'd like your profile to be.</p>
                     
                     <form method="post">
                         {% csrf_token %}
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label class="form-label">30 minutes (GBP)</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">&pound;</span>
-                                    {{ form.rate_30_min }}
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">60 minutes (GBP)</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">&pound;</span>
-                                    {{ form.rate_60_min }}
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">90 minutes (GBP)</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">&pound;</span>
-                                    {{ form.rate_90_min }}
-                                </div>
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label">Years of professional experience</label>
+                            {{ form.years_experience }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Senior roles held</label>
+                            {{ form.senior_roles }}
+                            <small class="text-muted">List senior positions you have held (e.g. VP Engineering, Managing Director)</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sector expertise</label>
+                            {{ form.sector_expertise }}
+                            <small class="text-muted">Describe your industry sectors of expertise</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Profile visibility</label>
+                            {{ form.privacy_level }}
+                            <small class="text-muted">Controls who can see your profile. You can change this later.</small>
                         </div>
                         <div class="mb-3">
                             <div class="form-check">

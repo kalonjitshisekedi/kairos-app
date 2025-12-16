@@ -13,20 +13,20 @@ from datetime import timedelta
 import uuid
 
 from accounts.models import AuditLog
-from experts.models import ExpertProfile
+from experts.models import ExpertProfile, ExpertiseTag
 from availability.models import TimeSlot
 from messaging.models import MessageThread
-from .models import Booking, BookingNote, BookingAttachment, Review, ExpertClientRating, ConciergeRequest
+from .models import Booking, BookingNote, BookingAttachment, Review, ExpertClientRating, ConciergeRequest, ClientRequest
 
 
 @login_required
 def create_booking(request, expert_id):
-    expert = get_object_or_404(ExpertProfile, pk=expert_id, verification_status='verified')
+    expert = get_object_or_404(ExpertProfile, pk=expert_id, verification_status__in=['vetted', 'active'])
     
     if request.method == 'POST':
-        duration = int(request.POST.get('duration', 60))
         slot_id = request.POST.get('slot_id')
         problem_statement = request.POST.get('problem_statement', '')
+        service_type = request.POST.get('service_type', 'consultation')
         terms_accepted = request.POST.get('terms_accepted') == 'on'
         
         if not terms_accepted:
@@ -35,40 +35,23 @@ def create_booking(request, expert_id):
         
         slot = get_object_or_404(TimeSlot, pk=slot_id, expert=expert, status='available')
         
-        if duration == 30:
-            amount = expert.rate_30_min
-        elif duration == 60:
-            amount = expert.rate_60_min
-        else:
-            amount = expert.rate_90_min
-        
         booking = Booking.objects.create(
             client=request.user,
             expert=expert,
-            duration=duration,
+            service_type=service_type,
             scheduled_start=slot.start_datetime,
-            scheduled_end=slot.start_datetime + timedelta(minutes=duration),
+            scheduled_end=slot.start_datetime + timedelta(minutes=60),
             problem_statement=problem_statement,
-            amount=amount,
+            amount=0,
             terms_accepted=True,
             terms_accepted_at=timezone.now(),
             status='requested',
             jitsi_room_id=f'kairos-{uuid.uuid4()}'
         )
         
-        slots_needed = duration // 30
-        current_slot = slot
-        for i in range(slots_needed):
-            if current_slot:
-                current_slot.status = 'booked'
-                current_slot.booking = booking
-                current_slot.save()
-                next_start = current_slot.start_datetime + timedelta(minutes=30)
-                current_slot = TimeSlot.objects.filter(
-                    expert=expert,
-                    start_datetime=next_start,
-                    status='available'
-                ).first()
+        slot.status = 'booked'
+        slot.booking = booking
+        slot.save()
         
         MessageThread.objects.create(booking=booking)
         
@@ -76,24 +59,19 @@ def create_booking(request, expert_id):
             user=request.user,
             event_type=AuditLog.EventType.BOOKING_CREATED,
             description=f'Booking created with {expert.user.full_name}',
-            metadata={'booking_id': str(booking.id), 'amount': str(amount)}
+            metadata={'booking_id': str(booking.id), 'service_type': service_type}
         )
         
         send_mail(
-            subject='New consultation request - Kairos',
-            message=f'You have a new consultation request from {request.user.full_name}.\n\nProblem: {problem_statement}\n\nPlease log in to accept or decline.',
+            subject='New engagement request - Kairos',
+            message=f'You have a new engagement request from {request.user.full_name}.\n\nProblem: {problem_statement}\n\nPlease log in to accept or decline.',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[expert.user.email],
             fail_silently=True
         )
         
-        if settings.PAYMENTS_ENABLED and amount > 0:
-            return redirect('payments:checkout', booking_id=booking.id)
-        else:
-            booking.status = 'scheduled'
-            booking.save()
-            messages.success(request, 'Your consultation has been booked!')
-            return redirect('consultations:booking_detail', pk=booking.id)
+        messages.success(request, 'Your request has been submitted. The expert will be notified.')
+        return redirect('consultations:booking_detail', pk=booking.id)
     
     from availability.models import TimeSlot
     available_slots = TimeSlot.objects.filter(
@@ -443,3 +421,48 @@ def my_bookings(request):
         bookings = Booking.objects.filter(client=request.user).order_by('-created_at')
     
     return render(request, 'consultations/my_bookings.html', {'bookings': bookings})
+
+
+def submit_client_request(request):
+    """Submit a client request for expert matching - concierge flow."""
+    if request.method == 'POST':
+        name = request.POST.get('name', '')
+        company = request.POST.get('company', '')
+        email = request.POST.get('email', '')
+        problem_description = request.POST.get('problem_description', '')
+        engagement_type = request.POST.get('engagement_type', 'consultation')
+        timeline_urgency = request.POST.get('timeline_urgency', 'low')
+        confidentiality_level = request.POST.get('confidentiality_level', 'standard')
+        
+        client_request = ClientRequest.objects.create(
+            name=name,
+            company=company,
+            email=email,
+            client=request.user if request.user.is_authenticated else None,
+            problem_description=problem_description,
+            engagement_type=engagement_type,
+            timeline_urgency=timeline_urgency,
+            confidentiality_level=confidentiality_level
+        )
+        
+        send_mail(
+            subject='New client request - Kairos',
+            message=f'New client request from {company} ({name}):\n\n{problem_description}\n\nEngagement type: {engagement_type}\nUrgency: {timeline_urgency}',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.DEFAULT_FROM_EMAIL],
+            fail_silently=True
+        )
+        
+        messages.success(request, 'Your request has been submitted. Our team will review it and be in touch shortly.')
+        if request.user.is_authenticated:
+            return redirect('accounts:dashboard')
+        return redirect('core:home')
+    
+    tags = ExpertiseTag.objects.all()
+    context = {
+        'tags': tags,
+        'engagement_types': ClientRequest.EngagementType.choices,
+        'urgency_levels': ClientRequest.UrgencyLevel.choices,
+        'confidentiality_levels': ClientRequest.ConfidentialityLevel.choices,
+    }
+    return render(request, 'consultations/submit_request.html', context)

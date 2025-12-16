@@ -1,37 +1,67 @@
-# Kairos - Expert Consultation Platform
+# Kairos - Confidential Expert Network
 
 ## Overview
-Kairos is a SaaS platform connecting clients with verified PhD experts, professors, and industry specialists for premium consultations. The platform emphasises brilliance, expertise, and global service capability.
+Kairos is a premium, confidential, enterprise-focused expert network. The platform enables enterprise clients to submit confidential requests which are matched by internal staff to vetted experts. Unlike public marketplaces, Kairos operates as a curated network with concierge-style matching.
+
+**Tagline**: "Don't guess. Know."
 
 ## Recent Changes
-- **December 2024**: Added SVG logo and "Get In Touch" button in navbar
-- **December 2024**: Created "Why Businesses Benefit" page for South African market context
-- **December 2024**: Created "Get In Touch" contact page with POPIA-compliant form
-- **December 2024**: Created "Join as Expert" careers page with CV upload, LinkedIn, GitHub, ORCID fields
-- **December 2024**: Enhanced Expert Directory with "Vetted" badges and improved filtering
-- **December 2024**: Added 10 dummy experts via seed_experts management command
-- **December 2024**: Added ContactInquiry and ExpertApplication models
-- **December 2024**: Redesigned UI with elegant black/white color scheme and gold accent color
+- **December 2024**: Transformed platform from public marketplace to enterprise-focused expert network
+- **December 2024**: Removed hourly rates; pricing is now per-engagement negotiated by Kairos team
+- **December 2024**: Added privacy levels for experts (public, semi-private, private)
+- **December 2024**: Changed verification workflow: applied → vetted → active
+- **December 2024**: Created ClientRequest model for enterprise request submission
+- **December 2024**: Updated all templates with enterprise positioning and confidentiality messaging
+- **December 2024**: Added submit_client_request view for concierge-style client flow
+- **December 2024**: Updated navigation: Submit request, How it works, For enterprise, Expert network
+
+## Platform Model
+
+### For Enterprise Clients
+1. Submit a confidential request describing their challenge
+2. Kairos team reviews and matches with ideal expert(s)
+3. Engagement is coordinated through Kairos with NDA options
+4. Pricing negotiated per engagement (not hourly marketplace rates)
+
+### For Experts
+1. Apply via expert network application form
+2. Vetted by Kairos team (applied → vetted → active)
+3. Matched with client requests by Kairos staff
+4. Control profile visibility: public, semi-private, or private
+
+### Privacy Levels
+- **public**: Visible on directory to all visitors
+- **semi_private**: Visible only to verified enterprise clients
+- **private**: Not listed; matched manually by Kairos team only
+
+### Service Types
+- Consultation: Single expert consultation
+- Advisory: Ongoing advisory relationship
+- Project work: Project-based engagement
+- Research: Research and analysis work
 
 ## Project Architecture
 
 ### Apps
 - `accounts/` - User authentication, profiles, and account management
 - `availability/` - Expert availability and time slot management
-- `consultations/` - Booking requests, sessions, and reviews
+- `consultations/` - Client requests, bookings, sessions, and reviews
 - `core/` - Landing pages, admin dashboard, and common views
-- `experts/` - Expert profiles, directory, and verification workflow
+- `experts/` - Expert profiles, directory, and vetting workflow
 - `messaging/` - Private messaging between clients and experts
-- `payments/` - Stripe integration and payment processing
+- `payments/` - Payment processing and expert payouts
 
-### Key Files
-- `kairos/settings.py` - Django configuration
+### Key Models
+- `ExpertProfile` - Expert with privacy_level, service_type, years_experience, verification_status (applied/vetted/active)
+- `ClientRequest` - Enterprise client request with engagement_type, urgency, confidentiality level
+- `Booking` - Engagement between client and expert with service_type
+
+### Key Templates
 - `templates/base.html` - Base template with global styling (black/white/gold theme)
-- `templates/experts/directory.html` - Expert directory with vetted badges and filters
-- `templates/experts/join.html` - Expert application form (CV, LinkedIn, GitHub, ORCID)
-- `templates/core/why_businesses.html` - Why businesses benefit page (South African context)
-- `templates/core/contact.html` - Contact form with POPIA compliance
-- `core/management/commands/seed_experts.py` - Seed 10 dummy experts
+- `templates/core/home.html` - Homepage with enterprise positioning
+- `templates/consultations/submit_request.html` - Enterprise client request form
+- `templates/experts/directory.html` - Expert directory (vetted experts only)
+- `templates/experts/join.html` - Expert application form
 
 ### Design System
 - **Primary colors**: Black (#0a0a0a), white (#fafafa)
@@ -55,3 +85,4 @@ python manage.py migrate
 - Proper sentence case capitalization
 - No emoji usage
 - Elegant, professional design aesthetic
+- Enterprise-focused, confidentiality-first approach
