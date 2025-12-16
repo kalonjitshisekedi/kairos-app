@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Expertise{% endblock %}
+{% block title %}Capabilities{% endblock %}
 
 {% block content %}
 <section class="hero py-5">
     <div class="container text-center">
         <p class="text-gold text-uppercase small fw-medium mb-3 letter-spacing-wide">Our network</p>
-        <h1 class="mb-3">Expertise across critical domains</h1>
+        <h1 class="mb-3">Capabilities across critical domains</h1>
         <p class="tagline mb-0">Access specialists across industries, disciplines, and sectors.<br>Matched to your specific challenge, protected by confidentiality.</p>
     </div>
 </section>
@@ -194,7 +194,7 @@
         <h3 class="fw-semibold mb-3" style="font-family: var(--font-serif);">Ready to access expertise?</h3>
         <p class="text-muted mb-4 mx-auto" style="max-width: 600px;">Describe your challenge and let us match you with the right specialist.</p>
         <div class="d-flex flex-wrap justify-content-center gap-3">
-            <a href="{% url 'consultations:submit_request' %}" class="btn btn-primary btn-lg">Request expert matching</a>
+            <a href="{% url 'consultations:submit_request' %}" class="btn btn-primary btn-lg">Request matching</a>
             <a href="{% url 'experts:careers' %}" class="btn btn-outline-primary btn-lg">Join the expert network</a>
         </div>
     </div>

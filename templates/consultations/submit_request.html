@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %}Submit a request{% endblock %}
+{% block title %}Request matching{% endblock %}
 
 {% block content %}
 <section class="hero py-5">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center">
-                <p class="text-gold text-uppercase small fw-medium mb-3 letter-spacing-wide">Client request</p>
-                <h1 class="mb-3">Submit a request</h1>
+                <p class="text-gold text-uppercase small fw-medium mb-3 letter-spacing-wide">Enterprise request</p>
+                <h1 class="mb-3">Request matching</h1>
                 <p class="tagline mb-0">Tell us about your challenge. Our team will match you with the ideal expert from our vetted network.</p>
             </div>
         </div>
@@ -21,7 +21,7 @@
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body p-5">
-                        <form method="post">
+                        <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             
                             <div class="mb-4 pb-3 border-bottom">
@@ -31,32 +31,34 @@
                             
                             <div class="row g-3 mb-4">
                                 <div class="col-md-6">
-                                    <label for="name" class="form-label">Your name <span class="text-danger">*</span></label>
+                                    <label for="name" class="form-label">Full name <span class="text-danger">*</span></label>
                                     <input type="text" name="name" id="name" class="form-control" required {% if user.is_authenticated %}value="{{ user.full_name }}"{% endif %}>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="company" class="form-label">Company <span class="text-danger">*</span></label>
+                                    <label for="company" class="form-label">Organisation <span class="text-danger">*</span></label>
                                     <input type="text" name="company" id="company" class="form-control" required placeholder="Your organisation">
                                 </div>
                             </div>
                             
-                            <div class="mb-4">
-                                <label for="email" class="form-label">Email address <span class="text-danger">*</span></label>
-                                <input type="email" name="email" id="email" class="form-control" required {% if user.is_authenticated %}value="{{ user.email }}"{% endif %}>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Email address <span class="text-danger">*</span></label>
+                                    <input type="email" name="email" id="email" class="form-control" required {% if user.is_authenticated %}value="{{ user.email }}"{% endif %}>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Phone number</label>
+                                    <input type="tel" name="phone" id="phone" class="form-control" placeholder="+27 XX XXX XXXX">
+                                    <small class="text-muted">Include country code</small>
+                                </div>
                             </div>
 
                             <div class="mb-4 pb-3 border-bottom mt-5">
                                 <h5 class="fw-semibold mb-1" style="font-family: var(--font-serif);">Your request</h5>
                                 <p class="text-muted small mb-0">Describe what you need help with</p>
                             </div>
-                            
-                            <div class="mb-4">
-                                <label for="problem_description" class="form-label">Describe your challenge <span class="text-danger">*</span></label>
-                                <textarea name="problem_description" id="problem_description" class="form-control" rows="6" required placeholder="Describe the problem you need help with, the context, and what outcomes you're looking for. The more detail you provide, the better we can match you with the right expert."></textarea>
-                            </div>
 
                             <div class="row g-3 mb-4">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label for="engagement_type" class="form-label">Engagement type</label>
                                     <select name="engagement_type" id="engagement_type" class="form-select">
                                         {% for value, label in engagement_types %}
@@ -65,7 +67,7 @@
                                     </select>
                                     <small class="text-muted">Type of engagement needed</small>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label for="timeline_urgency" class="form-label">Timeline</label>
                                     <select name="timeline_urgency" id="timeline_urgency" class="form-select">
                                         {% for value, label in urgency_levels %}
@@ -74,7 +76,20 @@
                                     </select>
                                     <small class="text-muted">How urgent is this request?</small>
                                 </div>
-                                <div class="col-md-4">
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="problem_description" class="form-label">Problem description <span class="text-danger">*</span></label>
+                                <textarea name="problem_description" id="problem_description" class="form-control" rows="6" required placeholder="Describe the problem you need help with, the context, and what outcomes you're looking for. The more detail you provide, the better we can match you with the right expert."></textarea>
+                            </div>
+
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label for="budget_range" class="form-label">Budget range (optional)</label>
+                                    <input type="text" name="budget_range" id="budget_range" class="form-control" placeholder="e.g. R50,000 - R100,000">
+                                    <small class="text-muted">Leave blank if unsure</small>
+                                </div>
+                                <div class="col-md-6">
                                     <label for="confidentiality_level" class="form-label">Confidentiality</label>
                                     <select name="confidentiality_level" id="confidentiality_level" class="form-select">
                                         {% for value, label in confidentiality_levels %}
@@ -83,6 +98,12 @@
                                     </select>
                                     <small class="text-muted">Level of confidentiality required</small>
                                 </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="brief_document" class="form-label">Upload a brief or proposal (optional)</label>
+                                <input type="file" name="brief_document" id="brief_document" class="form-control" accept=".pdf,.doc,.docx">
+                                <small class="text-muted">Accepted formats: PDF, DOCX. Maximum size: 10MB</small>
                             </div>
                             
                             <div class="card mb-4" style="background-color: var(--kairos-ivory); border: 1px solid var(--kairos-border);">
@@ -99,11 +120,20 @@
                                 </div>
                             </div>
 
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="consent" id="consent" required>
+                                    <label class="form-check-label small" for="consent">
+                                        I consent to Kairos processing my personal information in accordance with the <a href="{% url 'core:privacy' %}" target="_blank">Privacy Policy</a> and the Protection of Personal Information Act (POPIA). <span class="text-danger">*</span>
+                                    </label>
+                                </div>
+                            </div>
+
                             <button type="submit" class="btn btn-primary btn-lg w-100">
-                                <i class="bi bi-send me-2"></i>Submit request
+                                <i class="bi bi-send me-2"></i>Send request
                             </button>
                             
-                            <p class="text-muted small text-center mt-4 mb-0">Our team typically responds within 24-48 hours to discuss your needs and propose a matched expert.</p>
+                            <p class="text-muted small text-center mt-4 mb-0">We will respond within 24 hours to discuss your needs and propose a matched expert.</p>
                         </form>
                     </div>
                 </div>

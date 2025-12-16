@@ -1,0 +1,122 @@
+Continue in the existing Kairos Django codebase. Do not rebuild. Do not revert.
+
+Context:
+Some changes were not implemented as intended. We need to refine the homepage CTA ordering and restore/improve the enterprise request form so companies can submit a brief and optionally upload a proposal document.
+
+Critical rules:
+- Do not stop early.
+- Do not leave TODOs.
+- British English and sentence case everywhere.
+- Premium, confidential, enterprise-first tone (not a marketplace).
+- South Africa-based (soft positioning), but globally credible.
+
+────────────────────────────────────────
+1) Homepage hero CTA order and labels
+────────────────────────────────────────
+Requirement:
+The homepage hero must show THREE CTAs in this exact order:
+
+1) “How it works” (secondary button)
+2) Main request CTA (primary button) – use a shorter, premium label
+3) “Join the expert network” (secondary button)
+
+Main request CTA label:
+- Replace “Submit a request for an expert” with:
+  - “Request matching”
+This is shorter, premium, and clear.
+
+Buttons:
+- “How it works” → btn-outline-light
+- “Request matching” → btn-primary (primary CTA)
+- “Join the expert network” → btn-outline-light
+
+Links:
+- How it works → core:how_it_works
+- Request matching → consultations:submit_request (or the correct enterprise request form route)
+- Join the expert network → experts:careers
+
+Ensure the three buttons wrap cleanly on mobile (flex-wrap) and remain in the same order.
+
+Also update any other CTAs on the homepage to use “Request matching” for consistency.
+
+────────────────────────────────────────
+2) Rename “Expertise” page label in navbar
+────────────────────────────────────────
+We want the concept (a non-person, capability overview page) but the label “Expertise” might not be right.
+
+Change the navbar label from “Expertise” to:
+- “Capabilities”
+
+Route stays the same (the page remains /expertise/ or equivalent), but the visible label should be “Capabilities”.
+
+Also update any footer link to match the new label.
+
+Acceptance criteria:
+- Navbar shows “Capabilities”, not “Expertise”
+- Page still exists and looks premium
+
+────────────────────────────────────────
+3) Restore and upgrade the enterprise request form (brief + file upload)
+────────────────────────────────────────
+We lost (or need to extend) the company request submission form.
+
+Requirement:
+The request form must capture enterprise brief details and allow optional file upload.
+
+Fields (minimum):
+- full name
+- organisation
+- email
+- phone (default +27)
+- engagement type (consultation / research / advisory)
+- urgency/timeline
+- problem description (large textarea)
+- optional: budget range (optional, can be blank)
+- optional file upload:
+  - label: “Upload a brief or proposal (optional)”
+  - accepted: PDF, DOCX
+  - max size: set a safe limit (e.g., 10MB)
+- consent checkbox (POPIA-aligned)
+
+Storage:
+- Save submissions to your existing ClientRequest model (or equivalent).
+- Save uploaded file on the model (FileField) with proper MEDIA settings.
+- Ensure the file is only accessible to staff/admin and the submitting client (if logged in).
+
+UI requirements:
+- Premium form layout (card, clear section headings, calm help text).
+- Replace any old “submit” phrasing with the new action wording:
+  - Page title and H1 should be: “Request matching”
+  - Button should be: “Send request”
+- After submit:
+  - show success message
+  - optionally show “We will respond within 24 hours.”
+
+Acceptance criteria:
+- The request form exists and works.
+- File upload works in dev.
+- File field is visible in Django admin.
+- Phone placeholder uses +27 example, not +44.
+
+────────────────────────────────────────
+4) Update site copy to reflect the form
+────────────────────────────────────────
+Anywhere you mention the request flow, update copy to match:
+- “Request matching”
+- “Upload a brief or proposal (optional)”
+
+Update:
+- homepage CTA
+- how it works page (if it describes steps)
+- why kairos page (if it describes engagement process)
+- README smoke test checklist
+
+────────────────────────────────────────
+5) Final verification
+────────────────────────────────────────
+- Confirm homepage CTA order is correct.
+- Confirm navbar label is “Capabilities”.
+- Confirm request form captures all required fields and accepts a file.
+- Confirm no broken links.
+
+Proceed and complete all tasks.

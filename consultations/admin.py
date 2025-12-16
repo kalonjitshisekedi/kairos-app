@@ -14,10 +14,13 @@ class ClientRequestAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at']
     fieldsets = (
         ('Client details', {
-            'fields': ('name', 'company', 'email', 'client')
+            'fields': ('name', 'company', 'email', 'phone', 'client')
         }),
         ('Request details', {
-            'fields': ('problem_description', 'engagement_type', 'timeline_urgency', 'confidentiality_level', 'preferred_expertise')
+            'fields': ('problem_description', 'engagement_type', 'timeline_urgency', 'confidentiality_level', 'budget_range', 'preferred_expertise')
+        }),
+        ('Brief document', {
+            'fields': ('brief_document', 'consent_given')
         }),
         ('Matching', {
             'fields': ('status', 'matched_expert', 'matched_by', 'matched_at', 'internal_priority')

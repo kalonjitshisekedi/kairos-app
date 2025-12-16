@@ -429,31 +429,49 @@ def submit_client_request(request):
         name = request.POST.get('name', '')
         company = request.POST.get('company', '')
         email = request.POST.get('email', '')
+        phone = request.POST.get('phone', '')
         problem_description = request.POST.get('problem_description', '')
         engagement_type = request.POST.get('engagement_type', 'consultation')
         timeline_urgency = request.POST.get('timeline_urgency', 'low')
         confidentiality_level = request.POST.get('confidentiality_level', 'standard')
+        budget_range = request.POST.get('budget_range', '')
+        consent = request.POST.get('consent') == 'on'
+        
+        brief_document = request.FILES.get('brief_document')
+        if brief_document:
+            allowed_extensions = ['.pdf', '.doc', '.docx']
+            file_ext = '.' + brief_document.name.split('.')[-1].lower()
+            if file_ext not in allowed_extensions:
+                messages.error(request, 'Invalid file type. Please upload a PDF or DOCX file.')
+                return redirect('consultations:submit_request')
+            if brief_document.size > 10 * 1024 * 1024:
+                messages.error(request, 'File too large. Maximum size is 10MB.')
+                return redirect('consultations:submit_request')
         
         client_request = ClientRequest.objects.create(
             name=name,
             company=company,
             email=email,
+            phone=phone,
             client=request.user if request.user.is_authenticated else None,
             problem_description=problem_description,
             engagement_type=engagement_type,
             timeline_urgency=timeline_urgency,
-            confidentiality_level=confidentiality_level
+            confidentiality_level=confidentiality_level,
+            budget_range=budget_range,
+            brief_document=brief_document,
+            consent_given=consent
         )
         
         send_mail(
             subject='New client request - Kairos',
-            message=f'New client request from {company} ({name}):\n\n{problem_description}\n\nEngagement type: {engagement_type}\nUrgency: {timeline_urgency}',
+            message=f'New client request from {company} ({name}):\n\nPhone: {phone}\n\n{problem_description}\n\nEngagement type: {engagement_type}\nUrgency: {timeline_urgency}\nBudget: {budget_range or "Not specified"}',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.DEFAULT_FROM_EMAIL],
             fail_silently=True
         )
         
-        messages.success(request, 'Your request has been submitted. Our team will review it and be in touch shortly.')
+        messages.success(request, 'Your request has been submitted. We will respond within 24 hours.')
         if request.user.is_authenticated:
             return redirect('accounts:dashboard')
         return redirect('core:home')
