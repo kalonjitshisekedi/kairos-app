@@ -1,0 +1,120 @@
+Continue in the existing Kairos Django codebase. Do not rebuild.
+
+Goal: Implement the core data model and gating logic described in docs/core-workflows/01 and 02:
+- Client approval gate before expert access
+- Expert approval gate before matching
+- Client requests
+- Admin shortlist/matching
+- Dual-path connection flags
+- Progress tracking model (state machine)
+- Admin and dashboard readiness (but keep UI changes minimal in this run)
+
+Critical rules:
+- Do not stop early.
+- No TODOs.
+- British English and sentence case.
+- No public expert pricing.
+- Do not implement payments yet (invoice will be prompt 2).
+
+Step-by-step tasks:
+
+1) Accounts model: add gating flags
+- Extend the user/profile model (whichever exists) to include:
+  - is_client (if not already)
+  - is_expert (if not already)
+  - client_status: pending / verified / rejected
+  - expert_status: applied / vetted / active / rejected
+- Ensure staff/admin can set these statuses in Django admin.
+- Add database migrations.
+
+2) Create core workflow models (new app “engagements” or within consultations if preferred)
+Create models to support the enterprise workflow:
+
+A) ClientRequest
+- client (FK to user)
+- organisation_name
+- billing_email (optional for now, required later)
+- phone (default +27)
+- engagement_type (consultation / research / advisory)
+- urgency (enum: standard / urgent)
+- brief (TextField)
+- attachment (FileField, optional; pdf/docx)
+- confidentiality_level (enum: standard / restricted)
+- status (enum/state machine)
+- created_at, updated_at
+
+B) ExpertMatch (shortlist item)
+- request (FK)
+- expert (FK to user)
+- proposed_by (FK to admin user)
+- status: proposed / declined / accepted / expired
+- note_to_client (optional)
+- internal_note (optional)
+- created_at, updated_at
+
+C) Engagement (created once an expert accepts or admin confirms)
+- request (FK)
+- expert (FK)
+- status: scheduled / in_progress / awaiting_client_confirmation / completed / archived / cancelled
+- scheduled_start (datetime, optional)
+- scheduled_end (datetime, optional)
+- meeting_mode (enum: platform / admin_facilitated)
+- meeting_link (optional)
+- shared_notes (TextField optional)
+- private_expert_notes (TextField optional)
+- created_at, updated_at
+
+D) ProgressEvent (for progress bar + audit)
+- request (FK)
+- actor (FK to user, nullable)
+- event_type (enum)
+- message (short text)
+- created_at
+
+3) Implement state machine constants
+- Centralise statuses in a single module (enums.py) for consistency.
+- Add helper methods:
+  - ClientRequest.can_view_experts(user)
+  - ClientRequest.advance(event_type, actor)
+  - Engagement.advance(status, actor)
+
+4) Gate expert visibility
+- Do not build an expert directory publicly.
+- Ensure any view that returns experts (even shortlist) requires:
+  - user.client_status == verified
+- Add a decorator or mixin for “verified client required”.
+- Add a basic unit test verifying a pending client cannot access expert listing endpoints/views.
+
+5) Update admin interface minimally
+- Register new models in Django admin.
+- Add list filters for statuses.
+- Make it easy for admin to:
+  - review requests
+  - propose experts
+  - mark expert accepted/declined
+  - create an engagement record
+
+6) Update seed_demo to include workflow objects
+- Extend seed_demo to create:
+  - admin + ops + client + 4 experts (diverse: STEM PhD, retired academic, young PhD specialist, industry specialist)
+  - ensure client is VERIFIED
+  - ensure experts are ACTIVE
+  - create:
+    - one ClientRequest (status submitted)
+    - two ExpertMatch proposals (one accepted, one declined)
+    - one Engagement created from accepted match (status scheduled or in_progress)
+
+7) Run migrations and tests
+- Create migrations
+- Run migrate
+- Run pytest
+- Fix any failures.
+
+Deliverable for this run:
+- New models + migrations
+- Admin registration
+- Updated seed_demo
+- Passing tests
+- No payments/invoice logic yet
+
+Proceed and complete all tasks.

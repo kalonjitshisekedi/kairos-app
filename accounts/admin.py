@@ -8,15 +8,15 @@ from .models import User, AuditLog
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ['email', 'first_name', 'last_name', 'role', 'is_active', 'date_joined']
-    list_filter = ['role', 'is_active', 'is_staff', 'deletion_requested']
+    list_display = ['email', 'first_name', 'last_name', 'role', 'client_status', 'expert_status', 'is_active', 'date_joined']
+    list_filter = ['role', 'client_status', 'expert_status', 'is_active', 'is_staff', 'deletion_requested']
     search_fields = ['email', 'first_name', 'last_name']
     ordering = ['-date_joined']
     
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Personal info', {'fields': ('first_name', 'last_name')}),
-        ('Role', {'fields': ('role',)}),
+        ('Role and status', {'fields': ('role', 'client_status', 'expert_status')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Compliance', {'fields': ('privacy_consent', 'privacy_consent_date', 'terms_accepted', 'terms_accepted_date', 'deletion_requested', 'deletion_requested_date')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),

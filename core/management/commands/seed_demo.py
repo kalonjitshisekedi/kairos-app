@@ -9,6 +9,18 @@ from accounts.models import User
 from experts.models import ExpertProfile, ExpertiseTag
 from consultations.models import ClientRequest, Booking, Review
 from blog.models import BlogPost
+from engagements.models import (
+    ClientRequest as EngagementRequest,
+    ExpertMatch,
+    Engagement,
+    ProgressEvent,
+)
+from engagements.enums import (
+    ClientRequestStatus,
+    ExpertMatchStatus,
+    EngagementStatus,
+    ProgressEventType,
+)
 
 
 class Command(BaseCommand):
@@ -24,6 +36,7 @@ class Command(BaseCommand):
         self.create_diverse_experts()
         self.create_blog_posts()
         self.create_demo_requests_and_bookings()
+        self.create_engagement_workflow_data()
         
         self.stdout.write(self.style.SUCCESS('\nDemo data seeded successfully!\n'))
         self.stdout.write('\n=== Demo account credentials ===\n')
@@ -116,6 +129,7 @@ class Command(BaseCommand):
                 'is_superuser': False,
                 'is_active': True,
                 'role': User.Role.CLIENT,
+                'client_status': User.ClientStatus.VERIFIED,
                 'email_verified': True,
                 'privacy_consent': True,
                 'terms_accepted': True,
@@ -191,6 +205,7 @@ class Command(BaseCommand):
                     'is_superuser': False,
                     'is_active': True,
                     'role': User.Role.EXPERT,
+                    'expert_status': User.ExpertStatusChoices.ACTIVE,
                     'email_verified': True,
                     'privacy_consent': True,
                     'terms_accepted': True,
@@ -215,7 +230,7 @@ class Command(BaseCommand):
                     'languages': ['English'],
                     'sector_expertise': expert_data['sector_expertise'],
                     'privacy_level': expert_data['privacy_level'],
-                    'verification_status': ExpertProfile.VerificationStatus.VETTED,
+                    'verification_status': ExpertProfile.VerificationStatus.ACTIVE,
                     'is_publicly_listed': True,
                     'verification_submitted_at': timezone.now(),
                     'verification_reviewed_at': timezone.now(),
@@ -495,3 +510,121 @@ class Command(BaseCommand):
             )
             if created:
                 self.stdout.write(self.style.SUCCESS('  Created review for completed booking'))
+
+    def create_engagement_workflow_data(self):
+        client = User.objects.filter(email='client@kairos.co.za').first()
+        admin = User.objects.filter(email='admin@kairos.co.za').first()
+        expert_molefe = User.objects.filter(email='dr.molefe@kairos.co.za').first()
+        expert_dlamini = User.objects.filter(email='prof.dlamini@kairos.co.za').first()
+        expert_okonkwo = User.objects.filter(email='dr.okonkwo@kairos.co.za').first()
+        expert_vanwyk = User.objects.filter(email='dr.vanwyk@kairos.co.za').first()
+
+        if not all([client, admin, expert_molefe]):
+            self.stdout.write(self.style.WARNING('  Skipping engagement workflow data: required users not found'))
+            return
+
+        eng_request, created = EngagementRequest.objects.get_or_create(
+            client=client,
+            organisation_name='Umkhonto Capital (Pty) Ltd',
+            status=ClientRequestStatus.SUBMITTED,
+            defaults={
+                'billing_email': 'accounts@umkhontocapital.co.za',
+                'phone': '+27 11 555 0123',
+                'engagement_type': 'consultation',
+                'urgency': 'standard',
+                'brief': 'We are evaluating an investment opportunity in a South African biotechnology company developing AI-driven drug discovery platforms. We require expert input on the technical validity of their machine learning approach and an assessment of their computational biology capabilities.',
+                'confidentiality_level': 'restricted',
+            }
+        )
+        if created:
+            ProgressEvent.objects.create(
+                request=eng_request,
+                actor=client,
+                event_type=ProgressEventType.REQUEST_SUBMITTED,
+                message='Client submitted a new consultation request',
+            )
+            self.stdout.write(self.style.SUCCESS('  Created engagement request (submitted)'))
+        else:
+            self.stdout.write('  Engagement request (submitted) already exists')
+
+        eng_request_2, created = EngagementRequest.objects.get_or_create(
+            client=client,
+            organisation_name='Umkhonto Capital (Pty) Ltd',
+            status=ClientRequestStatus.SHORTLISTED,
+            defaults={
+                'billing_email': 'accounts@umkhontocapital.co.za',
+                'phone': '+27 11 555 0123',
+                'engagement_type': 'advisory',
+                'urgency': 'urgent',
+                'brief': 'Regulatory compliance review for a fintech acquisition target. We need expertise in South African financial regulation and Reserve Bank requirements.',
+                'confidentiality_level': 'restricted',
+            }
+        )
+        if created:
+            self.stdout.write(self.style.SUCCESS('  Created engagement request (shortlisted)'))
+
+            match_accepted, _ = ExpertMatch.objects.get_or_create(
+                request=eng_request_2,
+                expert=expert_dlamini,
+                defaults={
+                    'proposed_by': admin,
+                    'status': ExpertMatchStatus.ACCEPTED,
+                    'note_to_client': 'Prof Dlamini has extensive experience with Reserve Bank regulatory frameworks.',
+                    'internal_note': 'Confirmed availability for next week.',
+                }
+            )
+            self.stdout.write(self.style.SUCCESS('  Created expert match (accepted) - Prof Dlamini'))
+
+            if expert_vanwyk:
+                match_declined, _ = ExpertMatch.objects.get_or_create(
+                    request=eng_request_2,
+                    expert=expert_vanwyk,
+                    defaults={
+                        'proposed_by': admin,
+                        'status': ExpertMatchStatus.DECLINED,
+                        'internal_note': 'Declined due to capacity constraints.',
+                    }
+                )
+                self.stdout.write(self.style.SUCCESS('  Created expert match (declined) - Dr van Wyk'))
+        else:
+            self.stdout.write('  Engagement request (shortlisted) already exists')
+
+        eng_request_3, created = EngagementRequest.objects.get_or_create(
+            client=client,
+            organisation_name='Umkhonto Capital (Pty) Ltd',
+            status=ClientRequestStatus.IN_PROGRESS,
+            defaults={
+                'billing_email': 'accounts@umkhontocapital.co.za',
+                'phone': '+27 11 555 0123',
+                'engagement_type': 'research',
+                'urgency': 'standard',
+                'brief': 'Technical due diligence on a renewable energy battery storage system. Assessment of solid-state battery technology and commercial viability.',
+                'confidentiality_level': 'standard',
+            }
+        )
+        if created:
+            self.stdout.write(self.style.SUCCESS('  Created engagement request (in progress)'))
+
+            if expert_okonkwo:
+                engagement, _ = Engagement.objects.get_or_create(
+                    request=eng_request_3,
+                    expert=expert_okonkwo,
+                    defaults={
+                        'status': EngagementStatus.IN_PROGRESS,
+                        'scheduled_start': timezone.now() - timedelta(days=3),
+                        'scheduled_end': timezone.now() + timedelta(days=7),
+                        'meeting_mode': 'platform',
+                        'shared_notes': 'Initial technical review completed. Battery chemistry assessment in progress.',
+                    }
+                )
+                ProgressEvent.objects.create(
+                    request=eng_request_3,
+                    actor=admin,
+                    event_type=ProgressEventType.ENGAGEMENT_STARTED,
+                    message='Engagement started with Dr Okonkwo',
+                )
+                self.stdout.write(self.style.SUCCESS('  Created engagement (in progress) with Dr Okonkwo'))
+        else:
+            self.stdout.write('  Engagement request (in progress) already exists')
+
+        self.stdout.write(self.style.SUCCESS('  Engagement workflow data created'))

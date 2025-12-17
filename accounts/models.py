@@ -31,11 +31,34 @@ class User(AbstractBaseUser, PermissionsMixin):
         EXPERT = 'expert', 'Expert'
         ADMIN = 'admin', 'Admin'
 
+    class ClientStatus(models.TextChoices):
+        PENDING = 'pending', 'Pending verification'
+        VERIFIED = 'verified', 'Verified'
+        REJECTED = 'rejected', 'Rejected'
+
+    class ExpertStatusChoices(models.TextChoices):
+        APPLIED = 'applied', 'Applied'
+        VETTED = 'vetted', 'Vetted'
+        ACTIVE = 'active', 'Active'
+        REJECTED = 'rejected', 'Rejected'
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.CLIENT)
+    client_status = models.CharField(
+        max_length=20,
+        choices=ClientStatus.choices,
+        default=ClientStatus.PENDING,
+        help_text='Client approval status'
+    )
+    expert_status = models.CharField(
+        max_length=20,
+        choices=ExpertStatusChoices.choices,
+        default=ExpertStatusChoices.APPLIED,
+        help_text='Expert approval status'
+    )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
