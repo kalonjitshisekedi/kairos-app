@@ -326,6 +326,92 @@ python manage.py collectstatic --noinput
 https://your-domain.com/payments/webhook/
 ```
 
+## Cost-Effective AWS Deployment Guide
+
+This section provides recommendations for deploying Kairos on AWS in the most cost-effective way for a South African startup.
+
+### Estimated Monthly Costs (USD)
+
+| Service | Configuration | Estimated Cost |
+|---------|--------------|----------------|
+| RDS PostgreSQL | db.t3.micro (Free Tier eligible) | $0 - $15/month |
+| S3 Storage | 10GB with minimal requests | $0.25/month |
+| EC2 (if used) | t3.micro (Free Tier eligible) | $0 - $8/month |
+| Elastic Beanstalk | Uses underlying EC2 | $8 - $20/month |
+| CloudFront (optional) | 50GB transfer | $5/month |
+| **Total (startup phase)** | | **$15 - $50/month** |
+
+### Cost Optimisation Tips
+
+1. **Use AWS Free Tier**: New accounts get 12 months of free tier including:
+   - 750 hours/month of t3.micro EC2
+   - 750 hours/month of db.t3.micro RDS
+   - 5GB S3 storage
+
+2. **Choose af-south-1 (Cape Town)**: For South African users, this region offers lowest latency. Note: Free Tier may not apply to all services in this region.
+
+3. **Use Reserved Instances**: After testing, commit to 1-year reserved instances for 30-40% savings.
+
+4. **S3 Lifecycle Policies**: Move old files to S3 Glacier for 90% storage savings:
+```bash
+aws s3api put-bucket-lifecycle-configuration --bucket kairos-media \
+  --lifecycle-configuration '{
+    "Rules": [{
+      "ID": "ArchiveOldFiles",
+      "Status": "Enabled",
+      "Filter": {"Prefix": ""},
+      "Transitions": [{
+        "Days": 90,
+        "StorageClass": "GLACIER"
+      }]
+    }]
+  }'
+```
+
+5. **Use Spot Instances for Dev/Test**: Save up to 90% on development environments.
+
+6. **RDS Cost Savings**:
+   - Use db.t3.micro for development
+   - Enable storage auto-scaling to avoid over-provisioning
+   - Consider Aurora Serverless for variable workloads
+
+### Recommended Architecture (Budget-Friendly)
+
+For a startup with low to moderate traffic:
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Route 53  │────▶│ CloudFront  │────▶│    S3       │
+│   (Domain)  │     │    (CDN)    │     │ (Static)    │
+└─────────────┘     └─────────────┘     └─────────────┘
+                           │
+                           ▼
+                    ┌─────────────┐
+                    │   ALB/EB    │
+                    │ (Load Bal)  │
+                    └─────────────┘
+                           │
+                           ▼
+                    ┌─────────────┐     ┌─────────────┐
+                    │  EC2/EB     │────▶│  RDS        │
+                    │ (App Server)│     │ (PostgreSQL)│
+                    └─────────────┘     └─────────────┘
+                           │
+                           ▼
+                    ┌─────────────┐
+                    │    S3       │
+                    │  (Media)    │
+                    └─────────────┘
+```
+
+### Alternative: Deploy on Replit
+
+For the most cost-effective approach during early stages, deploy directly on Replit:
+- Built-in PostgreSQL database
+- Automatic HTTPS and domain
+- Zero DevOps overhead
+- Pay-as-you-go pricing
+
 ## Testing
 
 ### Running Tests
@@ -340,6 +426,90 @@ pytest --cov=.
 # Run specific app tests
 pytest accounts/tests.py
 pytest experts/tests.py
+```
+
+### Cross-Platform Testing
+
+#### Linux (Ubuntu/Debian)
+
+```bash
+# Install dependencies
+sudo apt update
+sudo apt install python3.11 python3.11-venv python3-pip postgresql-client
+
+# Clone and setup
+git clone <repository-url>
+cd kairos
+python3.11 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your settings
+
+# Run migrations and tests
+python manage.py migrate
+pytest
+
+# Start development server
+python manage.py runserver 0.0.0.0:5000
+```
+
+#### macOS
+
+```bash
+# Install Homebrew (if not installed)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install Python and PostgreSQL
+brew install python@3.11 postgresql@15
+
+# Clone and setup
+git clone <repository-url>
+cd kairos
+python3.11 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your settings
+
+# Run migrations and tests
+python manage.py migrate
+pytest
+
+# Start development server
+python manage.py runserver 0.0.0.0:5000
+```
+
+#### Windows (PowerShell)
+
+```powershell
+# Install Python 3.11 from python.org or via winget
+winget install Python.Python.3.11
+
+# Install PostgreSQL (optional for local development)
+winget install PostgreSQL.PostgreSQL
+
+# Clone and setup
+git clone <repository-url>
+cd kairos
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+
+# Configure environment
+copy .env.example .env
+# Edit .env with your settings using notepad or VS Code
+
+# Run migrations and tests
+python manage.py migrate
+pytest
+
+# Start development server
+python manage.py runserver 0.0.0.0:5000
 ```
 
 ### Test Database

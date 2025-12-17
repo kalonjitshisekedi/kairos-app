@@ -6,9 +6,14 @@ Kairos is a premium, confidential, enterprise-focused expert network. The platfo
 **Tagline**: "Don't guess. Know."
 
 ## Recent Changes
+- **December 2025**: Updated navigation and documentation:
+  - Navbar label changed from "Capabilities" to "Expertise"
+  - Added "Join the expert network" link to navbar
+  - Fixed navbar text wrapping (white-space: nowrap)
+  - Added comprehensive AWS cost-effective deployment guide
+  - Added cross-platform testing instructions (Linux, macOS, Windows)
 - **December 2025**: Updated request form and site copy:
   - Homepage hero CTAs reordered: "How it works", "Request matching", "Join the expert network"
-  - Navbar label changed from "Expertise" to "Capabilities"
   - ClientRequest model extended with phone, budget_range, brief_document, consent_given
   - Enterprise request form upgraded with file upload (PDF/DOCX, 10MB max), consent checkbox, +27 phone placeholder
   - All CTAs updated to use shorter "Request matching" label
