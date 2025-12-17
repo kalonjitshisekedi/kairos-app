@@ -37,7 +37,7 @@
                                 {% endif %}
                             </td>
                             <td>{{ booking.duration }} min</td>
-                            <td>&pound;{{ booking.amount }}</td>
+                            <td>R{{ booking.amount }}</td>
                             <td>
                                 <span class="badge bg-{% if booking.status == 'completed' %}success{% elif booking.status == 'scheduled' or booking.status == 'accepted' %}primary{% elif booking.status == 'cancelled' %}danger{% elif booking.status == 'in_session' %}warning{% else %}secondary{% endif %}">
                                     {{ booking.get_status_display }}

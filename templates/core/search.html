@@ -29,7 +29,7 @@
                             <h5>{{ expert.user.full_name }}</h5>
                             <p class="text-muted small">{{ expert.headline|truncatechars:80 }}</p>
                             {% if expert.rate_60_min > 0 %}
-                                <p><strong>&pound;{{ expert.rate_60_min }}</strong> / 60 min</p>
+                                <p><strong>R{{ expert.rate_60_min }}</strong> / 60 min</p>
                             {% endif %}
                         </div>
                         <div class="card-footer bg-white text-center">

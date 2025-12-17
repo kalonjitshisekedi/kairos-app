@@ -23,7 +23,7 @@
                         <tr>
                             <td>{{ payment.created_at|date:"j M Y" }}</td>
                             <td>{{ payment.booking.expert.user.full_name }}</td>
-                            <td>&pound;{{ payment.amount }}</td>
+                            <td>R{{ payment.amount }}</td>
                             <td>
                                 <span class="badge bg-{% if payment.status == 'completed' %}success{% elif payment.status == 'refunded' %}warning{% else %}secondary{% endif %}">
                                     {{ payment.get_status_display }}

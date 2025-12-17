@@ -30,7 +30,7 @@
                                     {{ invoice.expert.user.full_name }}
                                 {% endif %}
                             </td>
-                            <td>&pound;{{ invoice.amount }}</td>
+                            <td>R{{ invoice.amount }}</td>
                             <td>
                                 <span class="badge bg-{% if invoice.status == 'paid' %}success{% else %}secondary{% endif %}">
                                     {{ invoice.get_status_display }}

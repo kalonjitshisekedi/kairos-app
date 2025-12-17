@@ -28,9 +28,9 @@
                     {% if concierge.budget_min or concierge.budget_max %}
                     <div class="mb-3">
                         <strong>Budget:</strong> 
-                        {% if concierge.budget_min %}&pound;{{ concierge.budget_min }}{% endif %}
+                        {% if concierge.budget_min %}R{{ concierge.budget_min }}{% endif %}
                         {% if concierge.budget_min and concierge.budget_max %} - {% endif %}
-                        {% if concierge.budget_max %}&pound;{{ concierge.budget_max }}{% endif %}
+                        {% if concierge.budget_max %}R{{ concierge.budget_max }}{% endif %}
                     </div>
                     {% endif %}
                     {% if concierge.timeline %}
