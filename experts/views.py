@@ -8,7 +8,8 @@ from django.db.models import Q, Avg
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
-from accounts.models import AuditLog
+from accounts.decorators import verified_client_required
+from accounts.models import AuditLog, User
 from consultations.models import Booking
 from .models import ExpertProfile, ExpertiseTag, Publication, Patent, NotableProject, VerificationDocument
 from .forms import (
@@ -17,12 +18,13 @@ from .forms import (
 )
 
 
+@verified_client_required
 def expert_directory(request):
-    """Expert directory with improved filtering and vetted badges.
+    """Expert directory - requires verified client status.
     
     Privacy levels control visibility:
-    - public: Visible to everyone
-    - semi_private: Visible only to verified clients (authenticated + email verified)
+    - public: Visible to verified clients
+    - semi_private: Visible to verified clients
     - private: Never shown in directory (matched by admin only)
     """
     base_query = ExpertProfile.objects.filter(
@@ -33,7 +35,7 @@ def expert_directory(request):
     is_verified_client = (
         request.user.is_authenticated and 
         request.user.is_client and 
-        request.user.email_verified
+        request.user.client_status == User.ClientStatus.VERIFIED
     )
     is_admin = request.user.is_authenticated and request.user.is_admin
     
@@ -105,8 +107,9 @@ def join_as_expert(request):
     return render(request, 'experts/join.html', {'form': form})
 
 
+@verified_client_required
 def careers(request):
-    """New careers page with skill/expertise-based search."""
+    """Careers page with skill/expertise-based search - requires verified client status."""
     experts = ExpertProfile.objects.filter(
         verification_status__in=['vetted', 'active'],
         is_publicly_listed=True,
@@ -160,12 +163,12 @@ def careers(request):
     return render(request, 'experts/careers.html', context)
 
 
+@verified_client_required
 def expert_profile(request, pk):
-    """View expert profile with privacy level enforcement.
+    """View expert profile - requires verified client status.
     
     Access rules:
-    - public: Visible to everyone
-    - semi_private: Visible only to verified clients (authenticated + email verified), owner, or admin
+    - public/semi_private: Visible to verified clients, owner, or admin
     - private: Visible only to owner or admin
     """
     expert = get_object_or_404(
@@ -177,11 +180,6 @@ def expert_profile(request, pk):
     
     is_own_profile = request.user.is_authenticated and request.user == expert.user
     is_admin = request.user.is_authenticated and request.user.is_admin
-    is_verified_client = (
-        request.user.is_authenticated and 
-        request.user.is_client and 
-        request.user.email_verified
-    )
     
     if not expert.is_publicly_listed and not (is_own_profile or is_admin):
         messages.error(request, 'This expert profile is not available.')
@@ -189,10 +187,6 @@ def expert_profile(request, pk):
     
     if expert.privacy_level == 'private' and not (is_own_profile or is_admin):
         messages.error(request, 'This expert profile is private.')
-        return redirect('experts:directory')
-    
-    if expert.privacy_level == 'semi_private' and not (is_verified_client or is_own_profile or is_admin):
-        messages.error(request, 'This expert profile requires email verification to view. Please verify your email address.')
         return redirect('experts:directory')
     
     reviews = Booking.objects.filter(

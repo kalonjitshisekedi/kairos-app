@@ -10,6 +10,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from datetime import timedelta
 
+from accounts.decorators import verified_client_required
 from accounts.models import User, AuditLog
 from experts.models import ExpertProfile, ExpertiseTag
 from consultations.models import Booking, ConciergeRequest
@@ -31,7 +32,9 @@ def home(request):
     return render(request, 'core/home.html', context)
 
 
+@verified_client_required
 def search(request):
+    """Search for experts - requires verified client status."""
     query = request.GET.get('q', '')
     
     experts = ExpertProfile.objects.filter(
