@@ -547,49 +547,65 @@ class Command(BaseCommand):
         else:
             self.stdout.write('  Engagement request (submitted) already exists')
 
-        eng_request_2, created = EngagementRequest.objects.get_or_create(
-            client=client,
-            organisation_name='Umkhonto Capital (Pty) Ltd',
-            status=ClientRequestStatus.SHORTLISTED,
+        match_proposed, match_created = ExpertMatch.objects.get_or_create(
+            request=eng_request,
+            expert=expert_molefe,
             defaults={
-                'billing_email': 'accounts@umkhontocapital.co.za',
-                'phone': '+27 11 555 0123',
-                'engagement_type': 'advisory',
-                'urgency': 'urgent',
-                'brief': 'Regulatory compliance review for a fintech acquisition target. We need expertise in South African financial regulation and Reserve Bank requirements.',
-                'confidentiality_level': 'restricted',
+                'proposed_by': admin,
+                'status': ExpertMatchStatus.PROPOSED,
+                'note_to_client': 'Dr Molefe has deep expertise in computational biology and ML-driven drug discovery.',
+                'internal_note': 'Excellent match for technical assessment.',
             }
         )
-        if created:
-            self.stdout.write(self.style.SUCCESS('  Created engagement request (shortlisted)'))
+        if match_created:
+            ProgressEvent.objects.create(
+                request=eng_request,
+                actor=admin,
+                event_type=ProgressEventType.EXPERT_PROPOSED,
+                message='Dr Molefe proposed as expert match',
+            )
+            self.stdout.write(self.style.SUCCESS('  Created expert match (proposed) - Dr Molefe'))
+        else:
+            self.stdout.write('  Expert match (proposed) - Dr Molefe already exists')
 
-            match_accepted, _ = ExpertMatch.objects.get_or_create(
-                request=eng_request_2,
-                expert=expert_dlamini,
+        if expert_vanwyk:
+            match_declined, declined_created = ExpertMatch.objects.get_or_create(
+                request=eng_request,
+                expert=expert_vanwyk,
                 defaults={
                     'proposed_by': admin,
-                    'status': ExpertMatchStatus.ACCEPTED,
-                    'note_to_client': 'Prof Dlamini has extensive experience with Reserve Bank regulatory frameworks.',
-                    'internal_note': 'Confirmed availability for next week.',
+                    'status': ExpertMatchStatus.DECLINED,
+                    'internal_note': 'Declined due to scheduling conflict.',
                 }
             )
-            self.stdout.write(self.style.SUCCESS('  Created expert match (accepted) - Prof Dlamini'))
-
-            if expert_vanwyk:
-                match_declined, _ = ExpertMatch.objects.get_or_create(
-                    request=eng_request_2,
-                    expert=expert_vanwyk,
-                    defaults={
-                        'proposed_by': admin,
-                        'status': ExpertMatchStatus.DECLINED,
-                        'internal_note': 'Declined due to capacity constraints.',
-                    }
+            if declined_created:
+                ProgressEvent.objects.create(
+                    request=eng_request,
+                    actor=expert_vanwyk,
+                    event_type=ProgressEventType.EXPERT_DECLINED,
+                    message='Dr van Wyk declined the match proposal',
                 )
                 self.stdout.write(self.style.SUCCESS('  Created expert match (declined) - Dr van Wyk'))
-        else:
-            self.stdout.write('  Engagement request (shortlisted) already exists')
+            else:
+                self.stdout.write('  Expert match (declined) - Dr van Wyk already exists')
 
-        eng_request_3, created = EngagementRequest.objects.get_or_create(
+        engagement, eng_created = Engagement.objects.get_or_create(
+            request=eng_request,
+            expert=expert_molefe,
+            defaults={
+                'status': EngagementStatus.SCHEDULED,
+                'scheduled_start': timezone.now() + timedelta(days=5),
+                'scheduled_end': timezone.now() + timedelta(days=5, hours=2),
+                'meeting_mode': 'platform',
+                'shared_notes': 'Pre-engagement: please review the attached company technical brief.',
+            }
+        )
+        if eng_created:
+            self.stdout.write(self.style.SUCCESS('  Created engagement (scheduled) with Dr Molefe'))
+        else:
+            self.stdout.write('  Engagement (scheduled) with Dr Molefe already exists')
+
+        eng_request_2, created = EngagementRequest.objects.get_or_create(
             client=client,
             organisation_name='Umkhonto Capital (Pty) Ltd',
             status=ClientRequestStatus.IN_PROGRESS,
@@ -606,8 +622,8 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS('  Created engagement request (in progress)'))
 
             if expert_okonkwo:
-                engagement, _ = Engagement.objects.get_or_create(
-                    request=eng_request_3,
+                engagement_2, _ = Engagement.objects.get_or_create(
+                    request=eng_request_2,
                     expert=expert_okonkwo,
                     defaults={
                         'status': EngagementStatus.IN_PROGRESS,
@@ -618,7 +634,7 @@ class Command(BaseCommand):
                     }
                 )
                 ProgressEvent.objects.create(
-                    request=eng_request_3,
+                    request=eng_request_2,
                     actor=admin,
                     event_type=ProgressEventType.ENGAGEMENT_STARTED,
                     message='Engagement started with Dr Okonkwo',
