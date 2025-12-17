@@ -1,0 +1,43 @@
+Continue in the existing Kairos Django codebase. Do not rebuild.
+Task
+Create comprehensive instructions that document the complete user flow, access logic, and system workflows for your SaaS app. The assistant should map out: (1) when and how clients gain access to the expert list, (2) how experts receive and respond to client requests, (3) the role of your team in facilitating connections, (4) payment and communication handling, and (5) progress tracking across all user types.
+
+Objective
+Establish a clear, implementable specification for your development team so they can build the platform's core logic without ambiguity, enabling you to test the complete workflow with demo accounts immediately upon implementation.
+
+Knowledge
+The platform has three user types with distinct capabilities:
+
+    Clients: Submit interest → gain portal access → browse experts → receive suggestions → initiate contact → track progress
+    Experts: Review incoming requests → accept or decline → optionally let your team facilitate meeting setup → complete work → receive payment
+    Admin Team: Approve client onboarding → suggest expert matches → facilitate connections when needed → monitor all progress
+
+Key features required:
+
+    Client approval/onboarding gate before expert list access
+    Expert recommendation engine (your team suggests matches)
+    Dual-path contact: direct client-to-expert OR admin-facilitated meeting setup
+    Centralized payment processing through your business
+    Real-time progress bars visible on admin dashboard, client portal, and expert dashboard
+    Completion trigger with client satisfaction confirmation
+    Continuous development with no stops until changes are fully implemented and testable
+
+Instructions
+
+Structure the documentation with these sections:
+
+    Client Onboarding Flow: Detail the submission process, approval criteria, and the exact moment portal access is granted and expert list becomes visible.
+
+    Expert Discovery & Matching: Explain how the expert list is populated for each client, how your team's suggestions appear, and the UI/UX for browsing and suggestion presentation.
+
+    Connection Initiation: Document two parallel paths—(a) client directly contacts expert, and (b) client requests admin facilitation for meeting setup—including what triggers each path and how experts are notified.
+
+    Expert Request Management: Outline how experts view incoming requests, the accept/decline interface, and how declined requests are handled (reassigned, returned to client, etc.).
+
+    Communication & Payment: Specify that formal communication happens through the platform (not external channels), payment is processed by your business (not peer-to-peer), and define the payment trigger point.
+
+    Progress Tracking: Detail the progress bar logic—what stages it displays, how it updates in real-time, and where it appears (admin dashboard, client portal, expert dashboard).
+
+    Completion & Closure: Define what constitutes job completion, how client satisfaction is confirmed, what trigger signal fires upon completion, and how records are archived.
+
+    Implementation Notes: Include any technical considerations, data dependencies, or edge cases (e.g., expert declines, client abandons browsing, payment fails).
