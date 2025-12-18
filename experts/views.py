@@ -18,13 +18,12 @@ from .forms import (
 )
 
 
-@verified_client_required
 def expert_directory(request):
-    """Expert directory - requires verified client status.
+    """Expert directory - accessible to verified clients, admins, and operations staff.
     
     Privacy levels control visibility:
-    - public: Visible to verified clients
-    - semi_private: Visible to verified clients
+    - public: Visible to verified clients, admins, ops
+    - semi_private: Visible to verified clients, admins, ops
     - private: Never shown in directory (matched by admin only)
     """
     base_query = ExpertProfile.objects.filter(
@@ -38,6 +37,12 @@ def expert_directory(request):
         request.user.client_status == User.ClientStatus.VERIFIED
     )
     is_admin = request.user.is_authenticated and request.user.is_admin
+    is_ops = request.user.is_authenticated and request.user.is_admin and hasattr(request.user, 'role')
+    
+    # Allow access to verified clients, admins, and operations staff
+    if not (is_verified_client or is_admin):
+        messages.warning(request, 'Access to the expert directory requires verification or admin privileges.')
+        return redirect('core:home')
     
     if is_verified_client or is_admin:
         experts = base_query.filter(privacy_level__in=['public', 'semi_private'])
@@ -75,6 +80,9 @@ def expert_directory(request):
         'search': search,
         'selected_expertise': expertise,
         'sort': sort,
+        'is_verified_client': is_verified_client,
+        'is_admin': is_admin,
+        'can_contact': is_admin,
     }
     return render(request, 'experts/directory.html', context)
 

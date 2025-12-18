@@ -89,13 +89,13 @@
             </div>
             
             <div class="col-lg-9">
-                {% if not user.is_authenticated or not user.email_verified %}
+                {% if not user.is_authenticated %}
                 <div class="card card-premium text-center p-5 mb-4">
                     <i class="bi bi-lock display-4 text-gold mb-3"></i>
-                    <h4 class="fw-semibold mb-3" style="font-family: var(--font-serif);">Access to profiles is available after verification</h4>
-                    <p class="text-muted mb-4">Our expert network is not publicly browsable. To access profiles, please create an account or contact us to discuss your requirements.</p>
+                    <h4 class="fw-semibold mb-3" style="font-family: var(--font-serif);">Sign in to browse experts</h4>
+                    <p class="text-muted mb-4">Our expert network is available to verified clients and administrators. Please sign in or create an account to access the directory.</p>
                     <div class="d-flex justify-content-center gap-3 flex-wrap">
-                        <a href="{% url 'consultations:submit_request' %}" class="btn btn-primary">Request matching</a>
+                        <a href="{% url 'accounts:login' %}" class="btn btn-primary">Sign in</a>
                         <a href="{% url 'core:contact' %}" class="btn btn-outline-primary">Contact us</a>
                     </div>
                 </div>
@@ -159,7 +159,14 @@
                                         {% endif %}
                                     </div>
                                     <div class="card-footer bg-white border-0 text-center pb-4">
-                                        <a href="{% url 'experts:profile' pk=expert.pk %}" class="btn btn-outline-primary btn-sm w-100">View profile</a>
+                                        <div class="d-flex gap-2">
+                                            <a href="{% url 'experts:profile' pk=expert.pk %}" class="btn btn-outline-primary btn-sm flex-grow-1">View profile</a>
+                                            {% if can_contact %}
+                                                <a href="mailto:{{ expert.user.email }}" class="btn btn-outline-secondary btn-sm flex-grow-1">Contact</a>
+                                            {% elif is_verified_client %}
+                                                <a href="{% url 'consultations:submit_request' %}" class="btn btn-outline-accent btn-sm flex-grow-1">Request</a>
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
