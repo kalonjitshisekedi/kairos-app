@@ -1,8 +1,28 @@
 # Progress, payments, and closure specification
 
 **Document version:** 1.0  
-**Last updated:** 17 December 2025  
-**Status:** Ready for implementation
+**Last updated:** 18 December 2025  
+**Implementation Status:** Partially implemented
+
+## Implementation Status
+
+### Implemented Features
+- ✅ Invoice-based payment model (no card checkout at platform level)
+- ✅ Invoice status workflow (draft → sent → paid)
+- ✅ Invoice creation and sending to clients
+- ✅ Booking status lifecycle (draft → requested → accepted → scheduled → in_session → completed)
+- ✅ Expert payout eligibility tracking
+- ✅ Completion marking by expert
+- ✅ Client satisfaction confirmation flow
+- ✅ Audit logging for all actions
+
+### Planned Next
+- Auto-confirmation after 7 days without client response
+- Dispute handling workflow with resolution options
+- Record archiving and anonymization (POPIA compliance)
+- Real-time progress bar updates (currently manual refresh)
+- Rework request handling for minor revisions
+- Payment confirmation automation via bank API
 
 This specification defines operational workflows for communication, invoice-based payments, progress tracking, and engagement completion across all user types.
 

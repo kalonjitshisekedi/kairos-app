@@ -1,8 +1,25 @@
 # Access and onboarding specification
 
 **Document version:** 1.0  
-**Last updated:** 17 December 2025  
-**Status:** Ready for implementation
+**Last updated:** 18 December 2025  
+**Implementation Status:** Partially implemented
+
+## Implementation Status
+
+### Implemented Features
+- ✅ User roles (client, expert, admin) with database fields (`client_status`, `expert_status`)
+- ✅ Expert verification status workflow (applied → active)
+- ✅ Expert catalogue access gating (`/experts/catalogue/`)
+- ✅ Privacy levels on expert profiles (public, semi-private, private)
+- ✅ Expert profile editing with CV and professional links (`/experts/edit/`)
+- ✅ Profile photo and expertise tag management
+- ✅ Permissions matrix for role-based access control
+
+### Planned Next
+- Email verification flow for clients
+- Expert application review workflow (currently: direct profile creation)
+- Complete onboarding demo accounts with all states
+- Profile wizard multi-step flow refinement
 
 This specification defines platform access rules, user roles, and onboarding gates for the Kairos expert consultation platform. Developers should implement these rules without ambiguity.
 

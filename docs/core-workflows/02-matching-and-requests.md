@@ -1,8 +1,26 @@
 # Matching and requests specification
 
 **Document version:** 1.0  
-**Last updated:** 17 December 2025  
-**Status:** Ready for implementation
+**Last updated:** 18 December 2025  
+**Implementation Status:** Partially implemented
+
+## Implementation Status
+
+### Implemented Features
+- ✅ Client request submission form with expertise tags, urgency, engagement type
+- ✅ Request status workflow (pending → in_review → matched → confirmed → completed)
+- ✅ Request matching expertise categorization (tags, sector, engagement type)
+- ✅ Expert shortlist creation by admin
+- ✅ Privacy-aware expert data visibility (public/semi-private/private filters)
+- ✅ Booking model with expert assignment and scheduling
+- ✅ Direct messaging within booking context
+
+### Planned Next
+- Auto-response timeout escalation (4h/12h/24h/48h)
+- Admin-facilitated expert introduction workflow
+- Advanced search/filter for admin expert matching
+- Booking accept/decline interface with reasons
+- Dispute resolution workflow
 
 This specification defines how expert matching works and how clients, experts, and admins interact once a consultation request exists.
 

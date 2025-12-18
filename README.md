@@ -8,19 +8,62 @@ Kairos provides a curated marketplace where clients can access brilliant minds w
 
 ### Key Features
 
-- **Expert Directory**: Browse verified experts by domain, expertise, and skills
-- **Consultation Booking**: Request and schedule private video consultations
-- **Concierge Matching**: Submit requests for personalised expert recommendations
-- **Expert Verification**: Rigorous credential verification workflow
-- **Secure Payments**: Integrated payment processing via Stripe
-- **Messaging System**: Private communication between clients and experts
+- **Expert Catalogue**: Gated directory of verified experts accessible to authenticated clients
+- **Request Matching**: Submit consultation requests for expert matching by admin
+- **Engagement Management**: End-to-end workflow from request submission to completion
+- **Expert Verification**: Rigorous credential verification with profile uploads (CV, professional links)
+- **Invoice-based Payments**: Payment handling via invoicing system (no card checkout)
+- **Messaging System**: Private communication between clients and experts within booking context
+
+## Current Platform Workflow (Implemented)
+
+### Access Control
+The platform uses role-based gating with `client_status` and `expert_status` fields:
+- **Verified clients** can access the expert catalogue and submit consultation requests
+- **Unverified clients** see public expert profiles only
+- **Experts** must be verified (active status) to receive and manage bookings
+- **Admins** (ops staff and superusers) manage expert vetting and client matching
+
+### Expert Catalogue
+Located at `/experts/catalogue/`:
+- Accessible to: verified clients, staff, and admin users
+- Shows: vetted/active experts with public or semi-private profiles
+- Each expert displays: headline, bio, expertise tags, years of experience, affiliation
+- Features: "Request this expert" button for direct engagement initiation
+
+### Request → Match → Engagement → Completion Flow
+1. **Client submits request** - Fills form with problem description, engagement type, urgency, budget
+2. **Admin reviews and matches** - Ops staff identifies suitable expert(s) from catalogue
+3. **Expert receives notification** - Invitation to accept/decline the engagement
+4. **Proposal sent to client** - Admin creates invoice with pricing and scope
+5. **Engagement confirmed** - Client accepts terms; invoice sent for payment
+6. **Expert delivery** - Work progresses; expert marks complete when done
+7. **Client confirmation** - Client confirms satisfaction; payout becomes eligible
+8. **Completion and review** - Engagement archived; client may leave review
+
+### Invoice-based Payment Model
+- No card checkout at platform level
+- Admin creates and sends invoices after client accepts proposal
+- Client pays via bank transfer or EFT
+- Expert payout triggered after completion confirmed and payment received
+- Platform retains fee between invoiced amount and expert payout rate
+
+### Expert Profile Management
+- **Edit page** (`/experts/edit/`): Experts can update profile with complete information:
+  - Basic info (headline, bio, pronouns, affiliation, location, timezone)
+  - Profile photo upload (JPG/PNG/GIF, max 5MB)
+  - CV upload (PDF/DOCX, max 10MB)
+  - Professional links (LinkedIn, GitHub, ORCID URLs)
+  - Expertise areas and tags selection
+  - Languages and availability settings
+  - Profile visibility (public/semi-private/private)
 
 ## Technology Stack
 
 - **Backend**: Django 5.x with Django REST Framework
 - **Database**: PostgreSQL
-- **File Storage**: AWS S3 (via django-storages)
-- **Payments**: Stripe
+- **File Storage**: AWS S3 (via django-storages) + local media in development
+- **Payments**: Invoice-based (no Stripe card processing)
 - **Frontend**: Bootstrap 5 with custom styling
 
 ## Local Development Setup
@@ -598,30 +641,31 @@ This command is idempotent and safe to run multiple times.
 
 ### Demo credentials
 
-| Role | Email | Password |
-|------|-------|----------|
-| Super admin | admin@kairos.co.za | KairosAdmin123! |
-| Operations (staff) | ops@kairos.co.za | KairosOps123! |
-| Client | client@kairos.co.za | KairosClient123! |
-| Expert | dr.molefe@kairos.co.za | KairosExpert123! |
+| Role | Email | Password | Account Status |
+|------|-------|----------|-----------------|
+| Super admin | admin@kairos.co.za | KairosAdmin123! | Full access, staff + superuser |
+| Operations staff | ops@kairos.co.za | KairosOps123! | Staff only (can vet experts, match requests) |
+| Verified client | client@kairos.co.za | KairosClient123! | Verified email, full client features |
+| Active expert | dr.molefe@kairos.co.za | KairosExpert123! | Verified profile, can receive bookings |
 
-### What gets created
+### What gets created by seed_demo
 
-**Users:**
-- Super admin with full access
-- Operations user (staff only, no superuser)
-- Client user (Morgan Naidoo from Umkhonto Capital)
-- 4 expert profiles with diverse specialisms:
-  - Dr Thabo Molefe: Computational biology specialist, ML for drug discovery
-  - Prof Nomvula Dlamini: Regulatory policy and financial systems (emeritus)
-  - Dr Adaeze Okonkwo: Early-career PhD, materials science and renewable energy
-  - Dr Johan van Wyk: Quantitative finance specialist, risk model development
+**Users and Profiles:**
+- 1 super admin with full platform access
+- 1 operations staff user (can vet experts, match requests, manage platform)
+- 1 verified client (Morgan Naidoo from Umkhonto Capital, email verified)
+- 4 active expert profiles:
+  - Dr Thabo Molefe: Computational biology, ML for drug discovery
+  - Prof Nomvula Dlamini: Regulatory policy, financial systems
+  - Dr Adaeze Okonkwo: Materials science, renewable energy
+  - Dr Johan van Wyk: Quantitative finance, risk modeling
+  - All have: CV uploaded, professional links, expertise tags, availability set
 
 **Content:**
-- 16 expertise tags across disciplines and industries
+- 16 expertise tags (AI/ML, regulatory, finance, materials science, etc.)
 - 3 published blog posts
-- 1 pending client request (awaiting match)
-- 1 matched/scheduled engagement
+- 1 pending client request
+- 1 matched engagement (proposed, awaiting client confirmation)
 - 1 completed engagement with review
 
 ### Quick click-through test checklist
@@ -647,8 +691,9 @@ This command is idempotent and safe to run multiple times.
 
 **Expert workflow:**
 1. Log in as dr.molefe@kairos.co.za
-2. Access expert dashboard (shows assigned engagements)
-3. View profile and availability settings
+2. Visit `/experts/edit/` to manage profile with CV, professional links, expertise
+3. Access expert dashboard (shows assigned engagements)
+4. View availability settings and upcoming bookings
 
 ## Support
 
