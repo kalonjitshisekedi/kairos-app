@@ -1,0 +1,76 @@
+Continue in the existing Kairos Django codebase. Do not rebuild.
+
+Short task: add a gated “Expert catalogue” browsing experience for logged-in users, and seed 8–10 realistic experts for testing.
+
+Rules:
+- Keep premium, enterprise tone.
+- No public pricing.
+- Catalogue is visible only to:
+  - admin + ops (staff)
+  - verified clients
+- Unverified clients must not see the catalogue.
+- Experts can be visible in a discreet, professional way (no marketplace feel).
+
+Tasks (do these in order):
+
+1) Add “Expert catalogue” entry point after login
+- Add a button/link in:
+  - client dashboard
+  - admin/ops dashboard
+- Label: “Expert catalogue”
+- Route: /experts/catalogue/ (create if missing)
+
+2) Build the catalogue page (gated)
+- Create a new view + template:
+  - experts:catalogue
+  - templates/experts/catalogue.html
+- Gate access:
+  - allow staff always
+  - allow clients only if client_status == verified
+  - otherwise show a message and link to the request form
+- Display expert cards with:
+  - name (or anonymised name if privacy tier is set)
+  - headline
+  - specialisms/tags
+  - short bio snippet
+  - verification badge
+  - rating (if model supports; otherwise use “Client feedback” label with 4.7/5 style)
+- No hourly rates. No pricing. No “book now”.
+
+3) Add “Request matching” action from the catalogue
+- Each expert card must have a CTA button:
+  - “Request this expert”
+- Clicking it should take the user to the request form with the expert pre-selected:
+  - Pass expert_id as a query param (?expert_id=123)
+- Update the request form to:
+  - read expert_id param
+  - show “Preferred expert (optional)” prefilled and editable
+  - save it on the ClientRequest model (preferred_expert FK) if available; otherwise save as a note.
+
+4) Seed 8–10 demo experts
+Update seed_demo to create 8–10 verified/active experts with realistic diversity:
+- STEM PhD specialist (ML)
+- STEM PhD specialist (biomed)
+- young PhD specialist (NLP)
+- retired academic (public health)
+- industry specialist (fintech risk)
+- policy/regulation specialist
+- energy/mining specialist
+- supply chain/operations specialist
+- cybersecurity specialist (optional)
+Each must include:
+- headline
+- bio
+- tags/specialisms
+- rating (if model supports) or a field your UI can display
+- profile photo placeholder (optional)
+
+5) Quick verification
+- Run: python manage.py seed_demo
+- Log in as:
+  - ops user: should see catalogue link and access page
+  - verified client: should see catalogue link and access page
+  - unverified client (create one quickly): should be blocked
+- Confirm “Request this expert” pre-fills the request form.
+
+Finish only when the catalogue is accessible to allowed roles, blocked for others, and seeded experts appear.

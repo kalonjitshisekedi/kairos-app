@@ -18,6 +18,65 @@ from .forms import (
 )
 
 
+def expert_catalogue(request):
+    """Gated expert catalogue - accessible only to verified clients, admins, and staff.
+    Experts with any privacy level (public, semi_private) are shown for browsing and request matching.
+    """
+    is_verified_client = (
+        request.user.is_authenticated and 
+        request.user.is_client and 
+        request.user.client_status == User.ClientStatus.VERIFIED
+    )
+    is_staff = request.user.is_authenticated and request.user.is_staff
+    
+    # Gate access - only verified clients and staff
+    if not (is_verified_client or is_staff):
+        if request.user.is_authenticated and request.user.is_client:
+            # Unverified client - show message and link to request form
+            return render(request, 'experts/catalogue.html', {
+                'access_denied': True,
+                'reason': 'Verified clients'
+            })
+        # Not authenticated - redirect to login
+        messages.warning(request, 'Please sign in to browse the expert catalogue.')
+        return redirect('accounts:login')
+    
+    # Build expert list
+    experts = ExpertProfile.objects.filter(
+        verification_status__in=['vetted', 'active'],
+        is_publicly_listed=True,
+        privacy_level__in=['public', 'semi_private']
+    ).select_related('user').prefetch_related('expertise_tags').order_by('-average_rating', '-total_reviews')
+    
+    search = request.GET.get('search', '')
+    if search:
+        experts = experts.filter(
+            Q(user__first_name__icontains=search) |
+            Q(user__last_name__icontains=search) |
+            Q(headline__icontains=search) |
+            Q(bio__icontains=search)
+        )
+    
+    expertise = request.GET.getlist('expertise')
+    if expertise:
+        experts = experts.filter(expertise_tags__slug__in=expertise).distinct()
+    
+    paginator = Paginator(experts, 12)
+    page = request.GET.get('page')
+    experts = paginator.get_page(page)
+    
+    discipline_tags = ExpertiseTag.objects.filter(tag_type='discipline')
+    
+    context = {
+        'experts': experts,
+        'discipline_tags': discipline_tags,
+        'search': search,
+        'selected_expertise': expertise,
+        'access_granted': True,
+    }
+    return render(request, 'experts/catalogue.html', context)
+
+
 def expert_directory(request):
     """Expert directory - accessible to verified clients, admins, and operations staff.
     

@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+
+{% block title %}Expert Catalogue{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    {% if access_denied %}
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Access restricted</h4>
+        <p>The expert catalogue is available only to verified clients. Your account status is currently pending verification.</p>
+        <hr>
+        <p class="mb-0">
+            <a href="{% url 'consultations:submit_request' %}" class="btn btn-primary btn-sm">Submit a request</a>
+            to describe your needs and our team will match you with the right expert.
+        </p>
+    </div>
+    {% elif access_granted %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <p class="text-gold text-uppercase small fw-semibold mb-2 letter-spacing-wide">Our Network</p>
+            <h1 style="font-family: var(--font-serif);">Expert catalogue</h1>
+            <p class="text-muted">Browse our verified network and request the experts you need.</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search by name or expertise...">
+        </div>
+        <div class="col-md-9">
+            <div class="d-flex flex-wrap gap-2" id="filterTags">
+                {% for tag in discipline_tags %}
+                <button class="btn btn-outline-secondary btn-sm filter-tag" data-slug="{{ tag.slug }}">
+                    {{ tag.name }}
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5" id="expertsContainer">
+        {% for expert in experts %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 expert-card" style="border: 1px solid #e0e0e0;">
+                {% if expert.avatar %}
+                <img src="{{ expert.avatar.url }}" class="card-img-top" alt="{{ expert.user.full_name }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="bi bi-person-circle text-muted" style="font-size: 3rem;"></i>
+                </div>
+                {% endif %}
+                
+                <div class="card-body">
+                    <div class="d-flex align-items-start justify-content-between mb-2">
+                        <div>
+                            <h5 class="card-title mb-0">{{ expert.user.full_name }}</h5>
+                            {% if expert.is_verified %}
+                            <small class="text-gold"><i class="bi bi-check-circle-fill"></i> Verified</small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <p class="card-text small mb-2" style="color: #666;">
+                        <strong>{{ expert.headline }}</strong>
+                    </p>
+
+                    {% if expert.affiliation %}
+                    <p class="card-text small text-muted mb-2">
+                        <i class="bi bi-building me-1"></i>{{ expert.affiliation }}
+                    </p>
+                    {% endif %}
+
+                    {% if expert.location %}
+                    <p class="card-text small text-muted mb-3">
+                        <i class="bi bi-geo-alt me-1"></i>{{ expert.location }}
+                    </p>
+                    {% endif %}
+
+                    {% if expert.expertise_tags.all %}
+                    <div class="mb-3">
+                        <div class="d-flex flex-wrap gap-1">
+                            {% for tag in expert.expertise_tags.all|slice:":3" %}
+                            <span class="badge bg-light text-dark small">{{ tag.name }}</span>
+                            {% endfor %}
+                            {% if expert.expertise_tags.count > 3 %}
+                            <span class="badge bg-light text-dark small">+{{ expert.expertise_tags.count|add:"-3" }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if expert.average_rating > 0 %}
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="text-warning small me-2">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= expert.average_rating %}
+                                    <i class="bi bi-star-fill"></i>
+                                    {% elif forloop.counter <= expert.average_rating|add:"0.5" %}
+                                    <i class="bi bi-star-half"></i>
+                                    {% else %}
+                                    <i class="bi bi-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <span class="small text-muted">{{ expert.average_rating|floatformat:1 }}/5 ({{ expert.total_reviews }})</span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if expert.bio %}
+                    <p class="card-text small text-muted mb-3">
+                        {{ expert.bio|truncatechars:120 }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <div class="card-footer bg-white border-top">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'experts:profile' pk=expert.pk %}" class="btn btn-outline-primary btn-sm">
+                            View profile
+                        </a>
+                        <a href="{% url 'consultations:submit_request' %}?expert_id={{ expert.pk }}" class="btn btn-primary btn-sm">
+                            Request this expert
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="bi bi-search display-4 mb-2"></i>
+                <p class="mb-0">No experts match your search. Try adjusting your filters.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if experts.has_other_pages %}
+    <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center">
+            {% if experts.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">First</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ experts.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+
+            {% for num in experts.paginator.page_range %}
+            {% if experts.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if experts.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ experts.next_page_number }}">Next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ experts.paginator.num_pages }}">Last</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const filterTags = document.querySelectorAll('.filter-tag');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            const params = new URLSearchParams(window.location.search);
+            params.set('search', query);
+            window.location.href = '?' + params.toString();
+        });
+    }
+    
+    filterTags.forEach(tag => {
+        tag.addEventListener('click', function() {
+            const slug = this.getAttribute('data-slug');
+            const params = new URLSearchParams(window.location.search);
+            const expertise = params.getAll('expertise') || [];
+            
+            if (expertise.includes(slug)) {
+                expertise.splice(expertise.indexOf(slug), 1);
+            } else {
+                expertise.push(slug);
+            }
+            
+            params.delete('expertise');
+            expertise.forEach(e => params.append('expertise', e));
+            window.location.href = '?' + params.toString();
+        });
+    });
+});
+</script>
+
+<div class="privacy-banner text-center mt-4">
+    <div class="container">
+        <p class="mb-0">
+            <i class="bi bi-shield-check text-gold me-2"></i>
+            All experts are verified and bound by strict confidentiality agreements.
+        </p>
+    </div>
+</div>
+{% endblock %}

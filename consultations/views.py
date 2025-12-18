@@ -424,7 +424,17 @@ def my_bookings(request):
 
 
 def submit_client_request(request):
-    """Submit a client request for expert matching - concierge flow."""
+    """Submit a client request for expert matching - concierge flow.
+    Supports pre-selecting an expert via ?expert_id=<uuid> query param.
+    """
+    preferred_expert = None
+    expert_id = request.GET.get('expert_id')
+    if expert_id:
+        try:
+            preferred_expert = ExpertProfile.objects.get(pk=expert_id)
+        except ExpertProfile.DoesNotExist:
+            pass
+    
     if request.method == 'POST':
         name = request.POST.get('name', '')
         company = request.POST.get('company', '')
@@ -448,6 +458,15 @@ def submit_client_request(request):
                 messages.error(request, 'File too large. Maximum size is 10MB.')
                 return redirect('consultations:submit_request')
         
+        # Get preferred expert from form or query param
+        preferred_expert_id = request.POST.get('preferred_expert') or expert_id
+        preferred_expert_obj = None
+        if preferred_expert_id:
+            try:
+                preferred_expert_obj = ExpertProfile.objects.get(pk=preferred_expert_id)
+            except ExpertProfile.DoesNotExist:
+                pass
+        
         client_request = ClientRequest.objects.create(
             name=name,
             company=company,
@@ -460,12 +479,13 @@ def submit_client_request(request):
             confidentiality_level=confidentiality_level,
             budget_range=budget_range,
             brief_document=brief_document,
-            consent_given=consent
+            consent_given=consent,
+            matched_expert=preferred_expert_obj  # Save preferred expert
         )
         
         send_mail(
             subject='New client request - Kairos',
-            message=f'New client request from {company} ({name}):\n\nPhone: {phone}\n\n{problem_description}\n\nEngagement type: {engagement_type}\nUrgency: {timeline_urgency}\nBudget: {budget_range or "Not specified"}',
+            message=f'New client request from {company} ({name}):\n\nPhone: {phone}\n\n{problem_description}\n\nEngagement type: {engagement_type}\nUrgency: {timeline_urgency}\nBudget: {budget_range or "Not specified"}\nPreferred expert: {preferred_expert_obj.user.full_name if preferred_expert_obj else "None"}',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.DEFAULT_FROM_EMAIL],
             fail_silently=True
@@ -479,6 +499,7 @@ def submit_client_request(request):
     tags = ExpertiseTag.objects.all()
     context = {
         'tags': tags,
+        'preferred_expert': preferred_expert,
         'engagement_types': ClientRequest.EngagementType.choices,
         'urgency_levels': ClientRequest.UrgencyLevel.choices,
         'confidentiality_levels': ClientRequest.ConfidentialityLevel.choices,

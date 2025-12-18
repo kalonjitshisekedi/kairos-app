@@ -210,8 +210,11 @@
                     <div class="card-body p-4">
                         <h6 class="text-gold mb-3">Quick actions</h6>
                         <div class="d-grid gap-2">
+                            <a href="{% url 'experts:catalogue' %}" class="btn btn-outline-light btn-sm">
+                                <i class="bi bi-briefcase me-2"></i>Expert catalogue
+                            </a>
                             <a href="{% url 'experts:directory' %}" class="btn btn-outline-light btn-sm">
-                                <i class="bi bi-people me-2"></i>View experts
+                                <i class="bi bi-people me-2"></i>Expert directory
                             </a>
                             <a href="{% url 'core:admin_audit_log' %}" class="btn btn-outline-light btn-sm">
                                 <i class="bi bi-list-check me-2"></i>Audit log

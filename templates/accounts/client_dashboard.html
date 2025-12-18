@@ -6,7 +6,10 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 style="font-family: var(--font-serif);">Welcome back, {{ user.first_name }}</h1>
-        <a href="{% url 'consultations:submit_request' %}" class="btn btn-primary">Request matching</a>
+        <div>
+            <a href="{% url 'experts:catalogue' %}" class="btn btn-outline-primary me-2">Expert catalogue</a>
+            <a href="{% url 'consultations:submit_request' %}" class="btn btn-primary">Request matching</a>
+        </div>
     </div>
 
     <div class="row g-4">
@@ -83,7 +86,8 @@
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
-                        <a href="{% url 'consultations:submit_request' %}" class="btn btn-primary">Request matching</a>
+                        <a href="{% url 'experts:catalogue' %}" class="btn btn-primary">Expert catalogue</a>
+                        <a href="{% url 'consultations:submit_request' %}" class="btn btn-secondary">Request matching</a>
                         <a href="{% url 'messaging:my_messages' %}" class="btn btn-secondary">Messages</a>
                         <a href="{% url 'payments:my_payments' %}" class="btn btn-secondary">Payment history</a>
                     </div>
