@@ -404,8 +404,7 @@ def edit_profile(request):
         
         if all([basic_form.is_valid(), avatar_form.is_valid(), expertise_form.is_valid(), experience_form.is_valid()]):
             basic_form.save()
-            if request.FILES.get('avatar'):
-                avatar_form.save()
+            avatar_form.save()  # Handles both avatar and cv_file
             expertise_form.save()
             experience_form.save()
             AuditLog.objects.create(

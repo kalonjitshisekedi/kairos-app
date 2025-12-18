@@ -61,59 +61,104 @@
 
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0">Profile photo</h5>
+                <h5 class="mb-0">Profile photo and CV</h5>
             </div>
             <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-md-3 text-center">
-                        {% if profile.avatar %}
-                            <img src="{{ profile.avatar.url }}" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
-                        {% else %}
-                            <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center text-white" style="width: 100px; height: 100px;">
-                                <span class="display-6">{{ user.first_name.0 }}{{ user.last_name.0 }}</span>
-                            </div>
-                        {% endif %}
+                <div class="mb-4">
+                    <label class="form-label">Profile photo</label>
+                    <div class="row align-items-center">
+                        <div class="col-md-3 text-center mb-3 mb-md-0">
+                            {% if profile.avatar %}
+                                <img src="{{ profile.avatar.url }}" class="rounded" style="width: 100px; height: 100px; object-fit: cover;">
+                                <p class="small text-muted mt-2">Current photo</p>
+                            {% else %}
+                                <div class="bg-light rounded d-inline-flex align-items-center justify-content-center text-muted" style="width: 100px; height: 100px;">
+                                    <i class="bi bi-image" style="font-size: 2rem;"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-9">
+                            {{ avatar_form.avatar }}
+                            <small class="form-text text-muted d-block mt-2">{{ avatar_form.avatar.help_text|safe }}</small>
+                        </div>
                     </div>
-                    <div class="col-md-9">
-                        {{ avatar_form.avatar }}
-                    </div>
+                </div>
+                
+                <hr>
+                
+                <div>
+                    <label class="form-label">Curriculum vitae</label>
+                    {% if profile.cv_file %}
+                        <div class="alert alert-info small mb-2">
+                            <i class="bi bi-check-circle me-2"></i>Current file: <a href="{{ profile.cv_file.url }}" target="_blank">{{ profile.cv_file.name|slice:"5:" }}</a>
+                        </div>
+                    {% endif %}
+                    {{ avatar_form.cv_file }}
+                    <small class="form-text text-muted d-block mt-2">{{ avatar_form.cv_file.help_text|safe }}</small>
                 </div>
             </div>
         </div>
 
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0">Rates</h5>
+                <h5 class="mb-0">Professional links</h5>
             </div>
             <div class="card-body">
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label class="form-label">30 minutes (ZAR)</label>
-                        <div class="input-group">
-                            <span class="input-group-text">R</span>
-                            {{ rates_form.rate_30_min }}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">60 minutes (ZAR)</label>
-                        <div class="input-group">
-                            <span class="input-group-text">R</span>
-                            {{ rates_form.rate_60_min }}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">90 minutes (ZAR)</label>
-                        <div class="input-group">
-                            <span class="input-group-text">R</span>
-                            {{ rates_form.rate_90_min }}
-                        </div>
-                    </div>
+                <div class="mb-3">
+                    <label class="form-label">LinkedIn URL</label>
+                    {{ expertise_form.linkedin_url }}
+                    <small class="form-text text-muted d-block mt-1">Optional. Link to your LinkedIn profile.</small>
                 </div>
-                <div class="form-check">
-                    {{ rates_form.project_work_available }}
-                    <label class="form-check-label">Available for project work</label>
+                <div class="mb-3">
+                    <label class="form-label">GitHub URL</label>
+                    {{ expertise_form.github_url }}
+                    <small class="form-text text-muted d-block mt-1">Optional. Link to your GitHub profile.</small>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">ORCID identifier</label>
+                    {{ expertise_form.orcid_id }}
+                    <small class="form-text text-muted d-block mt-1">Optional. Your ORCID ID (e.g., 0000-0002-1234-5678).</small>
                 </div>
             </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Expertise and availability</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <label class="form-label">Areas of expertise</label>
+                    <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
+                        {{ expertise_form.expertise_tags }}
+                    </div>
+                    <small class="form-text text-muted d-block mt-2">Select all that apply.</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Languages</label>
+                    {{ expertise_form.languages }}
+                    <small class="form-text text-muted d-block mt-1">{{ expertise_form.languages.help_text }}</small>
+                </div>
+                
+                <hr>
+                
+                <div class="form-check mb-3">
+                    {{ experience_form.project_work_available }}
+                    <label class="form-check-label">Available for project work</label>
+                </div>
+                
+                <div>
+                    <label class="form-label">Profile visibility</label>
+                    {{ experience_form.privacy_level }}
+                    <small class="form-text text-muted d-block mt-1">Control who can see your profile: public, semi-private, or private.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Profile review:</strong> Profiles are reviewed before being shared with clients.
         </div>
 
         <button type="submit" class="btn btn-primary btn-lg">Save changes</button>

@@ -1,0 +1,81 @@
+Continue in the existing Kairos Django codebase. Do not rebuild.
+
+Fix: the expert profile edit page is broken for expert accounts:
+- URL: /experts/edit/
+This page must allow experts to update their profile and upload files (photo, CV, and supporting links).
+
+Critical rules:
+- Do not stop early.
+- No TODOs.
+- Keep British English and sentence case across UI.
+- Maintain premium, discreet tone (no marketplace language).
+- Ensure file uploads work correctly in development.
+
+Tasks (do in order):
+
+1) Reproduce and diagnose
+- Log in as a demo expert user.
+- Visit /experts/edit/
+- Capture the exact error (404, permission denied, template error, form error, etc.).
+- Identify the correct view, url name, template, and form involved.
+
+2) Fix routing and access control
+- Ensure /experts/edit/ maps to a valid view and template.
+- Access rules:
+  - Only authenticated users with expert_status == active/vetted (or user.is_expert) can access.
+  - Non-experts should be redirected to home or expert careers page with a message.
+- Ensure the edit page loads for the expert demo account.
+
+3) Ensure expert profile model supports required fields
+Confirm the expert profile model includes (or add if missing, with migrations):
+- headshot / photo (ImageField)
+- CV upload (FileField) – PDF/DOCX only
+- headline (CharField)
+- bio (TextField)
+- specialisms/tags (ManyToMany or comma-separated field)
+- visibility / privacy level (public/semi-private/private)
+- links:
+  - LinkedIn URL (optional)
+  - ORCID URL (optional)
+  - GitHub URL (optional)
+- verification status field (read-only to expert)
+
+If adding any new fields:
+- Create migrations
+- Apply migrations
+
+4) Fix the edit form and template
+- Ensure the form uses enctype="multipart/form-data"
+- Validate uploads:
+  - Photo: image only, safe size limit
+  - CV: pdf/docx only, safe size limit
+- Show clean help text under each field.
+- Add an on-page note in small text:
+  “Profiles are reviewed before being shared with clients.”
+- Submit button label: “Save changes”
+- After save:
+  - show success message
+  - redirect back to /experts/edit/ (or expert dashboard)
+- Display current photo thumbnail if present.
+
+5) Ensure media files work in development
+- Confirm settings.py has MEDIA_URL and MEDIA_ROOT set.
+- Confirm urls.py serves MEDIA_URL in DEBUG mode.
+- Confirm uploaded files actually appear when refreshed.
+
+6) Add a regression test
+- Add a test that:
+  - logs in as expert
+  - GET /experts/edit/ returns 200
+  - POST with updated fields saves successfully
+(For file upload test, you can use a small dummy file object.)
+
+7) Update seed_demo (if needed)
+- Ensure the demo expert user has an ExpertProfile created so /experts/edit/ has something to edit.
+- Optionally seed placeholder headline/bio/tags.
+
+Finish criteria:
+- /experts/edit/ loads for expert accounts
+- expert can update profile fields and upload photo + CV
+- uploads are stored and retrievable in dev
+- tests pass

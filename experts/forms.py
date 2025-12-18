@@ -27,9 +27,18 @@ class ExpertProfileBasicForm(forms.ModelForm):
 class ExpertProfileAvatarForm(forms.ModelForm):
     class Meta:
         model = ExpertProfile
-        fields = ['avatar']
+        fields = ['avatar', 'cv_file']
         widgets = {
             'avatar': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
+            'cv_file': forms.FileInput(attrs={'class': 'form-control', 'accept': '.pdf,.doc,.docx'}),
+        }
+        labels = {
+            'avatar': 'Profile photo',
+            'cv_file': 'Curriculum vitae (CV)',
+        }
+        help_texts = {
+            'avatar': 'JPG, PNG or GIF. Max size: 5MB.',
+            'cv_file': 'PDF or DOCX. Max size: 10MB.',
         }
 
 
@@ -47,9 +56,11 @@ class ExpertProfileExpertiseForm(forms.ModelForm):
 
     class Meta:
         model = ExpertProfile
-        fields = ['expertise_tags', 'orcid_id']
+        fields = ['expertise_tags', 'orcid_id', 'linkedin_url', 'github_url']
         widgets = {
             'orcid_id': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 0000-0002-1234-5678'}),
+            'linkedin_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://linkedin.com/in/yourprofile'}),
+            'github_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://github.com/yourprofile'}),
         }
 
     def __init__(self, *args, **kwargs):
