@@ -1,0 +1,134 @@
+Continue in the existing Kairos Django codebase. Do not rebuild. Do not revert.
+
+Context:
+We stopped during Task 4 (seed_demo). The command runs, but the seeded workflow is not exactly correct.
+The requirement is:
+- Exactly 1 ClientRequest (status submitted)
+- Exactly 2 ExpertMatch linked to THAT SAME request:
+  - one proposed
+  - one declined
+- Exactly 1 Engagement linked to THAT SAME request (and an expert)
+- Exactly 3 ProgressEvents linked to THAT SAME request (and/or its engagement)
+Currently, the code spreads these objects across multiple requests. We need to fix seed_demo to produce one coherent workflow chain.
+
+Critical rules:
+- Do not stop early.
+- No TODOs.
+- British English and sentence case.
+- seed_demo must be idempotent (safe to run multiple times without duplicating data).
+
+Work in these small tasks, in order. After each task, run the command(s) and fix issues before moving on.
+
+────────────────────────────────────────
+Task 4.1: Inspect current seed_demo logic and define stable identifiers
+────────────────────────────────────────
+- Open core/management/commands/seed_demo.py
+- Identify how it currently creates:
+  - ClientRequest(s)
+  - ExpertMatch(es)
+  - Engagement(s)
+  - ProgressEvent(s)
+- Decide on stable unique identifiers so objects are idempotent:
+  - Use the demo client email to locate the client.
+  - Use a single stable “demo request key” such as:
+    - title = "Demo request: risk and market entry"
+    OR
+    - a unique reference field if it exists
+- Ensure you can always retrieve the SAME ClientRequest on repeated runs.
+
+Stop once you have a clear plan for a single stable request and stable matches.
+
+Commands to run (no changes yet):
+- python manage.py seed_demo
+
+────────────────────────────────────────
+Task 4.2: Force seed_demo to create EXACTLY one ClientRequest
+────────────────────────────────────────
+- Modify seed_demo so it creates or gets ONE request only:
+  - status must be submitted
+  - linked to demo client user
+  - include realistic fields (organisation, brief, engagement_type, etc.)
+
+Important:
+- Do not create multiple ClientRequests.
+- If one already exists, reuse it (get_or_create).
+- If duplicates exist from earlier runs, select one canonical record and do NOT create more.
+
+Commands:
+- python manage.py seed_demo
+- python manage.py shell -c "from consultations.models import ClientRequest; print(ClientRequest.objects.filter(client__email='client@kairos.co.za').count())"
+(adapt import path/model name to actual project)
+
+Stop once the client has exactly 1 canonical ClientRequest (or at least seed_demo always targets one consistent request).
+
+────────────────────────────────────────
+Task 4.3: Create EXACTLY two ExpertMatch for the SAME request
+────────────────────────────────────────
+- Ensure two ExpertMatch rows link to the single ClientRequest:
+  - ExpertMatch A: status proposed
+  - ExpertMatch B: status declined
+- Both must point to different demo experts.
+- Use get_or_create with unique constraints:
+  - request + expert + status (or request + expert if status updates)
+- If a match exists, update its status to required value rather than creating new.
+
+Commands:
+- python manage.py seed_demo
+- verify counts in shell:
+  - number of ExpertMatch for that request is exactly 2
+  - statuses are proposed and declined
+
+Stop once that request has exactly two matches, and their statuses are correct.
+
+────────────────────────────────────────
+Task 4.4: Create EXACTLY one Engagement linked to the SAME request
+────────────────────────────────────────
+- Create or get one Engagement linked to the request and the “proposed” expert
+  (or whichever expert is intended to progress).
+- Set status to scheduled or in_progress (whichever exists in your enums).
+- Ensure no additional Engagements are created on repeated runs.
+- If an Engagement exists but points to the wrong request/expert, update it rather than creating new.
+
+Commands:
+- python manage.py seed_demo
+- verify in shell:
+  - Engagement count for that request is exactly 1
+
+Stop once the request has exactly one Engagement.
+
+────────────────────────────────────────
+Task 4.5: Create EXACTLY three ProgressEvents linked to the SAME request
+────────────────────────────────────────
+- Create 3 ProgressEvent entries for the request (and optionally link engagement if your model supports).
+- Event types should reflect realistic steps, for example:
+  1) request_submitted
+  2) experts_proposed
+  3) engagement_created
+- Ensure these are idempotent:
+  - Use a unique tuple like (request, event_type) and update/create.
+
+Commands:
+- python manage.py seed_demo
+- verify:
+  - ProgressEvent count for that request is exactly 3
+  - event types match what you defined
+
+Stop once the request has exactly three progress events.
+
+────────────────────────────────────────
+Task 4.6: Final validation and documentation note
+────────────────────────────────────────
+- Run:
+  - python manage.py seed_demo (twice) and confirm counts do not increase
+- Update README demo section if needed to reflect that demo workflow exists.
+
+Final output requirement:
+Provide a short summary:
+- which models were seeded
+- that the single request contains exactly:
+  - 2 matches (proposed + declined)
+  - 1 engagement
+  - 3 progress events
+- confirm seed_demo is idempotent
+
+Now proceed task-by-task in order and do not move to the next task until the current one is correct.
