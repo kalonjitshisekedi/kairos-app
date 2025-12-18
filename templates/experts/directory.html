@@ -159,14 +159,7 @@
                                         {% endif %}
                                     </div>
                                     <div class="card-footer bg-white border-0 text-center pb-4">
-                                        <div class="d-flex gap-2">
-                                            <a href="{% url 'experts:profile' pk=expert.pk %}" class="btn btn-outline-primary btn-sm flex-grow-1">View profile</a>
-                                            {% if can_contact %}
-                                                <a href="mailto:{{ expert.user.email }}" class="btn btn-outline-secondary btn-sm flex-grow-1">Contact</a>
-                                            {% elif is_verified_client %}
-                                                <a href="{% url 'consultations:submit_request' %}" class="btn btn-outline-accent btn-sm flex-grow-1">Request</a>
-                                            {% endif %}
-                                        </div>
+                                        <a href="{% url 'experts:profile' pk=expert.pk %}" class="btn btn-outline-primary btn-sm w-100">View profile</a>
                                     </div>
                                 </div>
                             </div>

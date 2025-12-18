@@ -80,9 +80,6 @@ def expert_directory(request):
         'search': search,
         'selected_expertise': expertise,
         'sort': sort,
-        'is_verified_client': is_verified_client,
-        'is_admin': is_admin,
-        'can_contact': is_admin,
     }
     return render(request, 'experts/directory.html', context)
 
